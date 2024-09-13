@@ -1,4 +1,6 @@
-<x-guest-layout>
+@extends('guest-master')
+
+@section('content')
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -44,9 +46,9 @@
                 {{ __('Already registered?') }}
             </a>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
+            <button class="ms-3 bg-gray-800 text-white inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                Register
+            </button>
         </div>
     </form>
-</x-guest-layout>
+@endsection

@@ -1,20 +1,20 @@
 <div x-data="{ open: false, isSticky: false }" @scroll.window="isSticky = window.scrollY > 0" class="hidden sm:flex md:flex lg:flex border-t border-sscr-yellow sticky top-0 z-10 transition ease-in-out duration-500" :class="{ 'bg-sscr-red py-2': isSticky, 'bg-sscr-yellow': !isSticky }">
     <div class="max-w-7xl mx-auto sm:flex md:flex lg:flex justify-between py-1 w-full">
         <div class="hidden sm:-my-px sm:flex">
-            <x-nav-link :href="route('dashboard')">
+            <x-nav-link :href="route('home')">
                 {{ __('Home') }}
             </x-nav-link>
-            <x-nav-link :href="route('dashboard')">
+            <x-nav-link :href="route('home')">
                 {{ __('My Organizations') }}
             </x-nav-link>
-            <x-nav-link :href="route('dashboard')">
+            <x-nav-link :href="route('home')">
                 {{ __('Announcements') }}
             </x-nav-link>
-            <x-nav-link :href="route('dashboard')">
+            <x-nav-link :href="route('home')">
                 {{ __('Events') }}
             </x-nav-link>
             @if (Auth::user()->role !== 'alumni')
-                <x-nav-link :href="route('dashboard')">
+                <x-nav-link :href="route('home')">
                     {{ __('Accounts') }}
                 </x-nav-link>
             @endif

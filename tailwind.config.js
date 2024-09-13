@@ -18,7 +18,6 @@ export default {
         colors: {
             'sscr-red': '#6a0106',
             'sscr-yellow': '#a67c00',
-            'gray-200': '#e5e7eb',
             gray: {
                 50: '#F9FAFB',
                 100: '#F3F4F6',
