@@ -1,10 +1,10 @@
-<div id="sticky-navbar" class="hidden md:flex lg:flex border-t border-sscr-yellow sticky top-0 z-10 transition ease-in-out duration-500 bg-sscr-yellow">
+<div id="sticky-navbar" class="md:flex lg:flex border-t border-sscr-yellow sticky top-0 z-10 transition ease-in-out duration-500 bg-sscr-yellow">
     <div class="max-w-7xl mx-auto sm:flex md:flex lg:flex justify-between py-1 w-full">
         <div class="sm:-my-px sm:flex">
             <a href="{{route('home')}}" class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 Home
             </a>
-            <a href="{{route('home')}}" class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+            <a href="{{route('groups.index')}}" class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 My Organizations
             </a>
             <a href="{{route('home')}}" class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
@@ -27,7 +27,7 @@
                 </button>
 
                 <div id="sticky-navbar-dropdown" class="absolute z-50 mt-2 hidden rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
-                    <a href="{{route('profile.details')}}" class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
+                    <a href="{{route('user.index')}}" class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
                         Profile
                     </a>
                     <form method="POST" action="{{ route('logout') }}">

@@ -87,6 +87,8 @@ return new class extends Migration
             $table->foreignId('disabled_by')->nullable()->constrained('users');
             $table->string('first_name');
             $table->string('last_name');
+            $table->string('middle_name')->nullable();
+            $table->string('suffix')->nullable();
             $table->string('department')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -125,10 +127,10 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('alumni_hobbies', function (Blueprint $table) {
+        Schema::create('user_hobbies', function (Blueprint $table) {
             $table->id();
             $table->foreignId('hobbies_id')->constrained('hobbies');
-            $table->foreignId('alumni_id')->constrained('alumni_informations');
+            $table->foreignId('user_id')->constrained('users');
             $table->foreignId('deleted_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
@@ -247,7 +249,7 @@ return new class extends Migration
         Schema::dropIfExists('group_members');
         Schema::dropIfExists('post_edit_approvals');
         Schema::dropIfExists('chats');
-        Schema::dropIfExists('alumni_hobbies');
+        Schema::dropIfExists('user_hobbies');
         Schema::dropIfExists('alumni_informations');
         Schema::dropIfExists('admin_informations');
         Schema::dropIfExists('posts');

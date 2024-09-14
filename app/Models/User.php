@@ -4,12 +4,13 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, SoftDeletes, Notifiable;
 
     public $table = "users";
 
@@ -19,9 +20,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
+        'username',
         'password',
+        'image',
+        'role',
     ];
 
     /**
@@ -54,5 +57,18 @@ class User extends Authenticatable
     public function adminInformation()
     {
         return $this->hasOne(AdminInformation::class);
+    }
+    public function hobbies()
+    {
+        return $this->belongsToMany(Hobbies::class, 'user_hobbies', 'user_id', 'group_id')
+                ->withPivot('deleted_at')
+                ->whereNull('user_hobbies.deleted_at');
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'group_members', 'user_id', 'group_id')
+                ->withPivot('deleted_at')
+                ->whereNull('group_members.deleted_at');
     }
 }

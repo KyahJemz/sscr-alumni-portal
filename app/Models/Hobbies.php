@@ -12,8 +12,21 @@ class Hobbies extends Model
 
     public $table = 'hobbies';
 
-    public function alumniInformation(): BelongsToMany
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'description',
+        'category',
+        'image',
+    ];
+
+    public function users()
     {
-        return $this->belongsToMany(AlumniInformation::class);
+        return $this->belongsToMany(User::class, 'user_hobbies', 'hobbies_id', 'user_id');
     }
+
 }

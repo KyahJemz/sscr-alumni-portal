@@ -72,7 +72,7 @@ class ProfileController extends Controller
         if ($request->image) {
             $imageName = time() . '.' . $request->image->getClientOriginalExtension();
         }
-        
+
         User::where('id', Auth::user()->id)->update([
             'username' => $request->username,
             'email' => $request->email,
