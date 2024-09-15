@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\AdminInformation;
+use App\Models\AlumniInformation;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -27,13 +30,13 @@ class UserSeeder extends Seeder
                 'role' => 'cict_admin',
             ],
             [
-                'name' => 'Alumni User',
+                'name' => 'Program Chair',
                 'email' => 'program_chair@test.com',
                 'username' => 'ProgramChair',
                 'role' => 'program_chair',
             ],
             [
-                'name' => 'Alumni User',
+                'name' => 'Alumni Coordinator',
                 'email' => 'alumni_coordinator@test.com',
                 'username' => 'AlumniCoordinator',
                 'role' => 'alumni_coordinator',
@@ -43,5 +46,6 @@ class UserSeeder extends Seeder
         foreach ($users as $user) {
             User::factory()->create($user);
         }
+
     }
 }

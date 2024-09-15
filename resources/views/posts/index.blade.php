@@ -9,7 +9,7 @@
                     @csrf
                     @method('post')
 
-                    <img src="" alt="" class="border border-gray-300 dark:border-gray-700 w-16 h-16 rounded-full bg-gray-200">
+                    <img src="{{ $user->image ? asset('storage/profile/images/' . $user->image) : asset('storage/profile/images/default.jpg') }}" alt="" class="border border-gray-300 dark:border-gray-700 w-16 h-16 rounded-full bg-gray-200">
                     <div class="w-full space-y-2">
                         <select name="type" class="text-xs font-light px-2 py-1 pr-8 cursor-pointer rounded">
                             <option class="cursor-pointer" value="post">Create Post</option>
