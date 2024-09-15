@@ -61,7 +61,7 @@
             <div class="bg-white shadow-md rounded-lg p-6 space-y-6">
                 <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center">
                     More Information
-                    @if ($user->role === 'alumni' && $information)
+                    @if ($user->role === 'alumni')
                         <a href="{{ route('alumni-information.edit', ['alumniInformation' => $user->id]) }}"
                             class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
                     @else
@@ -135,7 +135,7 @@
                             <p class="font-light text-gray-500">Phone</p>
                         </div>
                         <div class="flex flex-col">
-                            <p class="font-semibold">{{ $information->birth_date ? $information->birth_date->format('d/m/Y') : 'N/A' }}</p>
+                            <p class="font-semibold">{{ !empty($information->birth_date) ? $information->birth_date->format('d/m/Y') : 'N/A' }}</p>
                             <p class="font-light text-gray-500">Birth Date</p>
                         </div>
                     </div>
@@ -145,7 +145,7 @@
             <div class="bg-white shadow-md rounded-lg p-6 space-y-6">
                 <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center">
                     User Hobbies
-                    @if ($user->role === 'alumni' && $information)
+                    @if ($user->role === 'alumni')
                         <a href="{{ route('user-hobbies.edit', ['user_id' => $user->id]) }}"
                             class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
                     @endif

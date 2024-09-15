@@ -58,11 +58,13 @@ class User extends Authenticatable
     {
         return $this->hasOne(AdminInformation::class);
     }
+
     public function hobbies()
     {
-        return $this->belongsToMany(Hobbies::class, 'user_hobbies', 'user_id', 'group_id')
-                ->withPivot('deleted_at')
-                ->whereNull('user_hobbies.deleted_at');
+        return $this->belongsToMany(Hobbies::class, 'user_hobbies', 'user_id', 'hobbies_id')
+                    ->withPivot('created_at', 'updated_at', 'deleted_at')
+                    ->whereNull('user_hobbies.deleted_at')
+                    ->withTimestamps();
     }
 
     public function groups()
@@ -70,5 +72,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Group::class, 'group_members', 'user_id', 'group_id')
                 ->withPivot('deleted_at')
                 ->whereNull('group_members.deleted_at');
+    }
+
+    public function groupsManaged()
+    {
+        return $this->belongsToMany(Group::class, 'group_admins', 'user_id', 'group_id')
+                ->withPivot('deleted_at')
+                ->whereNull('group_admins.deleted_at');
     }
 }

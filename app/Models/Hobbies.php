@@ -23,10 +23,8 @@ class Hobbies extends Model
         'category',
         'image',
     ];
-
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_hobbies', 'hobbies_id', 'user_id');
     }
-
 }

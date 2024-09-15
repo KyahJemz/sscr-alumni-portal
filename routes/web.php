@@ -8,8 +8,6 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserHobbiesController;
-use App\Models\Hobbies;
-use App\Models\UserHobbies;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {

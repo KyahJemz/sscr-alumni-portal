@@ -15,24 +15,32 @@
         <div>
             <h2 class="text-xl font-semibold text-gray-800">My Clubs</h2>
             <div id="my-clubs" class="flex flex-row space-x-4 overflow-x-auto py-4">
-                @foreach ($myGroups as $group)
-                    <a href="{{ route('groups.show', [$group->id]) }}" class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50 group-card" data-name="{{ $group->name }}">
-                        <img src="{{ asset('public/images/groups/' . $group->image) }}" alt="{{ $group->name }}" class="w-24 h-24 rounded-full object-cover mb-2">
+                @forelse  ($myGroups as $group)
+                    <a href="{{ route('groups.show', ['group' => $group->id]) }}" class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50 group-card" data-name="{{ $group->name }}">
+                        <img src="{{ asset('public/images/groups/' . $group->image ?? 'default.jpg') }}" alt="{{ $group->name }}" class="w-24 h-24 rounded-full object-cover mb-2">
                         <p class="text-sm font-medium text-gray-700">{{ $group->name }}</p>
                     </a>
-                @endforeach
+                    @empty
+                    <a href="#" class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50">
+                        Join some groups
+                    </a>
+                @endforelse
             </div>
         </div>
 
         <div>
             <h2 class="text-xl font-semibold text-gray-800">Other Clubs</h2>
             <div id="recommended-clubs" class="flex flex-row space-x-4 overflow-x-auto py-4">
-                @foreach ($recommended as $group)
-                    <a href="{{ route('groups.show', ['group' $group->id]) }}" class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50 group-card" data-name="{{ $group->name }}">
-                        <img src="{{ asset('public/images/groups/' . $group->image) }}" alt="{{ $group->name }}" class="w-24 h-24 rounded-full object-cover mb-2">
+                @forelse ($recommended as $group)
+                    <a href="{{ route('groups.show', ['group' => $group->id]) }}" class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50 group-card" data-name="{{ $group->name }}">
+                        <img src="{{ asset('public/images/groups/' . $group->image ?? 'default.jpg') }}" alt="{{ $group->name }}" class="w-24 h-24 rounded-full object-cover mb-2">
                         <p class="text-sm font-medium text-gray-700">{{ $group->name }}</p>
                     </a>
-                @endforeach
+                    @empty
+                    <a href="#" class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50">
+                        No groups to join
+                    </a>
+                @endforelse
             </div>
         </div>
     </div>

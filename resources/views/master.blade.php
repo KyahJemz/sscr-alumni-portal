@@ -23,9 +23,10 @@
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             @include('navigation.nav')
-            <main class="relative">
+            <main class="relative h-full">
                 @include('navigation.nav-sticky')
                 @yield('content')
+                @include('footer.index')
             </main>
         </div>
         @yield('scripts')

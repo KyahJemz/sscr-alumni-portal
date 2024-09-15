@@ -21,7 +21,7 @@ class UserHobbies extends Model
         'deleted_by',
     ];
 
-    public function hobby()
+    public function group()
     {
         return $this->belongsTo(Hobbies::class, 'hobbies_id');
     }
@@ -30,4 +30,5 @@ class UserHobbies extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
 }

@@ -23,7 +23,6 @@ class GroupController extends Controller
             'recommended' => $recommended,
             'user' => $user
         ];
-        // dd($data);
         return view('groups.index', $data);
     }
 
@@ -48,7 +47,24 @@ class GroupController extends Controller
      */
     public function show(Group $group)
     {
-        //
+        $user = Auth::user();
+        $myGroups = $user->groups;
+        $groupManaged = $user->groupsManaged;
+
+        $isMember = $myGroups->contains($group);
+
+        $isAdmin = $groupManaged->contains($group);
+
+        $status = $isMember ? 'member' : ($group->status ?? 'not a member');
+
+        $data = [
+            'group' => $group,
+            'status' => $status, // member, not a member, pending
+            'isAdmin' => $isAdmin,
+            'user' => $user
+        ];
+
+        return view('groups.show', $data);
     }
 
     /**
