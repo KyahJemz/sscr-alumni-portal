@@ -12,7 +12,7 @@ class GroupMember extends Model
 
     public $table = 'group_members';
 
-    protected $fillable = ['user_id', 'group_id'];
+    protected $fillable = ['user_id', 'group_id', 'approved_at', 'rejected_at', 'approved_by', 'rejected_by'];
 
     public function group()
     {

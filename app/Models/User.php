@@ -59,6 +59,21 @@ class User extends Authenticatable
         return $this->hasOne(AdminInformation::class);
     }
 
+    public function posts()
+    {
+        return $this->hasMany(post::class, 'created_by');
+    }
+
+    public function approvedPosts()
+    {
+        return $this->hasMany(post::class, 'approved_by');
+    }
+
+    public function rejectedPosts()
+    {
+        return $this->hasMany(post::class, 'rejected_by');
+    }
+
     public function hobbies()
     {
         return $this->belongsToMany(Hobbies::class, 'user_hobbies', 'user_id', 'hobbies_id')
@@ -70,14 +85,20 @@ class User extends Authenticatable
     public function groups()
     {
         return $this->belongsToMany(Group::class, 'group_members', 'user_id', 'group_id')
-                ->withPivot('deleted_at')
-                ->whereNull('group_members.deleted_at');
+            ->withPivot('deleted_at', 'created_at')
+            ->whereNull('group_members.deleted_at')
+            ->whereNull('group_members.rejected_at')
+            ->whereNotNull('group_members.approved_at')
+            ->orderBy('group_members.created_at', 'desc')
+            ->distinct('group_members.group_id');
     }
 
     public function groupsManaged()
     {
         return $this->belongsToMany(Group::class, 'group_admins', 'user_id', 'group_id')
-                ->withPivot('deleted_at')
-                ->whereNull('group_admins.deleted_at');
+                ->withPivot('deleted_at', 'created_at')
+                ->whereNull('group_admins.deleted_at')
+                ->orderBy('group_admins.created_at', 'desc')
+                ->distinct('group_admins.group_id');
     }
 }

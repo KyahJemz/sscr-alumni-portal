@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Event extends Model
+class Announcement extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public $table = 'events';
+    public $table = 'announcements';
 
-    protected $fillable = ['title', 'description', 'thumbnail', 'start_date', 'end_date', 'location', 'status'];
+    protected $fillable = ['title', 'description', 'thumbnail'];
 
     public function post()
     {

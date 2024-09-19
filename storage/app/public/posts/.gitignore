@@ -1,0 +1,7 @@
+*
+!news/
+!announcements/
+!events/
+!thumbnails/
+!default*
+!.gitignore

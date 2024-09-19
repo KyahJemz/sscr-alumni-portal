@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Models\GroupMember;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -48,24 +50,33 @@ class GroupController extends Controller
     public function show(Group $group)
     {
         $user = Auth::user();
-        $myGroups = $user->groups;
         $groupManaged = $user->groupsManaged;
-
-        $isMember = $myGroups->contains($group);
-
         $isAdmin = $groupManaged->contains($group);
 
-        $status = $isMember ? 'member' : ($group->status ?? 'not a member');
+        $groupMembers = GroupMember::where('group_id', $group->id)
+            ->where('user_id', $user->id)
+            ->whereNull('deleted_at')
+            ->latest()
+            ->first();
+        if ($groupMembers && !is_null($groupMembers->approved_at)) {
+            $status = 'member';
+        } elseif ($groupMembers && is_null($groupMembers->rejected_at) && is_null($groupMembers->approved_at)) {
+            $status = 'pending';
+        } else {
+            $status = 'not a member';
+        }
 
         $data = [
             'group' => $group,
             'status' => $status, // member, not a member, pending
             'isAdmin' => $isAdmin,
+            'groupMember' => $groupMembers,
             'user' => $user
         ];
 
         return view('groups.show', $data);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -88,6 +99,6 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        //
+
     }
 }

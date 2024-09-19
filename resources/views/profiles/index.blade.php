@@ -12,6 +12,7 @@
                 <div class="w-32 h-32">
                     <img id="profile-preview"
                         src="{{ $user->image ? asset('storage/profile/images/' . $user->image) : asset('storage/profile/images/default.jpg') }}"
+                        onerror="this.onerror=null;this.src='{{ asset('storage/profile/images/default.jpg') }}';"
                         alt="Profile Image" class="rounded-lg border-2 border-sscr-red w-full h-full object-cover">
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">

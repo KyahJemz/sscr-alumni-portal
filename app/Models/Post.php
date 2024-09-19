@@ -11,4 +11,30 @@ class Post extends Model
     use HasFactory, SoftDeletes;
 
     public $table = "posts";
+
+    protected $fillable = ['group_id', 'event_id', 'news_id', 'announcement_id', 'created_by', 'approved_by', 'deleted_by', 'rejected_by', 'content', 'type', 'images', 'files', 'videos', 'approved_at', 'rejected_at'];
+
+    public function event() {
+        return $this->belongsTo(Event::class);
+    }
+
+    public function announcement() {
+        return $this->belongsTo(Announcement::class);
+    }
+
+    public function news() {
+        return $this->belongsTo(News::class);
+    }
+
+    public function postedBy() {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function approvedBy() {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function rejected_by() {
+        return $this->belongsTo(User::class, 'rejected_by');
+    }
 }

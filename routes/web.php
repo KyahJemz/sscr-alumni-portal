@@ -2,13 +2,15 @@
 
 use App\Http\Controllers\AdminInformationController;
 use App\Http\Controllers\AlumniInformationController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupMembersController;
 use App\Http\Controllers\HobbiesController;
+use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserHobbiesController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,7 +18,7 @@ Route::get('/', function () {
 });
 
 Route::get('/home', function () {
-    return view('posts.index', ['user' => Auth::user()]);
+    return redirect()->route('posts.index');
 })->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {
@@ -85,6 +87,36 @@ Route::middleware('auth')->group(function () {
     Route::patch('/groups/{group}', [GroupController::class, 'update'])->name('groups.update');
     Route::delete('/groups/{group}', [GroupController::class, 'destroy'])->name('groups.destroy');
 
+    // GROUP MEMBERS
+    Route::get('/group-members', [GroupMembersController::class, 'index'])->name('group-members.index');
+    Route::get('/group-members/create', [GroupMembersController::class, 'create'])->name('group-members.create');
+    Route::post('/group-members', [GroupMembersController::class, 'store'])->name('group-members.store');
+    Route::get('/group-members/{group}', [GroupMembersController::class, 'show'])->name('group-members.show');
+    Route::get('/group-members/{group}/edit', [GroupMembersController::class, 'edit'])->name('group-members.edit');
+    Route::put('/group-members/{group}', [GroupMembersController::class, 'update'])->name('group-members.update');
+    Route::patch('/group-members/{group}', [GroupMembersController::class, 'update'])->name('group-members.update');
+    Route::delete('/group-members/{groupMember}', [GroupMembersController::class, 'destroy'])->name('group-members.destroy');
+
+    // FEEDBACK
+    Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+    Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('feedback.create');
+    Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+    Route::get('/feedback/{feedback}', [FeedbackController::class, 'show'])->name('feedback.show');
+    Route::get('/feedback/{feedback}/edit', [FeedbackController::class, 'edit'])->name('feedback.edit');
+    Route::put('/feedback/{feedback}', [FeedbackController::class, 'update'])->name('feedback.update');
+    Route::patch('/feedback/{feedback}', [FeedbackController::class, 'update'])->name('feedback.update');
+    Route::delete('/feedback/{feedback}', [FeedbackController::class, 'destroy'])->name('feedback.destroy');
+
+    // GROUP ADMINS
+    // Route::get('/group-admins', [GroupAdminsController::class, 'index'])->name('group-members.index');
+    // Route::get('/group-admins/create', [GroupMembersController::class, 'create'])->name('group-members.create');
+    // Route::post('/group-admins', [GroupMembersController::class, 'store'])->name('group-members.store');
+    // Route::get('/group-admins/{group}', [GroupMembersController::class, 'show'])->name('group-members.show');
+    // Route::get('/group-admins/{group}/edit', [GroupMembersController::class, 'edit'])->name('group-members.edit');
+    // Route::put('/group-admins/{group}', [GroupMembersController::class, 'update'])->name('group-members.update');
+    // Route::patch('/group-admins/{group}', [GroupMembersController::class, 'update'])->name('group-members.update');
+    // Route::delete('/group-admins/{groupMember}', [GroupMembersController::class, 'destroy'])->name('group-members.destroy');
+
     // POSTS
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
@@ -104,6 +136,16 @@ Route::middleware('auth')->group(function () {
     Route::put('/group/{groupId}/posts/{postId}', [GroupController::class, 'update'])->name('group.posts.update');
     Route::patch('/group/{groupId}/posts/{postId}', [GroupController::class, 'update'])->name('group.posts.update');
     Route::delete('/group/{groupId}/posts/{postId}', [GroupController::class, 'destroy'])->name('group.posts.destroy');
+
+    // MESSAGES
+    Route::get('/messages', [MessagesController::class, 'index'])->name('messages.index');
+    Route::get('/messages/create', [MessagesController::class, 'create'])->name('messages.create');
+    Route::post('/messages', [MessagesController::class, 'store'])->name('messages.store');
+    Route::get('/messages/{message}', [MessagesController::class, 'show'])->name('messages.show');
+    Route::get('/messages/{message}/edit', [MessagesController::class, 'edit'])->name('messages.edit');
+    Route::put('/messages/{message}', [MessagesController::class, 'update'])->name('messages.update');
+    Route::patch('/messages/{message}', [MessagesController::class, 'update'])->name('messages.update');
+    Route::delete('/messages/{message}', [MessagesController::class, 'destroy'])->name('messages.destroy');
 
     // POSTS
     // Route::get('/posts', [PostController::class, 'index'])->name('posts.index');

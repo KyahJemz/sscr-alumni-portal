@@ -19,6 +19,7 @@
                         Image</label>
                     <img id="image-preview"
                         src="{{ $user->image ? asset('storage/profile/images/' . $user->image) : asset('storage/profile/images/default.jpg') }}"
+                        onerror="this.onerror=null;this.src='{{ asset('storage/profile/images/default.jpg') }}';"
                         alt="Profile Image" class="rounded-full w-32 h-32 border-gray-300 dark:border-gray-700 mb-4">
                     <input id="image" class="mt-1 block w-full cursor-pointer" type="file" name="image"
                         accept="image/png, image/jpeg" />

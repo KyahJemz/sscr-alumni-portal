@@ -17,7 +17,7 @@
             <div id="my-clubs" class="flex flex-row space-x-4 overflow-x-auto py-4">
                 @forelse  ($myGroups as $group)
                     <a href="{{ route('groups.show', ['group' => $group->id]) }}" class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50 group-card" data-name="{{ $group->name }}">
-                        <img src="{{ asset('public/images/groups/' . $group->image ?? 'default.jpg') }}" alt="{{ $group->name }}" class="w-24 h-24 rounded-full object-cover mb-2">
+                        <img src="{{ asset('storage/groups/images/' . $group->image ?? 'default.jpg') }}" onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';" alt="{{ $group->name }}" class="w-24 h-24 rounded-full object-cover mb-2">
                         <p class="text-sm font-medium text-gray-700">{{ $group->name }}</p>
                     </a>
                     @empty
@@ -33,7 +33,7 @@
             <div id="recommended-clubs" class="flex flex-row space-x-4 overflow-x-auto py-4">
                 @forelse ($recommended as $group)
                     <a href="{{ route('groups.show', ['group' => $group->id]) }}" class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50 group-card" data-name="{{ $group->name }}">
-                        <img src="{{ asset('public/images/groups/' . $group->image ?? 'default.jpg') }}" alt="{{ $group->name }}" class="w-24 h-24 rounded-full object-cover mb-2">
+                        <img src="{{ asset('storage/groups/images/' . $group->image ?? 'default.jpg') }}" onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';" alt="{{ $group->name }}" class="w-24 h-24 rounded-full object-cover mb-2">
                         <p class="text-sm font-medium text-gray-700">{{ $group->name }}</p>
                     </a>
                     @empty

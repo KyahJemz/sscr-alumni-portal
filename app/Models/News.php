@@ -11,4 +11,11 @@ class News extends Model
     use HasFactory, SoftDeletes;
 
     public $table = 'news';
+
+    protected $fillable = ['title', 'description', 'thumbnail'];
+
+    public function post()
+    {
+        return $this->hasOne(Post::class);
+    }
 }

@@ -42,23 +42,29 @@ return new class extends Migration
 
         Schema::create('news', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('created_by')->constrained('users');
             $table->string('title');
             $table->text('description');
-            $table->text('images')->nullable();
-            $table->string('files')->nullable();
+            $table->text('thumbnail')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('created_by')->constrained('users');
-            $table->date('date');
-            $table->time('time');
-            $table->string('location');
+            $table->text('thumbnail')->nullable();
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
+            $table->string('location')->nullable();
             $table->string('status');
-            $table->text('images')->nullable();
+            $table->string('title');
+            $table->text('description');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('announcements', function (Blueprint $table) {
+            $table->id();
+            $table->text('thumbnail')->nullable();
             $table->string('title');
             $table->text('description');
             $table->timestamps();
@@ -70,13 +76,15 @@ return new class extends Migration
             $table->foreignId('group_id')->nullable()->constrained('groups');
             $table->foreignId('event_id')->nullable()->constrained('events');
             $table->foreignId('news_id')->nullable()->constrained('news');
+            $table->foreignId('announcement_id')->nullable()->constrained('announcements');
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('approved_by')->nullable()->constrained('users');
             $table->foreignId('deleted_by')->nullable()->constrained('users');
             $table->foreignId('rejected_by')->nullable()->constrained('users');
-            $table->text('content');
+            $table->text('content')->nullable();
             $table->text('images')->nullable();
             $table->string('files')->nullable();
+            $table->string('type');
             $table->timestamps();
             $table->softDeletes();
             $table->timestamp('approved_at')->nullable();
