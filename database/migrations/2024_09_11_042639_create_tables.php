@@ -245,6 +245,14 @@ return new class extends Migration
             $table->softDeletes();
         });
 
+        Schema::create('likes', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('liked_by')->constrained('users');
+            $table->foreignId('post_id')->constrained('posts');
+            $table->softDeletes();
+            $table->timestamps();
+        });
+
     }
 
     /**
@@ -273,5 +281,6 @@ return new class extends Migration
         Schema::dropIfExists('news');
         Schema::dropIfExists('groups');
         Schema::dropIfExists('hobbies');
+        Schema::dropIfExists('likes');
     }
 };

@@ -2,16 +2,27 @@
 
 use App\Http\Controllers\AdminInformationController;
 use App\Http\Controllers\AlumniInformationController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupMembersController;
 use App\Http\Controllers\HobbiesController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserHobbiesController;
+use App\Models\Chat;
 use Illuminate\Support\Facades\Route;
+
+// 'roles' => [
+//     'alumni' => 'Alumni',
+//     'cict_admin' => 'CICT Admin',
+//     'program_chair' => 'Program Chair',
+//     'alumni_coordinator' => 'Alumni Coordinator',
+// ],
 
 Route::get('/', function () {
     return view('guest.index');
@@ -119,13 +130,15 @@ Route::middleware('auth')->group(function () {
 
     // POSTS
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+    Route::get('/api/posts', [PostController::class, 'apiIndex'])->name('api.posts');
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
-    Route::get('/posts/{postId}', [PostController::class, 'show'])->name('posts.show');
-    Route::get('/posts/{postId}/edit', [PostController::class, 'edit'])->name('posts.edit');
-    Route::put('/posts/{postId}', [PostController::class, 'update'])->name('posts.update');
-    Route::patch('/posts/{postId}', [PostController::class, 'update'])->name('posts.update');
-    Route::delete('/posts/{postId}', [PostController::class, 'destroy'])->name('posts.destroy');
+    Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+    Route::get('/api/posts/{id}', [PostController::class, 'apiShow'])->name('api.posts.show');
+    Route::get('/posts/{id}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::patch('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('/posts/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
 
     // GROUP POSTS
     Route::get('/group/{groupId}/posts', [GroupController::class, 'index'])->name('group.posts.index');
@@ -146,6 +159,40 @@ Route::middleware('auth')->group(function () {
     Route::put('/messages/{message}', [MessagesController::class, 'update'])->name('messages.update');
     Route::patch('/messages/{message}', [MessagesController::class, 'update'])->name('messages.update');
     Route::delete('/messages/{message}', [MessagesController::class, 'destroy'])->name('messages.destroy');
+
+    // CHAT
+    Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
+    Route::get('/chats/create', [ChatController::class, 'create'])->name('chats.create');
+    Route::post('/chats', [ChatController::class, 'store'])->name('chats.store');
+    Route::get('/chats/{id}', [ChatController::class, 'show'])->name('chats.show');
+    Route::get('/chats/{id}/edit', [ChatController::class, 'edit'])->name('chats.edit');
+    Route::put('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
+    Route::patch('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
+    Route::delete('/chats/{id}', [ChatController::class, 'destroy'])->name('chats.destroy');
+
+    // COMMENTS
+    //Route::get('/comment', [CommentController::class, 'index'])->name('comment.index');
+    //Route::get('/comment/create', [CommentController::class, 'create'])->name('comment.create');
+    Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
+    //Route::get('/comment/{comment}', [CommentController::class, 'show'])->name('comment.show');
+    //Route::get('/comment/{comment}/edit', [CommentController::class, 'edit'])->name('comment.edit');
+    //Route::put('/comment/{comment}', [CommentController::class, 'update'])->name('comment.update');
+    //Route::patch('/comment/{comment}', [CommentController::class, 'update'])->name('comment.update');
+    Route::delete('/comment', [CommentController::class, 'destroy'])->name('comment.destroy');
+
+    // LIKES
+    //Route::get('/like', [LikeController::class, 'index'])->name('like.index');
+    //Route::get('/like/create', [LikeController::class, 'create'])->name('like.create');
+    Route::post('/like', [LikeController::class, 'store'])->name('like.store');
+    //Route::get('/like/{like}', [LikeController::class, 'show'])->name('like.show');
+    //Route::get('/like/{like}/edit', [LikeController::class, 'edit'])->name('like.edit');
+    //Route::put('/like/{like}', [LikeController::class, 'update'])->name('like.update');
+    //Route::patch('/like/{like}', [LikeController::class, 'update'])->name('like.update');
+    Route::delete('/like', [LikeController::class, 'destroy'])->name('like.destroy');
+
+
+
+
 
     // POSTS
     // Route::get('/posts', [PostController::class, 'index'])->name('posts.index');

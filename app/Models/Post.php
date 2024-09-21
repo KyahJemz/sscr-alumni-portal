@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
@@ -14,27 +15,53 @@ class Post extends Model
 
     protected $fillable = ['group_id', 'event_id', 'news_id', 'announcement_id', 'created_by', 'approved_by', 'deleted_by', 'rejected_by', 'content', 'type', 'images', 'files', 'videos', 'approved_at', 'rejected_at'];
 
-    public function event() {
+    public function event()
+    {
         return $this->belongsTo(Event::class);
     }
 
-    public function announcement() {
+    public function announcement()
+    {
         return $this->belongsTo(Announcement::class);
     }
 
-    public function news() {
+    public function news()
+    {
         return $this->belongsTo(News::class);
     }
 
-    public function postedBy() {
+    public function commentsCount()
+    {
+        return $this->comments()->count() ?? 0;
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'post_id');
+    }
+
+    public function likesCount()
+    {
+        return $this->likes()->count() ?? 0;
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class, 'post_id');
+    }
+
+    public function postedBy()
+    {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function approvedBy() {
+    public function approvedBy()
+    {
         return $this->belongsTo(User::class, 'approved_by');
     }
 
-    public function rejected_by() {
+    public function rejected_by()
+    {
         return $this->belongsTo(User::class, 'rejected_by');
     }
 }

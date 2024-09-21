@@ -42,7 +42,8 @@
                         src="{{ Auth::user()->image ? asset('storage/profile/images/' . Auth::user()->image) : asset('storage/profile/images/default.jpg') }}"
                         onerror="this.onerror=null;this.src='{{ asset('storage/profile/images/default.jpg') }}';"
                         alt="Profile">
-                    {{ Auth::user()->alumniInformation->getName() ?? Auth::user()->adminInformation->getName() }}
+                        {{ optional(Auth::user()->alumniInformation)->getName() ?? optional(Auth::user()->adminInformation)->getName() ?? Auth::user()->username }}
+
                 </button>
 
                 <div id="sticky-navbar-dropdown"

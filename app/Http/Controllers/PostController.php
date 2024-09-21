@@ -6,6 +6,7 @@ use App\Models\announcement;
 use App\Models\Event;
 use App\Models\News;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,12 +20,29 @@ class PostController extends Controller
         $user = Auth::user();
 
         $data = [
-            'posts' => Post::all()->sortByDesc('created_at'),
             'user' => $user,
         ];
+
         return view('posts.index', $data);
     }
+    public function apiIndex()
+    {
+        $user = Auth::user();
+        $posts = Post::with(['likes.user', 'comments.user', 'comments.deletedBy', 'postedBy.alumniInformation', 'postedBy.adminInformation', 'approvedBy', 'rejected_by', 'event', 'announcement', 'news'])
+                ->where('group_id', null)
+                ->orderBy('created_at', 'desc')
+                ->get();
 
+        $data = [
+            'posts' => $posts,
+            'user' => $user,
+        ];
+
+
+        return response()->json([
+            'data' => $data,
+        ], 200);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -158,7 +176,28 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $user = Auth::user();
+
+        if($post) {
+            $data = [
+                'post' => $post->loadCount(['likes', 'comments']),
+                'user' => $user,
+            ];
+        }
+
+        return view('posts.show', $data);
+    }
+
+    public function apiShow(string $id)
+    {
+        $user = Auth::user();
+        $data = [
+            'post' => Post::with(['likes.user', 'comments.user', 'comments.deletedBy', 'postedBy.alumniInformation', 'postedBy.adminInformation', 'approvedBy', 'rejected_by', 'event', 'announcement', 'news'])->where('group_id', null)->where('id', $id)->first(),
+            'user' => $user,
+        ];
+        return response()->json([
+            'data' => $data,
+        ], 200);
     }
 
     /**
@@ -180,8 +219,10 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(string $id)
     {
-        //
+
+
+        dd(Auth::user(), Post::where('id', $id)->first());
     }
 }
