@@ -12,7 +12,7 @@ class GroupAdmin extends Model
 
     public $table = 'group_admins';
 
-    protected $fillable = ['user_id', 'group_id'];
+    protected $fillable = ['user_id', 'group_id', 'created_by'];
 
     public function group()
     {

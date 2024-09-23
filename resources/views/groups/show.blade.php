@@ -12,24 +12,25 @@
                 <p> {{ $group->name }}</p>
                 <p> {{ $group->description }}</p>
                 <div class="flex gap-4">
-                    @if($status === 'not a member')
-                        <form action="{{ route('group-members.store') }}" method="post">
-                            @csrf
-                            <input type="hidden" name="group_id" value="{{ $group->id }}">
-                            <button type="submit">Join Group</button>
-                        </form>
-                    @elseif($status === 'pending')
-                    <form action="{{ route('group-members.destroy', ['groupMember' => $groupMember->id]) }}" method="post">
-                        @csrf
-                        @method('delete')
-                        <button type="submit">Cancel Request</button>
-                        @if(session('status') && session('errors'))
-                            <p>{{ session('status') }} {{ session('errors') }}</p>
-                        @endif
-                    </form>
-                    @endif
-                    @if($isAdmin)
+                    @if($isAdmin | Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
                         <a href="">Edit</a>
+                    @else
+                        @if($status === 'not a member')
+                            <form action="{{ route('group-members.store') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="group_id" value="{{ $group->id }}">
+                                <button type="submit">Join Group</button>
+                            </form>
+                        @elseif($status === 'pending')
+                            <form action="{{ route('group-members.destroy', ['groupMember' => $groupMember->id]) }}" method="post">
+                                @csrf
+                                @method('delete')
+                                <button type="submit">Cancel Request</button>
+                                @if(session('status') && session('errors'))
+                                    <p>{{ session('status') }} {{ session('errors') }}</p>
+                                @endif
+                            </form>
+                        @endif
                     @endif
                 </div>
             </div>

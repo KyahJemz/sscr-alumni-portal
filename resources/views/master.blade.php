@@ -923,10 +923,13 @@
             @include('navigation.nav-sticky')
             @yield('content')
             @include('footer.index')
+            <div id="alert-container" class="fixed bottom-4 right-4 space-y-4 z-50"></div>
         </main>
     </div>
+    @include('utils.utils')
+    @include('modal.confirmation')
+    @include('modal.alert')
     @yield('scripts')
-    @include('utils/utils')
 </body>
 
 </html>

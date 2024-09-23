@@ -25,23 +25,17 @@ class CommentController extends Controller
             $request->validate([
                 'comment' => 'required',
                 'post_id' => 'required|exists:posts,id',
-                'user_id' => 'required|exists:users,id',
             ]);
 
             Comment::create([
                 'post_id' => $request->post_id,
-                'commented_by' => $request->user_id,
+                'commented_by' => Auth::user()->id,
                 'deleted_by' => null,
                 'content' => $request->comment,
             ]);
 
             return response()->json([
                 'message' => 'Successfully added comment',
-                'data' => [
-                    'post_id' => $request->post_id,
-                    'user_id' => $request->user_id,
-                    'comment' => $request->comment,
-                ]
             ], 201);
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
@@ -72,28 +66,22 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function apiDestroy(Request $request)
     {
         $request->validate([
             'comment_id' => 'required|exists:comments,id',
-            'post_id' => 'required|exists:posts,id',
-            'user_id' => 'required|exists:users,id',
         ]);
 
         $comment = Comment::find($request->comment_id);
 
         if ($comment) {
             $comment->update([
-                'deleted_by' => $request->user_id,
+                'deleted_by' => Auth::user()->id,
             ]);
             $comment->delete();
 
             return response()->json([
-                'message' => 'Comment successfully deleted',
-                'data' => [
-                    'post_id' => $request->post_id,
-                    'user_id' => $request->user_id,
-                ]
+                'message' => 'Comment successfully deleted'
             ], 200);
         } else {
             return response()->json([

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
 use App\Models\Like;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,10 +24,9 @@ class LikeController extends Controller
         try {
             $request->validate([
                 'post_id' => 'required|exists:posts,id',
-                'user_id' => 'required|exists:users,id',
             ]);
 
-            $existingLike = Like::withTrashed()->where('liked_by', $request->user_id)->where('post_id',  $request->post_id)->first();
+            $existingLike = Like::withTrashed()->where('liked_by', Auth::user()->id)->where('post_id',  $request->post_id)->first();
 
             if ($existingLike) {
                 if ($existingLike->trashed()) {
@@ -36,24 +34,16 @@ class LikeController extends Controller
                 } else {
                     return response()->json([
                         'message' => 'Successfully added like',
-                        'data' => [
-                            'post_id' => $request->post_id,
-                            'user_id' => $request->user_id,
-                        ]
                     ], 201);
                 }
             } else {
                 Like::create([
-                    'liked_by' => $request->user_id,
+                    'liked_by' => Auth::user()->id,
                     'post_id' => $request->post_id,
                 ]);
             }
             return response()->json([
                 'message' => 'Successfully added like',
-                'data' => [
-                    'post_id' => $request->post_id,
-                    'user_id' => $request->user_id,
-                ]
             ], 201);
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
@@ -84,26 +74,21 @@ class LikeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function apiDestroy(Request $request)
     {
         try {
             $request->validate([
                 'post_id' => 'required|exists:posts,id',
-                'user_id' => 'required|exists:users,id',
             ]);
 
-            Like::where('liked_by', $request->user_id)->where('post_id', $request->post_id)->delete();
+            Like::where('liked_by', Auth::user()->id)->where('post_id', $request->post_id)->delete();
 
             return response()->json([
-                'message' => 'Comment successfully deleted',
-                'data' => [
-                    'post_id' => $request->post_id,
-                    'user_id' => $request->user_id,
-                ]
+                'message' => 'Like successfully deleted',
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Comment not found',
+                'message' => 'Like not found',
             ], 404);
         }
     }

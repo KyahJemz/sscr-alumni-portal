@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminInformationController;
 use App\Http\Controllers\AlumniInformationController;
 use App\Http\Controllers\ChatController;
@@ -47,6 +48,16 @@ Route::middleware('auth')->group(function () {
     Route::put('/user/{user}', [UserController::class, 'update'])->name('user.update');
     Route::patch('/user/{user}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+
+    // ACCOUNT
+    Route::get('/accounts', [AccountController::class, 'index'])->name('account.index');
+    Route::get('/accounts/create', [AccountController::class, 'create'])->name('account.create');
+    Route::post('/accounts', [AccountController::class, 'store'])->name('account.store');
+    Route::get('/accounts/{user}', [AccountController::class, 'show'])->name('account.show');
+    Route::get('/accounts/{user}/edit', [AccountController::class, 'edit'])->name('account.edit');
+    Route::put('/accounts/{user}', [AccountController::class, 'update'])->name('account.update');
+    Route::patch('/accounts/{user}', [AccountController::class, 'update'])->name('account.update');
+    Route::delete('/accounts/{user}', [AccountController::class, 'destroy'])->name('account.destroy');
 
     // ALUMNI INFORMATION
     Route::get('/alumni-information', [AlumniInformationController::class, 'index'])->name('alumni-information.index');
@@ -135,10 +146,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
     Route::get('/api/posts/{id}', [PostController::class, 'apiShow'])->name('api.posts.show');
-    Route::get('/posts/{id}/edit', [PostController::class, 'edit'])->name('posts.edit');
-    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
     Route::patch('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
-    Route::delete('/posts/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
+    Route::delete('/posts/{id}', [PostController::class, 'apiDestroy'])->name('api.posts.destroy');
 
     // GROUP POSTS
     Route::get('/group/{groupId}/posts', [GroupController::class, 'index'])->name('group.posts.index');
@@ -147,7 +157,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/group/{groupId}/posts/{postId}', [GroupController::class, 'show'])->name('group.posts.show');
     Route::get('/group/{groupId}/posts/{postId}/edit', [GroupController::class, 'edit'])->name('group.posts.edit');
     Route::put('/group/{groupId}/posts/{postId}', [GroupController::class, 'update'])->name('group.posts.update');
-    Route::patch('/group/{groupId}/posts/{postId}', [GroupController::class, 'update'])->name('group.posts.update');
+    Route::patch('/group/{groupId}/posts/{vpostId}', [GroupController::class, 'update'])->name('group.posts.update');
     Route::delete('/group/{groupId}/posts/{postId}', [GroupController::class, 'destroy'])->name('group.posts.destroy');
 
     // MESSAGES
@@ -173,22 +183,22 @@ Route::middleware('auth')->group(function () {
     // COMMENTS
     //Route::get('/comment', [CommentController::class, 'index'])->name('comment.index');
     //Route::get('/comment/create', [CommentController::class, 'create'])->name('comment.create');
-    Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
+    Route::post('/api/comment', [CommentController::class, 'store'])->name('api.comment.store');
     //Route::get('/comment/{comment}', [CommentController::class, 'show'])->name('comment.show');
     //Route::get('/comment/{comment}/edit', [CommentController::class, 'edit'])->name('comment.edit');
     //Route::put('/comment/{comment}', [CommentController::class, 'update'])->name('comment.update');
     //Route::patch('/comment/{comment}', [CommentController::class, 'update'])->name('comment.update');
-    Route::delete('/comment', [CommentController::class, 'destroy'])->name('comment.destroy');
+    Route::delete('/api/comment', [CommentController::class, 'apiDestroy'])->name('api.comment.destroy');
 
     // LIKES
     //Route::get('/like', [LikeController::class, 'index'])->name('like.index');
     //Route::get('/like/create', [LikeController::class, 'create'])->name('like.create');
-    Route::post('/like', [LikeController::class, 'store'])->name('like.store');
+    Route::post('/api/like', [LikeController::class, 'store'])->name('api.like.store');
     //Route::get('/like/{like}', [LikeController::class, 'show'])->name('like.show');
     //Route::get('/like/{like}/edit', [LikeController::class, 'edit'])->name('like.edit');
     //Route::put('/like/{like}', [LikeController::class, 'update'])->name('like.update');
     //Route::patch('/like/{like}', [LikeController::class, 'update'])->name('like.update');
-    Route::delete('/like', [LikeController::class, 'destroy'])->name('like.destroy');
+    Route::delete('/api/like', [LikeController::class, 'apiDestroy'])->name('api.like.destroy');
 
 
 

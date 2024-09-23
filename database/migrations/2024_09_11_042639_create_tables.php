@@ -29,15 +29,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('deleted_by')->nullable()->constrained('users');
-            $table->foreignId('approved_by')->nullable()->constrained('users');
-            $table->foreignId('rejected_by')->nullable()->constrained('users');
             $table->string('name');
             $table->text('description');
-            $table->text('image');
+            $table->text('image')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->timestamp('approved_at')->nullable();
-            $table->timestamp('rejected_at')->nullable();
         });
 
         Schema::create('news', function (Blueprint $table) {

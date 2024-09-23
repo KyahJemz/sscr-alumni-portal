@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Models\GroupAdmin;
 use App\Models\GroupMember;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GroupController extends Controller
 {
@@ -25,6 +29,15 @@ class GroupController extends Controller
             'recommended' => $recommended,
             'user' => $user
         ];
+        if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') {
+            $data['alumni_list'] = User::where('role', 'alumni')
+                ->whereNull('deleted_at')
+                ->whereNotNull('approved_at')
+                ->whereHas('alumniInformation')
+                ->with('alumniInformation')
+                ->get()->all();
+        }
+
         return view('groups.index', $data);
     }
 
@@ -40,9 +53,60 @@ class GroupController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
+{
+    // Validate incoming request data
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'required|string|max:1000',
+        'admin_ids' => 'required|string',
+    ]);
+
+        $proposedAdmins = json_decode($request->admin_ids);
+
+        if (!is_array($proposedAdmins)) {
+            return redirect()->back()->withErrors('Invalid admin list format.');
+        }
+
+    $imageName = null;
+    if ($request->hasFile('image')) {
+        $imageFile = $request->file('image');
+        $originalName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+        $imageName = 't_' . $originalName . '_' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
+        $imageFile->storeAs('public/groups/images', $imageName);
     }
+
+    DB::beginTransaction();
+
+    try {
+
+        $group = Group::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'created_by' => Auth::user()->id,
+            'image' => $imageName,
+        ]);
+
+
+        foreach ($proposedAdmins as $adminId) {
+            GroupAdmin::create([
+                'group_id' => $group->id,
+                'user_id' => $adminId,
+                'created_by' => Auth::user()->id
+            ]);
+        }
+
+        DB::commit();
+
+        return redirect()->route('groups.show', $group->id);
+
+    } catch (\Exception $e) {
+        DB::rollback();
+        dd($e);
+        Log::error('Error creating group: ', ['error' => $e->getMessage()]);
+        return redirect()->back()->withErrors('Failed to create the group. Please try again.');
+    }
+}
+
 
     /**
      * Display the specified resource.

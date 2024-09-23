@@ -196,21 +196,29 @@
             }
         }
 
-        document.getElementById('image-upload').addEventListener('change', function() {
-            handleFilePreview(this, 'image');
-        });
+        if (document.getElementById('image-upload')) {
+            document.getElementById('image-upload').addEventListener('change', function() {
+                handleFilePreview(this, 'image');
+            });
+        }
 
-        document.getElementById('video-upload').addEventListener('change', function() {
-            handleFilePreview(this, 'video');
-        });
+        if (document.getElementById('video-upload')) {
+            document.getElementById('video-upload').addEventListener('change', function() {
+                handleFilePreview(this, 'video');
+            });
+        }
 
-        document.getElementById('file-upload').addEventListener('change', function() {
-            handleFilePreview(this, 'file');
-        });
+        if (document.getElementById('file-upload')) {
+            document.getElementById('file-upload').addEventListener('change', function() {
+                handleFilePreview(this, 'file');
+            });
+        }
 
-        document.getElementById('thumbnail-upload').addEventListener('change', function() {
-            handleFilePreview(this, 'thumbnail');
-        });
+        if (document.getElementById('thumbnail-upload')) {
+            document.getElementById('thumbnail-upload').addEventListener('change', function() {
+                handleFilePreview(this, 'thumbnail');
+            });
+        }
 
         function changePostType(e) {
             const postForm = document.getElementById('post-form');
@@ -241,7 +249,10 @@
                     break;
             }
         }
-        document.getElementById('post-type-selector').addEventListener('change', changePostType);
+
+        if (document.getElementById('post-type-selector')) {
+            document.getElementById('post-type-selector').addEventListener('change', changePostType);
+        }
     </script>
 
     <script>
@@ -250,13 +261,8 @@
             optionsElement.classList.toggle('hidden');
         }
 
-        function editPost(postId) {
-            window.location.href = `/posts/${postId}/edit`;
-        }
-
-        function deletePost(postId) {
-            window.location.href = `/posts/${postId}/edit`;
-            deletePost
+        function deletePostConfirmation(postId) {
+            confirmation('Are you sure you want to delete this post?', () => deletePost(postId));
         }
 
         async function deletePost(postId) {
@@ -278,20 +284,26 @@
                     throw new Error(`Response status: ${response.status}`);
                 }
                 const json = await response.json();
+                alertModal(json.message);
                 getPosts();
             } catch (error) {
+                alertModal(error.message);
                 console.error(error.message);
             }
         }
     </script>
 
     <script>
+        function PostTemplate(post) {
+            const userHasLiked = post.likes.some(like => like.liked_by === +"{{ Auth::user()->id }}");
 
-        function PostTemplate(post, user) {
-            const fullName =
-                (post.posted_by.alumni_information?.first_name ?? post.posted_by.admin_information?.first_name) +
+            const postFullName =
+                    (post.posted_by.alumni_information?.first_name ?? post.posted_by.admin_information?.first_name) +
                 ' ' +
-                (post.posted_by.alumni_information?.last_name ?? post.posted_by.admin_information?.last_name);
+                    (post.posted_by.alumni_information?.last_name ?? post.posted_by.admin_information?.last_name);
+
+            const userFullName = "{{ optional($user->alumni_information)->first_name ?? optional($user->admin_information)->first_name }} {{ optional($user->alumni_information)->last_name ?? optional($user->admin_information)->last_name }}";
+
             const type = `${post.type.charAt(0).toUpperCase() + post.type.slice(1)} on ${getHumanReadableDate(new Date(post.created_at))}`;
             const hrs = getTimeAgo(new Date(post.approved_at ?? post.created_at));
 
@@ -370,20 +382,17 @@
                 </div>
             ` : '';
 
-            const userHasLiked = post.likes.some(like => like.liked_by === user.id);
             const likeSection = `
                 <div class="flex justify-around items-center mt-4 text-gray-700 border-y-2 border-gray-300 py-2 w-full">
                     ${userHasLiked ? `
                         <form onsubmit="deleteLike(event)" class="flex items-center gap-2 text-sscr-red">
                             <input type="hidden" name="post_id" value="${post.id}">
-                            <input type="hidden" name="user_id" value="${user.id}">
                             <button type="submit" class="like">@include('components.icons.heart-filled')</button>
                             <a href="/posts/${post.id}" class="text-sm hover:text-sscr-red text-gray-600 hover:underline">${post.likes.length > 1 ? "you and " + (post.likes.length - 1) + " others" : "you"} liked</a>
                         </form>
                     ` : `
                         <form onsubmit="sendLike(event)" class="flex items-center gap-2 text-sscr-red">
                             <input type="hidden" name="post_id" value="${post.id}">
-                            <input type="hidden" name="user_id" value="${user.id}">
                             <button type="submit" class="like">@include('components.icons.heart')</button>
                             <a class="text-sm hover:text-sscr-red text-gray-600 hover:underline">${post.likes.length} Likes</a>
                         </form>
@@ -398,13 +407,12 @@
             const commentSection = `
                 <div class="mt-4 space-y-2">
                     <div class="bg-gray-100 p-2 rounded-md shadow-md flex gap-2 items-start">
-                        <img src="storage/profile/images/${user.image || 'default.jpg'}" alt="Profile Image" class="w-8 h-8 rounded-full object-cover bg-gray-200">
+                        <img src="{{ asset('storage/profile/images/' . ($user->image ?? 'default.jpg')) }}" alt="Profile Image" class="w-8 h-8 rounded-full object-cover bg-gray-200">
                         <div class="flex-1">
-                            <p class="text-sm font-bold mb-1">${fullName}</p>
+                            <p class="text-sm font-bold mb-1">${userFullName}</p>
                             <form onsubmit="sendComment(event)" class="flex flex-row gap-2 content-center">
                                 <textarea name="comment" class="w-full p-2 text-xs border border-gray-300 rounded-md" rows="2" placeholder="Add a comment..."></textarea>
                                 <input type="hidden" name="post_id" value="${post.id}">
-                                <input type="hidden" name="user_id" value="${user.id}">
                                 <button type="submit" class="bg-sscr-red text-white px-2 py-1 rounded-md mt-2 text-nowrap">Send</button>
                             </form>
                         </div>
@@ -413,16 +421,11 @@
                         <div class="bg-gray-100 p-2 rounded-md mb-2 flex gap-2 items-start shadow-md">
                             <img src="storage/profile/images/${comment.user.image || 'default.jpg'}" alt="Profile Image" class="w-8 h-8 rounded-full object-cover bg-gray-200">
                             <div class="flex-1 relative">
-                                <p class="text-sm font-bold">${fullName}</p>
+                                <p class="text-sm font-bold">${(comment.user.alumni_information?.first_name ?? comment.user.admin_information?.first_name) + ' ' + (comment.user.alumni_information?.last_name ?? comment.user.admin_information?.last_name)}</p>
                                 <p class="text-xs font-light">${comment.content.replace(/\n/g, '<br>')}</p>
                                 <p class="text-xs text-gray-400">${getTimeAgo(new Date(comment.created_at))}</p>
-                                ${comment.user.id === user.id || user.role !== 'alumni' ? `
-                                    <form onsubmit="deleteComment(event)" method="POST" class="absolute bottom-0 right-0">
-                                        <input type="hidden" name="post_id" value="${post.id}">
-                                        <input type="hidden" name="user_id" value="${user.id}">
-                                        <input type="hidden" name="comment_id" value="${comment.id}">
-                                        <button class="text-xs text-gray-400 hover:text-sscr-red" type="submit">Delete Comment</button>
-                                    </form>
+                                ${comment.user.id === +"{{Auth::user()->id}}" || "{{Auth::user()->role}}" === 'cict_admin' || "{{Auth::user()->role}}" === 'alumni_coordinator' ? `
+                                    <button class="absolute bottom-0 right-0 text-xs text-gray-400 hover:text-sscr-red" type="button" onclick="deleteCommentConfirmation(${comment.id})">Delete Comment</button>
                                 ` : ''}
                             </div>
                         </div>
@@ -437,18 +440,18 @@
                             alt="Profile Image"
                             class="border border-gray-300 dark:border-gray-700 w-12 h-12 rounded-full bg-gray-200">
                         <div class="flex-1">
-                            <p class="text-md font-bold">${fullName}</p>
+                            <p class="text-md font-bold">${postFullName}</p>
                             <p class="text-xs font-light">${type}</p>
                             <p class="text-xs font-light">${hrs}</p>
                         </div>
-                        <button class="text-sscr-red absolute top-0 right-0" onclick="openPostOptions(${post.id})">
-                            @include('components.icons.more')
-                        </button>
-                        ${post.posted_by.id === user.id || user.role === 'cict_admin' || user.role === 'alumni_coordinator' ? `
+                        ${post.posted_by.id === +"{{Auth::user()->id}}" || "{{Auth::user()->role}}" === 'cict_admin' || "{{Auth::user()->role}}" === 'alumni_coordinator' ? `
+                            <button class="text-sscr-red absolute top-0 right-0" onclick="openPostOptions(${post.id})">
+                                @include('components.icons.more')
+                            </button>
                             <div class="hidden absolute top-7 right-0 border border-gray-300 dark:border-gray-700 rounded-md px-4 py-2 space-y-2 bg-white"
                                 id="post-options-${post.id}">
-                                <div onclick="editPost(${post.id})" class="text-sm font-light cursor-pointer">Edit</div>
-                                <div onclick="deletePost(${post.id})" class="text-sm font-light cursor-pointer">Delete</div>
+                                <a href="/posts/${post.id}/edit" class="text-sm font-light cursor-pointer">Edit</a>
+                                <div onclick="deletePostConfirmation(${post.id})" class="text-sm font-light cursor-pointer">Delete</div>
                             </div>
                         ` : ''}
                     </div>
@@ -459,9 +462,9 @@
                         <div class="bg-gray-100 p-4 border border-gray-300 rounded-lg flex flex-row gap-4 items-center">
                             @include('components.icons.calendar')
                             <div>
-                            <div class="text-md font-bold text-sscr-red">${getHumanReadableDate(new Date(post.event.start_date))}${post?.event?.end_date ? ' to ' + getHumanReadableDate(new Date(post.event.end_date)) : ''}</div>
-                            <div class="text-md text-gray-500 font-semibold">${post.event.title}</div>
-                            <div class="text-sm text-gray-500 ">${post.event.location}</div>
+                                <div class="text-md font-bold text-sscr-red">${getHumanReadableDate(new Date(post.event.start_date))}${post?.event?.end_date ? ' to ' + getHumanReadableDate(new Date(post.event.end_date)) : ''}</div>
+                                <div class="text-md text-gray-500 font-semibold">${post.event.title}</div>
+                                <div class="text-sm text-gray-500 ">${post.event.location}</div>
                             </div>
                         </div>
                         <div class="text-md text-gray-700 font-light my-4 ">
@@ -497,6 +500,31 @@
             return template;
         }
 
+        async function getPosts() {
+            const postsContainer = document.getElementById('posts-container');
+            const url = "{{ route('api.posts') }}";
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                const json = await response.json();
+
+                postsContainer.innerHTML = '';
+
+                json.data.posts.forEach(post => {
+                    const postElement = PostTemplate(post);
+                    postsContainer.innerHTML += postElement;
+                });
+                addEvents();
+            } catch (error) {
+                console.error('Error fetching posts:', error.message);
+            }
+        }
+
         function addEvents() {
             document.querySelectorAll('[data-carousel="slide"]').forEach(slider => {
                 const prevButton = slider.querySelector('[data-carousel-prev]');
@@ -524,39 +552,11 @@
             });
         }
 
-        async function getPosts() {
-            const postsContainer = document.getElementById('posts-container');
-            const url = "{{ route('api.posts') }}";
-
-            try {
-                const response = await fetch(url);
-
-                if (!response.ok) {
-                    throw new Error(`Response status: ${response.status}`);
-                }
-
-                const json = await response.json();
-                console.log(json);
-
-                postsContainer.innerHTML = '';
-
-                json.data.posts.forEach(post => {
-                    const postElement = PostTemplate(post, json.data.user);
-                    postsContainer.innerHTML += postElement;
-                });
-                addEvents();
-            } catch (error) {
-                console.error('Error fetching posts:', error.message);
-            }
-        }
-
-        getPosts()
-
         async function sendComment(e) {
             e.preventDefault();
             const commentBox = e.target.querySelector('textarea');
             const formData = new FormData(e.target);
-            const url = "{{ route('comment.store') }}";
+            const url = "{{ route('api.comment.store') }}";
             try {
                 const response = await fetch(url, {
                     method: 'POST',
@@ -572,17 +572,23 @@
                 }
                 const json = await response.json();
                 commentBox.value = '';
+                alertModal(json.message);
                 getPosts();
             } catch (error) {
+                alertModal(error.message);
                 console.error(error.message);
             }
         }
 
-        async function deleteComment(e) {
-            e.preventDefault();
-            const formData = new FormData(e.target);
+        function deleteCommentConfirmation(commentId) {
+            confirmation('Are you sure you want to delete this comment?', () => deleteComment(commentId));
+        }
+
+        async function deleteComment(commentId) {
+            const formData = new FormData();
             formData.append("_method", "DELETE");
-            const url = "{{ route('comment.destroy') }}";
+            formData.append("comment_id", commentId);
+            const url = "/api/comment/";
             try {
                 const response = await fetch(url, {
                     method: 'POST',
@@ -597,8 +603,10 @@
                     throw new Error(`Response status: ${response.status}`);
                 }
                 const json = await response.json();
+                alertModal(json.message);
                 getPosts();
             } catch (error) {
+                alertModal(error.message);
                 console.error(error.message);
             }
         }
@@ -607,7 +615,7 @@
             e.preventDefault();
             const likeBox = e.target.querySelector('.like');
             const formData = new FormData(e.target);
-            const url = "{{ route('like.store') }}";
+            const url = "{{ route('api.like.store') }}";
             try {
                 const response = await fetch(url, {
                     method: 'POST',
@@ -633,7 +641,7 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             formData.append("_method", "DELETE");
-            const url = "{{ route('like.destroy') }}";
+            const url = "{{ route('api.like.destroy') }}";
             try {
                 const response = await fetch(url, {
                     method: 'POST',
@@ -653,5 +661,7 @@
                 console.error(error.message);
             }
         }
+
+        getPosts()
     </script>
 @endsection
