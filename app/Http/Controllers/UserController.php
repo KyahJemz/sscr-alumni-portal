@@ -15,9 +15,12 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index($id): View
     {
         $user = Auth::user();
+        if($id) {
+            $user = User::where('id', $id)->first();
+        }
         $information = $user->role === 'alumni' ? $user->alumniInformation : $user->adminInformation;
         $hobbies = $user->hobbies;
 
@@ -59,9 +62,12 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $user = Auth::user();
+        $userData = Auth::user();
+        if($user->id === Auth::user()->id || Auth::user()->role === 'cict_admin') {
+            $userData = $user;
+        }
         $data = [
-            'user' => $user,
+            'user' => $userData,
         ];
 
         return view('profiles.edit-user', $data);

@@ -164,6 +164,30 @@
                     @endif
                 </div>
             </div>
+        @else
+            <div class="bg-white shadow-md rounded-lg p-6 space-y-6">
+                <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center">
+                    More Information
+                    @if ($user->role === 'alumni')
+                        <a href="{{ route('alumni-information.edit', ['alumniInformation' => $user->id]) }}"
+                            class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
+                    @else
+                        <a href="{{ route('admin-information.edit', ['adminInformation' => $user->id]) }}"
+                            class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
+                    @endif
+                </h2>
+                <div class="border-b border-gray-200 pb-6 mb-6">
+                    <h2 class="text-md font-semibold text-gray-800 mb-4">Additional Information</h2>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex flex-col">
+                            <p class="font-semibold">{{ $information->department ?? 'N/A' }}</p>
+                            <p class="font-light text-gray-500">Department</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
         @endif
     </div>
 @endsection

@@ -897,9 +897,9 @@
     </style>
     @yield('css')
     <style>
-        /* * {
+        * {
                 border: 1px solid black
-            } */
+            }
 
         /* For Webkit-based browsers (Chrome, Safari and Opera) */
         .scrollbar-hide::-webkit-scrollbar {
@@ -922,9 +922,9 @@
         <main class="flex-grow relative h-full">
             @include('navigation.nav-sticky')
             @yield('content')
-            @include('footer.index')
-            <div id="alert-container" class="fixed bottom-4 right-4 space-y-4 z-50"></div>
         </main>
+        @include('footer.index')
+        <div id="alert-container" class="fixed bottom-4 right-4 space-y-4 z-50"></div>
     </div>
     @include('utils.utils')
     @include('modal.confirmation')
@@ -933,3 +933,4 @@
 </body>
 
 </html>
+

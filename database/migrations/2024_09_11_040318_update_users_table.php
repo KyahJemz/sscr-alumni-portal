@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('deleted_by')->nullable()->constrained('users');
             $table->foreignId('disabled_by')->nullable()->constrained('users');
             $table->foreignId('rejected_by')->nullable()->constrained('users');
+            $table->string('name')->default(null)->after('id')->change();
             $table->string('username')->unique()->after('name');
             $table->string('role')->after('password');
             $table->boolean('is_active_now')->default(false)->after('role');

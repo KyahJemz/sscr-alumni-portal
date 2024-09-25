@@ -24,6 +24,7 @@ class AdminInformation extends Model
         'middle_name',
         'suffix',
         'department',
+               'user_id'
     ];
 
     public function getFullName(){

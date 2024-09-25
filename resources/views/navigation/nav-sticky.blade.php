@@ -52,12 +52,19 @@
                         class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
                         Profile
                     </a>
-                    <button id="send-feedback-trigger"
-                        type="button"
-                        onclick="document.getElementById('send-feedback-modal').classList.toggle('hidden');"
-                        class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
-                        Send Feedback
-                    </button>
+                    @if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator' || Auth::user()->role === 'program_chair')
+                        <a href="{{ route('feedback.index') }}"
+                            class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
+                            Feedback
+                        </a>
+                    @else
+                        <button id="send-feedback-trigger"
+                            type="button"
+                            onclick="document.getElementById('send-feedback-modal').classList.toggle('hidden');"
+                            class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
+                            Send Feedback
+                        </button>
+                    @endif
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <a href="{{ route('logout') }}"
@@ -72,49 +79,50 @@
     </div>
 </div>
 
-<div id="send-feedback-modal" class="hidden fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
-    <div class="fixed inset-0 bg-black opacity-50"></div>
-    <div id="send-feedback-form" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-96 p-4 relative">
-        <form action="{{ route('feedback.store') }}" method="POST">
-            @csrf
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Send Feedback
-                <button type="button" onclick="document.getElementById('send-feedback-modal').classList.toggle('hidden');" class="absolute top-4 right-4 text-sscr-red">@include('components.icons.x')</button>
-            </h2>
-            <div id="feedback-stars-container" class="flex gap-2 justify-center my-4">
-                <a id="star-1" class="star text-sscr-red cursor-pointer" onclick="setRating(1)">@include('components.icons.star-filled')</a>
-                <a id="star-2" class="star text-sscr-red cursor-pointer" onclick="setRating(2)">@include('components.icons.star')</a>
-                <a id="star-3" class="star text-sscr-red cursor-pointer" onclick="setRating(3)">@include('components.icons.star')</a>
-                <a id="star-4" class="star text-sscr-red cursor-pointer" onclick="setRating(4)">@include('components.icons.star')</a>
-                <a id="star-5" class="star text-sscr-red cursor-pointer" onclick="setRating(5)">@include('components.icons.star')</a>
-            </div>
-            <input class="hidden" id="feedback-rating" type="number" hidden name="rating" value="1">
-            <textarea name="feedback" required class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-gray-100" rows="5"
-                placeholder="Write your feedback..."></textarea>
-            <input type="submit"
-                class="w-full bg-sscr-red text-white font-light py-2 px-4 rounded-md cursor-pointer" value="Submit Feedback" />
-        </form>
+@if (Auth::user()->role === 'alumni')
+    <div id="send-feedback-modal" class="hidden fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
+        <div class="fixed inset-0 bg-black opacity-50"></div>
+        <div id="send-feedback-form" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-96 p-4 relative">
+            <form action="{{ route('feedback.store') }}" method="POST">
+                @csrf
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Send Feedback
+                    <button type="button" onclick="document.getElementById('send-feedback-modal').classList.toggle('hidden');" class="absolute top-4 right-4 text-sscr-red">@include('components.icons.x')</button>
+                </h2>
+                <div id="feedback-stars-container" class="flex gap-2 justify-center my-4">
+                    <a id="star-1" class="star text-sscr-red cursor-pointer" onclick="setRating(1)">@include('components.icons.star-filled')</a>
+                    <a id="star-2" class="star text-sscr-red cursor-pointer" onclick="setRating(2)">@include('components.icons.star')</a>
+                    <a id="star-3" class="star text-sscr-red cursor-pointer" onclick="setRating(3)">@include('components.icons.star')</a>
+                    <a id="star-4" class="star text-sscr-red cursor-pointer" onclick="setRating(4)">@include('components.icons.star')</a>
+                    <a id="star-5" class="star text-sscr-red cursor-pointer" onclick="setRating(5)">@include('components.icons.star')</a>
+                </div>
+                <input class="hidden" id="feedback-rating" type="number" hidden name="rating" value="1">
+                <textarea name="feedback" required class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-gray-100" rows="5"
+                    placeholder="Write your feedback..."></textarea>
+                <input type="submit"
+                    class="w-full bg-sscr-red text-white font-light py-2 px-4 rounded-md cursor-pointer" value="Submit Feedback" />
+            </form>
+        </div>
     </div>
-</div>
+@endif
+
+@if (Auth::user()->role === 'alumni')
+    <script>
+            function setRating(rating) {
+            const stars = document.querySelectorAll('#feedback-stars-container a');
+            const ratingInput = document.getElementById('feedback-rating');
+            ratingInput.value = `${rating}`;
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.innerHTML = `@include('components.icons.star-filled')`;
+                } else {
+                    star.innerHTML = `@include('components.icons.star')`;
+                }
+            });
+        }
+    </script>
+@endif
 
 <script>
-
-
-    function setRating(rating) {
-        const stars = document.querySelectorAll('#feedback-stars-container a');
-        const ratingInput = document.getElementById('feedback-rating');
-        ratingInput.value = `${rating}`;
-        stars.forEach((star, index) => {
-            if (index < rating) {
-                star.innerHTML = `@include('components.icons.star-filled')`;
-            } else {
-                star.innerHTML = `@include('components.icons.star')`;
-            }
-        });
-    }
-
-
-
-
 
     window.addEventListener('scroll', function() {
         const navbar = document.getElementById('sticky-navbar');
@@ -148,3 +156,11 @@
         }
     });
 </script>
+
+
+
+
+
+
+
+

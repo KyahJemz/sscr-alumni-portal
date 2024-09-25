@@ -49,7 +49,8 @@ class AlumniInformation extends Model
         'birth_date',
         'batch',
         'phone',
-        'occupation'
+        'occupation',
+        'user_id'
     ];
 
 

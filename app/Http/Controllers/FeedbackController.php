@@ -13,8 +13,30 @@ class FeedbackController extends Controller
      */
     public function index()
     {
-        $feedbacks = Feedback::all();
-        dd($feedbacks);
+        $ratings = Feedback::orderBy('id', 'DESC')->get();
+        $sum = 0;
+        $ratingsSummary = [
+            ['rating'=>1, 'count'=>0, 'percentage'=>0],
+            ['rating'=>2, 'count'=>0, 'percentage'=>0],
+            ['rating'=>3, 'count'=>0, 'percentage'=>0],
+            ['rating'=>4, 'count'=>0, 'percentage'=>0],
+            ['rating'=>5, 'count'=>0, 'percentage'=>0],
+        ];
+
+        foreach ($ratings as $value) {
+            $sum += $value->rating;
+            $ratingsSummary[$value->rating - 1]['count'] += 1;
+            $ratingsSummary[$value->rating - 1]['percentage'] = round(($ratingsSummary[$value->rating - 1]['count'] / count($ratings)) * 100, 2);
+        }
+
+        $data = [
+            'feedbacks' => $ratings,
+            'ratings' => $ratingsSummary,
+            'counts' => count($ratings),
+            'total' => round($sum / count($ratings), 2),
+        ];
+
+        return view('feedbacks.index', $data);
     }
 
     /**

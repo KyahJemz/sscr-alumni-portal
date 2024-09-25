@@ -15,7 +15,6 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserHobbiesController;
-use App\Models\Chat;
 use Illuminate\Support\Facades\Route;
 
 // 'roles' => [
@@ -40,7 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // USER
-    Route::get('/user', [UserController::class, 'index'])->name('user.index');
+    Route::get('/user/{id?}', [UserController::class, 'index'])->name('user.index');
     Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
     Route::post('/user', [UserController::class, 'store'])->name('user.store');
     Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show');
@@ -51,13 +50,17 @@ Route::middleware('auth')->group(function () {
 
     // ACCOUNT
     Route::get('/accounts', [AccountController::class, 'index'])->name('account.index');
-    Route::get('/accounts/create', [AccountController::class, 'create'])->name('account.create');
-    Route::post('/accounts', [AccountController::class, 'store'])->name('account.store');
+    Route::get('/api/accounts', [AccountController::class, 'apiIndex'])->name('api.account.index');
+    Route::post('/api/accounts', [AccountController::class, 'apiStore'])->name('api.account.store');
+    Route::delete('/api/accounts/{user}', [AccountController::class, 'apiDestroy'])->name('api.account.destroy');
+    Route::post('/api/accounts/approval/{user}', [AccountController::class, 'apiApproval'])->name('api.account.approval');
+    Route::post('/api/accounts/activation/{user}', [AccountController::class, 'apiActivation'])->name('api.account.activation');
+
     Route::get('/accounts/{user}', [AccountController::class, 'show'])->name('account.show');
     Route::get('/accounts/{user}/edit', [AccountController::class, 'edit'])->name('account.edit');
     Route::put('/accounts/{user}', [AccountController::class, 'update'])->name('account.update');
-    Route::patch('/accounts/{user}', [AccountController::class, 'update'])->name('account.update');
-    Route::delete('/accounts/{user}', [AccountController::class, 'destroy'])->name('account.destroy');
+    Route::patch('/api/accounts/{user}', [AccountController::class, 'update'])->name('account.update');
+
 
     // ALUMNI INFORMATION
     Route::get('/alumni-information', [AlumniInformationController::class, 'index'])->name('alumni-information.index');

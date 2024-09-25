@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AlumniInformation;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -63,6 +64,10 @@ class AlumniInformationController extends Controller
             'user' => $user,
             'information' => $alumniInformation,
         ];
+
+        if($user->role !== 'cict_admin') {
+            $data['user'] = User::find($alumniInformation->user_id);
+        }
 
         return view('profiles.edit-alumni-information',$data );
     }

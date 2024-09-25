@@ -1,11 +1,11 @@
 <div class="flex mb-4 gap-4 items-center">
-    <input type="text" id="search" oninput="searchUsers()" placeholder="Search users..." class="border rounded-lg p-2 w-full text-xs" />
+    <input type="text" oninput="searchAlumni(event)" placeholder="Search alumni..." class="border rounded-lg p-2 w-full text-xs" />
     <p class="text-md">Filters:</p>
     <div class="flex gap-2">
-        <button onclick="filterAccounts('all')" class="whitespace-nowrap text-sm bg-sscr-red text-white hover:bg-sscr-red/50 py-1 px-3 rounded">All Accounts</button>
-        <button onclick="filterAccounts('activated')" class="whitespace-nowrap text-sm bg-gray-200 hover:bg-sscr-red/50 hover:text-white py-1 px-3 rounded">For Approval</button>
-        <button onclick="filterAccounts('deactivated')" class="whitespace-nowrap text-sm bg-gray-200 hover:bg-sscr-red/50 hover:text-white py-1 px-3 rounded">Rejected Accounts</button>
-        <button onclick="filterAccounts('pending')" class="whitespace-nowrap text-sm bg-gray-200 hover:bg-sscr-red/50 hover:text-white py-1 px-3 rounded">Deactivated Accounts</button>
+        <button onclick="filterAlumniAccounts(event,'all')" class="whitespace-nowrap text-sm bg-sscr-red text-white bg-gray-200 hover:bg-sscr-red/50 hover:text-white py-1 px-3 rounded transition duration-150 ease-in-out">All</button>
+        <button onclick="filterAlumniAccounts(event,'for approval')" class="whitespace-nowrap text-sm bg-gray-200 hover:bg-sscr-red/50 hover:text-white py-1 px-3 rounded transition duration-150 ease-in-out">For Approval</button>
+        <button onclick="filterAlumniAccounts(event,'rejected')" class="whitespace-nowrap text-sm bg-gray-200 hover:bg-sscr-red/50 hover:text-white py-1 px-3 rounded transition duration-150 ease-in-out">Rejected</button>
+        <button onclick="filterAlumniAccounts(event,'deactivated')" class="whitespace-nowrap text-sm bg-gray-200 hover:bg-sscr-red/50 hover:text-white py-1 px-3 rounded transition duration-150 ease-in-out">Deactivated</button>
     </div>
 </div>
 

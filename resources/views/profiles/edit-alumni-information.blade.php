@@ -77,7 +77,7 @@
                             <label for="birth_date" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Birth Date</label>
                             <input id="birth_date" name="birth_date"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="date"
-                                value="{{ old('birth_date', $information->birth_date ?? '') }) }}" />
+                                value="{{ old('birth_date', $information->birth_date ?? '') }}" />
                         </div>
                         <div class="w-full md:w-1/4 px-3">
                             <label for="gender" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Gender</label>
