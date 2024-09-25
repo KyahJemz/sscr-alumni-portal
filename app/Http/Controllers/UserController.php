@@ -15,7 +15,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($id): View
+    public function index($id = 0): View
     {
         $user = Auth::user();
         if($id) {

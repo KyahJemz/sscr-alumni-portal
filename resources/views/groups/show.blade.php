@@ -40,10 +40,18 @@
             <div class="w-96">
                 <p class="flex text-sscr-red font-bold flex-row justify-between">Founded {{ $group->created_at->format('F j, Y') }}<a href="">@include('components.icons.more')</a></p>
                 <div>
-                    <p>members</p>
-                    <p>posts</p>
-                    <p>events</p>
-                    <p>announcements</p>
+                    <div>
+                        <p>{{ (count($group_data->members ?? []) + count($group_data->admins ?? [])) ?? 0 }}</p>
+                        <p class="text-sscr-red font-bold">Members</p>
+                    </div>
+                    <div>
+                        <p>{{ (count($group_data->posts  ?? [])) ?? 0 }}</p>
+                        <p class="text-sscr-red font-bold">Posts</p>
+                    </div>
+                    <div>
+                        <p>{{ (count($group_data->events  ?? [])) ?? 0 }}</p>
+                        <p class="text-sscr-red font-bold">Events</p>
+                    </div>
                 </div>
                 <div>
                     admins

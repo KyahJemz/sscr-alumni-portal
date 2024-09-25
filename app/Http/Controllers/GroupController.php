@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Models\GroupAdmin;
 use App\Models\GroupMember;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -130,14 +131,23 @@ class GroupController extends Controller
             $status = 'not a member';
         }
 
+        $group_data = [
+            'members' => GroupMember::where('group_id', $group->id)->whereNull('deleted_at')->whereNull('rejected_at')->whereNotNull('approved_at')->with(['user.alumniInformation', 'user.adminInformation'])->orderBy('created_at', 'desc')->get(),
+            'posts' => Post::where('group_id', $group->id)->whereNull('deleted_at')->whereNull('rejected_at')->whereNotNull('approved_at')->get(),
+            'events' => Post::where('group_id', $group->id)->whereNull('deleted_at')->whereNull('rejected_at')->whereNotNull('approved_at')->whereHas('event')->get(),
+            'admins' => GroupAdmin::where('group_id', $group->id)->whereNull('deleted_at')->orderBy('created_at', 'desc')->get(),
+        ];
+
         $data = [
             'group' => $group,
             'status' => $status, // member, not a member, pending
             'isAdmin' => $isAdmin,
             'groupMember' => $groupMembers,
-            'user' => $user
+            'user' => $user,
+            'group_data' => $group_data,
         ];
 
+        // dd($data);
         return view('groups.show', $data);
     }
 
