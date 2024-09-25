@@ -897,9 +897,9 @@
     </style>
     @yield('css')
     <style>
-        * {
+        /* * {
                 border: 1px solid black
-            }
+            } */
 
         /* For Webkit-based browsers (Chrome, Safari and Opera) */
         .scrollbar-hide::-webkit-scrollbar {
