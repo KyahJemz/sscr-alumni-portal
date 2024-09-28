@@ -2,6 +2,12 @@
 
 @section('content')
     <div class="container mx-auto px-4 py-6 max-w-7xl sm:px-6 lg:px-8 space-y-6">
+        <form action="{{ route('account.import') }}" method="post" enctype="multipart/form-data">
+            @csrf
+            <input type="file" name="file" id="" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+            <button type="submit">Import</button>
+        </form>
+
         <div class="bg-white shadow-md rounded-lg p-6 flex flex-col gap-6">
             <div class="flex justify-between items-center">
                 <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center">
@@ -330,7 +336,7 @@
         async function getAccounts() {
             const alumniContainer = document.getElementById('posts-container');
             const adminContainer = document.getElementById('posts-container');
-            const url = "{{ route('api.account.index') }}";
+            const url = "{{ route('api.account.index', ['type' => 'alumni']) }}";
 
             try {
                 const response = await fetch(url);

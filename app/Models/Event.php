@@ -12,7 +12,7 @@ class Event extends Model
 
     public $table = 'events';
 
-    protected $fillable = ['title', 'description', 'thumbnail', 'start_date', 'end_date', 'location', 'status'];
+    protected $fillable = ['title', 'description', 'thumbnail', 'start_date', 'end_date', 'location', 'status', 'contributions', 'amount'];
 
     public function post()
     {

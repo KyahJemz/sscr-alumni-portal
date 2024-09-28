@@ -29,6 +29,9 @@ class UserController extends Controller
             'information' => $information,
             'hobbies' => $hobbies,
         ];
+        if($user->role === 'alumni'){
+            $data['address'] = ($information->province ?? '') . ($information->city ?? '') . ($information->barangay ?? '') . ($information->street_address ?? '');
+        }
 
         return view('profiles.index', $data);
     }

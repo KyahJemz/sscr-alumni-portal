@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Announcement;
 use App\Models\Event;
+use App\Models\Group;
 use App\Models\News;
 use App\Models\Post;
 use App\Models\PostEditApproval;
@@ -107,6 +108,8 @@ class PostController extends Controller
                         'location' => 'nullable|string',
                         'description' => 'required|string',
                         'title' => 'required|string',
+                        'contributions' => 'nullable|string',
+                        'amount' => 'nullable|string',
                     ]);
                     $event = Event::create([
                         'title' => $request->title,
@@ -116,6 +119,8 @@ class PostController extends Controller
                         'end_date' => $request->endDate,
                         'status' => 'active',
                         'thumbnail' => $thumbnail,
+                        'contributions' => $request->contributions,
+                        'amount' => $request->amount,
                     ]);
                     break;
 
@@ -204,12 +209,12 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Post $post)
+    public function edit(Post $post, Group $group)
     {
         if($post) {
             $data = [
                 'user' => Auth::user(),
-                'post' => Post::with(['postedBy.alumniInformation', 'postedBy.adminInformation', 'event', 'announcement', 'news'])->where('group_id', null)->where('id', $post->id)->first(),
+                'post' => Post::with(['postedBy.alumniInformation', 'postedBy.adminInformation', 'event', 'announcement', 'news'])->where('id', $post->id)->first(),
             ];
         }
         return view('posts.edit', $data);
@@ -218,7 +223,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post, Group $group)
 {
 
     try {
@@ -373,21 +378,8 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function apiDestroy(string $id)
+    public function apiDestroy(Post $post)
     {
-        $validation = Validator::make(['id' => $id], [
-            'id' => 'required|exists:posts,id',
-        ]);
-
-        if ($validation->fails()) {
-            return response()->json([
-                'message' => 'Invalid post ID',
-                'errors' => $validation->errors(),
-            ], 400);
-        }
-
-        $post = Post::find($id);
-
         $post->deleted_by = Auth::user()->id;
         $post->save();
 

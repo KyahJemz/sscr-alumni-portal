@@ -147,7 +147,6 @@ class GroupController extends Controller
             'group_data' => $group_data,
         ];
 
-        // dd($data);
         return view('groups.show', $data);
     }
 

@@ -8,6 +8,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupMembersController;
+use App\Http\Controllers\GroupPostController;
 use App\Http\Controllers\HobbiesController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessagesController;
@@ -49,8 +50,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 
     // ACCOUNT
-    Route::get('/accounts', [AccountController::class, 'index'])->name('account.index');
-    Route::get('/api/accounts', [AccountController::class, 'apiIndex'])->name('api.account.index');
+    Route::post('/accounts/export', [AccountController::class, 'export'])->name('account.export');
+    Route::post('/api/accounts/import', [AccountController::class, 'apiImport'])->name('api.account.import');
+
+    Route::get('/accounts/{type}', [AccountController::class, 'index'])->name('account.index');
+    Route::get('/api/accounts/{type}', [AccountController::class, 'apiIndex'])->name('api.account.index');
+
+    // https://www.itsolutionstuff.com/post/laravel-11-import-export-excel-and-csv-file-tutorialexample.html
+
     Route::post('/api/accounts', [AccountController::class, 'apiStore'])->name('api.account.store');
     Route::delete('/api/accounts/{user}', [AccountController::class, 'apiDestroy'])->name('api.account.destroy');
     Route::post('/api/accounts/approval/{user}', [AccountController::class, 'apiApproval'])->name('api.account.approval');
@@ -124,13 +131,13 @@ Route::middleware('auth')->group(function () {
 
     // FEEDBACK
     Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
-    Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('feedback.create');
+    // Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('feedback.create');
     Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
-    Route::get('/feedback/{feedback}', [FeedbackController::class, 'show'])->name('feedback.show');
-    Route::get('/feedback/{feedback}/edit', [FeedbackController::class, 'edit'])->name('feedback.edit');
-    Route::put('/feedback/{feedback}', [FeedbackController::class, 'update'])->name('feedback.update');
-    Route::patch('/feedback/{feedback}', [FeedbackController::class, 'update'])->name('feedback.update');
-    Route::delete('/feedback/{feedback}', [FeedbackController::class, 'destroy'])->name('feedback.destroy');
+    // Route::get('/feedback/{feedback}', [FeedbackController::class, 'show'])->name('feedback.show');
+    // Route::get('/feedback/{feedback}/edit', [FeedbackController::class, 'edit'])->name('feedback.edit');
+    // Route::put('/feedback/{feedback}', [FeedbackController::class, 'update'])->name('feedback.update');
+    // Route::patch('/feedback/{feedback}', [FeedbackController::class, 'update'])->name('feedback.update');
+    // Route::delete('/feedback/{feedback}', [FeedbackController::class, 'destroy'])->name('feedback.destroy');
 
     // GROUP ADMINS
     // Route::get('/group-admins', [GroupAdminsController::class, 'index'])->name('group-members.index');
@@ -151,37 +158,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/posts/{id}', [PostController::class, 'apiShow'])->name('api.posts.show');
     Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
     Route::patch('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
-    Route::delete('/posts/{id}', [PostController::class, 'apiDestroy'])->name('api.posts.destroy');
+    Route::delete('/posts/{post}', [PostController::class, 'apiDestroy'])->name('api.posts.destroy');
 
     // GROUP POSTS
-    Route::get('/group/{groupId}/posts', [GroupController::class, 'index'])->name('group.posts.index');
-    Route::get('/group/{groupId}/posts/create', [GroupController::class, 'create'])->name('group.posts.create');
-    Route::post('/group/{groupId}/posts', [GroupController::class, 'store'])->name('group.posts.store');
-    Route::get('/group/{groupId}/posts/{postId}', [GroupController::class, 'show'])->name('group.posts.show');
-    Route::get('/group/{groupId}/posts/{postId}/edit', [GroupController::class, 'edit'])->name('group.posts.edit');
-    Route::put('/group/{groupId}/posts/{postId}', [GroupController::class, 'update'])->name('group.posts.update');
-    Route::patch('/group/{groupId}/posts/{vpostId}', [GroupController::class, 'update'])->name('group.posts.update');
-    Route::delete('/group/{groupId}/posts/{postId}', [GroupController::class, 'destroy'])->name('group.posts.destroy');
-
-    // MESSAGES
-    Route::get('/messages', [MessagesController::class, 'index'])->name('messages.index');
-    Route::get('/messages/create', [MessagesController::class, 'create'])->name('messages.create');
-    Route::post('/messages', [MessagesController::class, 'store'])->name('messages.store');
-    Route::get('/messages/{message}', [MessagesController::class, 'show'])->name('messages.show');
-    Route::get('/messages/{message}/edit', [MessagesController::class, 'edit'])->name('messages.edit');
-    Route::put('/messages/{message}', [MessagesController::class, 'update'])->name('messages.update');
-    Route::patch('/messages/{message}', [MessagesController::class, 'update'])->name('messages.update');
-    Route::delete('/messages/{message}', [MessagesController::class, 'destroy'])->name('messages.destroy');
-
-    // CHAT
-    Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
-    Route::get('/chats/create', [ChatController::class, 'create'])->name('chats.create');
-    Route::post('/chats', [ChatController::class, 'store'])->name('chats.store');
-    Route::get('/chats/{id}', [ChatController::class, 'show'])->name('chats.show');
-    Route::get('/chats/{id}/edit', [ChatController::class, 'edit'])->name('chats.edit');
-    Route::put('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
-    Route::patch('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
-    Route::delete('/chats/{id}', [ChatController::class, 'destroy'])->name('chats.destroy');
+    Route::get('/api/group/{group}/posts', [GroupPostController::class, 'apiIndex'])->name('api.group.posts.index');
+    Route::post('/api/group/{group}/posts', [GroupPostController::class, 'apiStore'])->name('api.group.posts.store');
+    Route::get('/group/{group}/posts/{post}', [GroupPostController::class, 'show'])->name('group.posts.show');
+    Route::get('/api/group/{group}/posts/{post}', [GroupPostController::class, 'apiShow'])->name('api.group.posts.show');
+    Route::get('/group/{group}/posts/{post}/edit', [GroupPostController::class, 'edit'])->name('group.posts.edit');
+    Route::patch('/api/group/{group}/posts/{post}', [GroupPostController::class, 'apiUpdate'])->name('api.group.posts.update');
+    Route::delete('/api/group/{group}/posts/{post}', [GroupPostController::class, 'apiDestroy'])->name('api.group.posts.destroy');
 
     // COMMENTS
     //Route::get('/comment', [CommentController::class, 'index'])->name('comment.index');
@@ -203,7 +189,25 @@ Route::middleware('auth')->group(function () {
     //Route::patch('/like/{like}', [LikeController::class, 'update'])->name('like.update');
     Route::delete('/api/like', [LikeController::class, 'apiDestroy'])->name('api.like.destroy');
 
+    // MESSAGES
+    Route::get('/messages', [MessagesController::class, 'index'])->name('messages.index');
+    Route::get('/messages/create', [MessagesController::class, 'create'])->name('messages.create');
+    Route::post('/messages', [MessagesController::class, 'store'])->name('messages.store');
+    Route::get('/messages/{message}', [MessagesController::class, 'show'])->name('messages.show');
+    Route::get('/messages/{message}/edit', [MessagesController::class, 'edit'])->name('messages.edit');
+    Route::put('/messages/{message}', [MessagesController::class, 'update'])->name('messages.update');
+    Route::patch('/messages/{message}', [MessagesController::class, 'update'])->name('messages.update');
+    Route::delete('/messages/{message}', [MessagesController::class, 'destroy'])->name('messages.destroy');
 
+    // CHAT
+    Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
+    Route::get('/chats/create', [ChatController::class, 'create'])->name('chats.create');
+    Route::post('/chats', [ChatController::class, 'store'])->name('chats.store');
+    Route::get('/chats/{id}', [ChatController::class, 'show'])->name('chats.show');
+    Route::get('/chats/{id}/edit', [ChatController::class, 'edit'])->name('chats.edit');
+    Route::put('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
+    Route::patch('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
+    Route::delete('/chats/{id}', [ChatController::class, 'destroy'])->name('chats.destroy');
 
 
 

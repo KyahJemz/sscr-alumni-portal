@@ -274,7 +274,7 @@
 
         async function getPosts() {
             const postsContainer = document.getElementById('posts-container');
-            const url = "{{ route('api.posts.show', ['id' => $post_id]) }}";
+            const url = "{{ route('api.group.posts.show', ['post' => $post_id, 'group' => $group->id]) }}";
 
             try {
                 const response = await fetch(url);

@@ -27,18 +27,20 @@
                             </p>
 
                             <div id="post-form" class="w-full space-y-2">
-                                <textarea placeholder="What's on your mind?" class="w-full p-2 rounded" name="content" id="" rows="3"></textarea>
+                                <textarea placeholder="What's on your mind?" class="w-full p-2 rounded text-sm" name="content" id="" rows="3"></textarea>
                             </div>
 
                             <div id="news-announcement-form" class="w-full hidden space-y-2">
-                                <input type="text" name="title" class="w-full p-2 rounded" placeholder="Title... *">
+                                <input type="text" name="title" class="w-full p-2 rounded text-sm" placeholder="Title... *">
                                 <textarea placeholder="What's on your mind? *" class="w-full p-2 rounded" name="description" id=""
                                     rows="3"></textarea>
                             </div>
 
                             <div id="event-form" class="w-full hidden space-y-2">
-                                <input type="text" name="location" class="w-full p-2 rounded -mt-2"
-                                    placeholder="Event location...">
+                                <input type="text" name="contributions" class="w-full p-2 rounded text-sm" placeholder="Contributions (optional)">
+                                <input type="text" name="amount" class="w-full p-2 rounded text-sm" placeholder="Amount (optional)">
+                                <input type="text" name="location" class="w-full p-2 rounded -mt-2 text-sm"
+                                    placeholder="Event location (optional)">
                                 <div class="w-full flex text-xs gap-2">
                                     <input type="datetime-local" name="startDate" id="startDate"
                                         class="text-xs cursor-pointer rounded p-2">
@@ -50,7 +52,7 @@
                             <div id="thumbnail-form" class="w-full hidden space-y-2">
                                 <p class="">Thumbnail:</p>
                                 <input id="thumbnail-upload" type="file" name="thumbnail"
-                                    class="w-full p-2 rounded -mt-2" placeholder="Thumbnail" accept="image/*">
+                                    class="w-full p-2 rounded -mt-2 text-sm" placeholder="Thumbnail" accept="image/*">
                                 <div id="thumbnail-preview"> </div>
                             </div>
 
@@ -464,12 +466,27 @@
                             <div>
                                 <div class="text-md font-bold text-sscr-red">${getHumanReadableDate(new Date(post.event.start_date))}${post?.event?.end_date ? ' to ' + getHumanReadableDate(new Date(post.event.end_date)) : ''}</div>
                                 <div class="text-md text-gray-500 font-semibold">${post.event.title}</div>
-                                <div class="text-sm text-gray-500 ">${post.event.location}</div>
+                                ${post.event.location
+                                    ? `<div class="text-sm text-gray-500 ">${post.event.location}</div>`
+                                    : ''}
                             </div>
                         </div>
                         <div class="text-md text-gray-700 font-light my-4 ">
                             ${post.event.description.replace(/\n/g, '<br>')}
                         </div>
+                        ${post.event?.contributions || post.event?.amount ? `
+                            <div class="text-sm text-gray-700 my-4 font-bold">Notes:
+                            ${post.event?.contributions ? `
+                                <div class="text-sm text-gray-700 font-light px-4">
+                                    Contributions: ${post.event.contributions}
+                                </div>
+                            ` : ""}
+                            ${post.event?.amount ? `
+                                <div class="text-sm text-gray-700 font-light px-4">
+                                    Amount: ${post.event.amount}
+                                </div>
+                            </div>` : ""}
+                        ` : ""}
                     ` : ""}
 
                     ${post?.announcement || post?.news ? `

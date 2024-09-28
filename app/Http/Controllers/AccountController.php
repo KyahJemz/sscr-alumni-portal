@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Excel\Exports\CustomExport;
 use App\Models\AdminInformation;
 use App\Models\AlumniInformation;
 use App\Models\User;
@@ -9,30 +10,175 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Excel\Imports\CustomImport;
 
 class AccountController extends Controller
 {
+    public function export(Request $request)
+    {
+        $request->validate([
+            'data' => 'required|array',
+            'headers' => 'required|array'
+        ]);
+
+        $data = $request->input('data');
+        $headers = $request->input('headers');
+
+        return Excel::download(new CustomExport($data, $headers), 'export-' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx');
+    }
+
+    public function apiImport(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        $data = Excel::toArray(new CustomImport, $request->file('file'));
+
+        $sheetData = $data[0];
+
+        $sheetData = array_slice($sheetData, 1);
+
+        $failedToUpload = [];
+
+        $alumniTotalCount = User::where('role', 'alumni')->count();
+
+        foreach ($sheetData as $row) {
+            if (count($row) < 7) {
+                $failedToUpload[] = "Invalid row length: " . $row;
+                continue;
+            }
+            if (empty($row[6]) || empty($row[7]) || empty($row[5]) || empty($row[1]) || empty($row[2])) {
+                $failedToUpload[] = "Missing column data: " . $row;
+                continue;
+            }
+            $isExist = User::where('email', $row[5])->first();
+            if($isExist) {
+                $failedToUpload[] = "Email already exists: " . $row[5];
+                continue;
+            }
+
+            try {
+                $alumniTotalCount++;
+                $formattedUsername = sprintf('%s-%07d', $row[6], $alumniTotalCount);
+
+                // first 2 letters of first name, last 2 letters of last name, and batch)
+                $defaultPassword = strtoupper(substr($row[1], 0, 2)) . strtoupper(substr($row[2], -2)) . $row[5];
+
+                $user = User::create([
+                    'created_by' => Auth::user()->id,
+                    'username' => $formattedUsername,
+                    'role' => 'alumni',
+                    'approved_by' => null,
+                    'approved_at' => null,
+                    'rejected_by' => null,
+                    'rejected_at' => null,
+                    'email' => $row[5],
+                    'password' => bcrypt($defaultPassword),
+                ]);
+
+                AlumniInformation::create([
+                    'user_id' => $user->id,
+                    'first_name' => $row[1],
+                    'last_name' => $row[2],
+                    'middle_name' => $row[3] ?? null,
+                    'suffix' => $row[4] ?? null,
+                    'batch' => $row[6],
+                    'course' => $row[7],
+                ]);
+            } catch (\Exception $e) {
+                $failedToUpload[] = $e->getMessage() . ": " . $row;
+                continue;
+            }
+        }
+
+        return response()->json([
+            'message' => 'File uploaded and data processed successfully',
+            'failed' => $failedToUpload,
+        ], 200);
+    }
+
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($type)
     {
-        $data = [
-            'alumni_list' => User::with(['alumniInformation'])->whereNull('deleted_at')->where('role', 'alumni')->get()->all(),
-            'admin_list' => User::with(['adminInformation'])->whereNull('deleted_at')->whereNot('role', 'alumni')->get()->all(),
-        ];
-
-        return view('accounts.index', $data);
+        switch ($type) {
+            case 'alumni':
+                if (Auth::user()->role != 'alumni') {
+                    $data = [
+                        'batches' => AlumniInformation::distinct('batch')->orderBy('batch', 'desc')->get(['batch']),
+                        'courses' => AlumniInformation::distinct('course')->orderBy('course', 'desc')->get(['course']),
+                    ];
+                    return view('accounts.alumni.index', $data);
+                } else {
+                    return abort(401, 'Unauthorized');
+                }
+                break;
+            case 'admin':
+                if (Auth::user()->role === 'cict_admin') {
+                    return view('accounts.index');
+                } else {
+                    return abort(401, 'Unauthorized');
+                }
+                break;
+            case 'graduates':
+                if (Auth::user()->role != 'alumni') {
+                    $data = [
+                        'batches' => AlumniInformation::distinct('batch')->orderBy('batch', 'desc')->get(['batch']),
+                        'courses' => AlumniInformation::distinct('course')->orderBy('course', 'desc')->get(['course']),
+                    ];
+                    return view('accounts.graduates.index',$data);
+                } else {
+                    return abort(401, 'Unauthorized');
+                }
+                break;
+            default:
+                return abort(403, 'Forbidden');
+                break;
+        }
     }
 
-    public function apiIndex()
+    public function apiIndex($type)
     {
-        $data = [
-            'alumni_list' => User::with(['alumniInformation'])->whereNull('deleted_at')->where('role', 'alumni')->get()->all(),
-            'admin_list' => User::with(['adminInformation'])->whereNull('deleted_at')->whereNot('role', 'alumni')->get()->all(),
-        ];
-
+        $data = [];
+        switch ($type) {
+            case 'alumni':
+                if (Auth::user()->role != 'alumni') {
+                    $data = [
+                        'alumni_list' => User::with(['alumniInformation'])->whereNull('deleted_at')->where('role', 'alumni')->whereNotNull('approved_at')->whereNull('rejected_at')->get()->all(),
+                    ];
+                } else {
+                    return abort(401, 'Unauthorized');
+                }
+                break;
+            case 'admin':
+                if (Auth::user()->role === 'cict_admin') {
+                    $data = [
+                        'admin_list' => User::with(['adminInformation'])->whereNull('deleted_at')->whereNot('role', 'alumni')->get()->all(),
+                    ];
+                } else {
+                    return abort(401, 'Unauthorized');
+                }
+                break;
+            case 'graduates':
+                if (Auth::user()->role != 'alumni') {
+                    $data = [
+                        'alumni_list' => User::with(['alumniInformation'])->whereNull('deleted_at')->where('role', 'alumni')->whereNull('approved_at')->whereNull('rejected_at')->get()->all(),
+                    ];
+                } else {
+                    return abort(401, 'Unauthorized');
+                }
+                break;
+            default:
+                return abort(403, 'Forbidden');
+                break;
+        }
+        $data['user'] = Auth::user();
         return response()->json($data);
+        dd($data);
     }
 
     /**

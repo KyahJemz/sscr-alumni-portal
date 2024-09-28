@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
@@ -30,19 +29,14 @@ class Post extends Model
         return $this->belongsTo(News::class);
     }
 
-    public function commentsCount()
+    public function group()
     {
-        return $this->comments()->count() ?? 0;
+        return $this->belongsTo(Group::class, 'group_id');
     }
 
     public function comments()
     {
         return $this->hasMany(Comment::class, 'post_id');
-    }
-
-    public function likesCount()
-    {
-        return $this->likes()->count() ?? 0;
     }
 
     public function likes()

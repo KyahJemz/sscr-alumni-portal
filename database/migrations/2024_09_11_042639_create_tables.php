@@ -51,6 +51,8 @@ return new class extends Migration
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->string('location')->nullable();
+            $table->string('contribution')->default(null)->nullable();
+            $table->string('amount')->default(null)->nullable();
             $table->string('status');
             $table->string('title');
             $table->text('description');

@@ -19,10 +19,48 @@
                 Events
             </a>
             @if (Auth::user()->role !== 'alumni')
-                <a href="{{ route('account.index') }}"
-                    class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
-                    Accounts
-                </a>
+                <div class="relative">
+                    <button id="dropdownToggle" class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+                        Accounts
+                        <svg id="nav-accounts-dropdown-arrow" xmlns="http://www.w3.org/2000/svg" class="ml-2 h-5 w-5 transform transition duration-150 ease-in-out" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.292 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div id="dropdownMenu" class="hidden absolute mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-20  transform transition duration-150 ease-in-out">
+                        <a href="{{ route('account.index', ['type'=>'alumni']) }}"
+                            class='block px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-indigo-400 dark:hover:bg-indigo-600 hover:text-white transition duration-150 ease-in-out'>
+                            Alumni Accounts
+                        </a>
+                        <a href="{{ route('account.index', ['type'=>'graduates']) }}"
+                            class='block px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-indigo-400 dark:hover:bg-indigo-600 hover:text-white transition duration-150 ease-in-out'>
+                            Graduation List
+                        </a>
+                        @if(Auth::user()->role !== 'cict_admin')
+                            <a href="{{ route('account.index', ['type'=>'admins']) }}"
+                                class='block px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-indigo-400 dark:hover:bg-indigo-600 hover:text-white transition duration-150 ease-in-out'>
+                                Management Accounts
+                            </a>
+                        @endif
+                    </div>
+                </div>
+                <script>
+                    const dropdownToggle = document.getElementById('dropdownToggle');
+                    const dropdownMenu = document.getElementById('dropdownMenu');
+                    const dropdownarrow = document.getElementById('nav-accounts-dropdown-arrow');
+
+                    dropdownToggle.addEventListener('click', function() {
+                        dropdownMenu.classList.toggle('hidden');
+                        dropdownarrow.classList.toggle('rotate-180');
+
+                    });
+
+                    window.addEventListener('click', function(event) {
+                        if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                            dropdownMenu.classList.add('hidden');
+                            dropdownarrow.classList.remove('rotate-180');
+                        }
+                    });
+                </script>
             @endif
         </div>
 
