@@ -14,6 +14,7 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserHobbiesController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,8 @@ use Illuminate\Support\Facades\Route;
 //     'program_chair' => 'Program Chair',
 //     'alumni_coordinator' => 'Alumni Coordinator',
 // ],
+
+Route::get('/test', [TestController::class, 'index'])->name('test.index');
 
 Route::get('/', function () {
     return view('guest.index');

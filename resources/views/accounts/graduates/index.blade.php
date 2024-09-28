@@ -21,7 +21,8 @@
                     <label for="search" class="text-SM text-gray-500">Search: </label>
                     <input name="search" id="search" type="text" oninput="searchAlumni(event)" placeholder="Search alumni..." class="border rounded-lg p-2 w-full text-xs" />
                 </div>
-                <div id="filters" class="flex mb-4 gap-4 items-center">
+                <div id="filters" class="flex justify-between w-full">
+                    <div class="flex mb-4 gap-4 items-center">
                         <p class="text-md">Filters:</p>
                         <div class="relative">
                             <button id="batch-filter-dropdown-btn" class="bg-gray-200 text-gray-700 rounded-md px-4 py-2 inline-flex items-center text-xs">
@@ -63,9 +64,9 @@
                                 </div>
                             </div>
                         </div>
-
+                    </div>
+                    <a class="bg-sscr-red text-white rounded-md h-max py-2 px-4 inline-flex items-center text-xs cursor-pointer" onclick="exportTable()">Export Table</a>
                 </div>
-
                 <div class="overflow-x-auto">
                     <table class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 rounded">
                         <thead class="bg-gray-100 dark:bg-gray-700">
@@ -109,6 +110,7 @@
                         <label for="file" class="text-sm font-semibold text-gray-700 dark:text-gray-200">Input excel file</label>
                         <input type="file" name="file" id="file" class="block w-full text-sm text-slate-500" />
                     </div>
+                    <p>Download template excel file: <a href="{{ asset('storage/bulk-account-template.xlsx') }}" class="text-blue-600 underline">click here</a></p>
                     <div>
                         <textarea id="errors" name="errors" cols="30" rows="10" class="hidden block w-full text-sm text-slate-500"></textarea>
                     </div>
@@ -167,7 +169,6 @@
                             <option value="alumni">Alumni</option>
                         </select>
                     </div>
-
                     <div>
                         <label for="email" class="text-sm font-semibold text-gray-700 dark:text-gray-200">Email</label>
                         <input id="email" type="email" name="email"
@@ -182,17 +183,13 @@
                     </div>
                     <div>
                         <label for="batch" class="text-sm font-semibold text-gray-700 dark:text-gray-200">Batch</label>
-                        <input id="batch" type="text" name="batch"
+                        <input id="batch" type="text" name="batch" maxlength="4" minlength="4"
                             class="mt-1 block w-full text-sm border-gray-300 dark:bg-gray-700 dark:text-gray-100 rounded-md shadow-sm"
                             required>
                     </div>
-                    <div>
-                        <label for="password" class="text-sm font-semibold text-gray-700 dark:text-gray-200">Password</label>
-                        <input id="password" type="password" name="password"
-                            class="mt-1 block w-full text-sm border-gray-300 dark:bg-gray-700 dark:text-gray-100 rounded-md shadow-sm"
-                            required>
+                    <div class="hidden">
+                        <input id="batch" type="text" name="approved" value="no">
                     </div>
-
                 </div>
                 <div class="flex justify-end mt-4">
                     <button type="submit"
@@ -336,6 +333,62 @@
     </script>
 
     <script>
+        async function exportTable() {
+            const data = [];
+            const headers = ["#", "Fullname", "Email", "Alumni Id", "Course", "Batch"];
+
+            const rows = document.querySelectorAll('#alumni-table-body tr');
+
+            rows.forEach(row => {
+                if (getComputedStyle(row).display !== 'none') {
+                    data.push([
+                        row.cells[0].innerText,
+                        row.cells[2].innerText,
+                        row.cells[3].innerText,
+                        row.cells[4].innerText,
+                        row.cells[5].innerText,
+                        row.cells[6].innerText
+                    ]);
+                }
+            });
+
+            const payload = {
+                headers: headers,
+                data: data
+            };
+
+            confirmation(`Are you sure you want to export (${data.length}) records?`, async function () {
+                const url = `{{ route('account.export') }}`;
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) {
+                        throw new Error(`Response status: ${response.status}`);
+                    }
+                    const fileName = `export-graduates-${(new Date()).toISOString()}.xlsx`;
+                    const blob = await response.blob();
+                    const link = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = link;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    alertModal('Exported successfully!');
+                } catch (error) {
+                    alertModal(error.message);
+                    console.error(error.message);
+                }
+            });
+        }
+
         async function getAccounts() {
             const url = "{{ route('api.account.index', ['type' => 'graduates']) }}";
 

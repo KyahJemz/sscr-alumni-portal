@@ -42,7 +42,7 @@ class AccountController extends Controller
 
         $failedToUpload = [];
 
-        $alumniTotalCount = User::where('role', 'alumni')->count();
+        $alumniTotalCount = User::where('role', 'alumni')->withTrashed()->count();
 
         foreach ($sheetData as $row) {
             if (count($row) < 7) {
@@ -99,7 +99,6 @@ class AccountController extends Controller
         ], 200);
     }
 
-
     /**
      * Display a listing of the resource.
      */
@@ -117,9 +116,9 @@ class AccountController extends Controller
                     return abort(401, 'Unauthorized');
                 }
                 break;
-            case 'admin':
+            case 'admins':
                 if (Auth::user()->role === 'cict_admin') {
-                    return view('accounts.index');
+                    return view('accounts.admin.index');
                 } else {
                     return abort(401, 'Unauthorized');
                 }
@@ -154,7 +153,7 @@ class AccountController extends Controller
                     return abort(401, 'Unauthorized');
                 }
                 break;
-            case 'admin':
+            case 'admins':
                 if (Auth::user()->role === 'cict_admin') {
                     $data = [
                         'admin_list' => User::with(['adminInformation'])->whereNull('deleted_at')->whereNot('role', 'alumni')->get()->all(),
@@ -193,48 +192,33 @@ class AccountController extends Controller
      * Store a newly created resource in storage.
      */
     public function apiStore(Request $request)
-{
-    try {
-        $request->validate([
-            'email' => 'required|unique:users,email',
-            'alumni_id' => 'required|unique:users,username',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'role' => 'required',
-        ]);
+    {
+        try {
+            $request->validate([
+                'email' => 'required|unique:users,email',
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'role' => 'required',
+            ]);
 
-        DB::beginTransaction();
+            DB::beginTransaction();
 
-        if (Auth::user()->role !== 'alumni') {
-            if (Auth::user()->role === 'program_chair') {
-                $user = User::create([
-                    'email' => $request->email,
-                    'password' => bcrypt($request->password),
-                    'role' => 'alumni',
-                    'username' => $request->alumni_id,
-                    'username' => $request->alumni_id,
-                    'created_by' => Auth::user()->id,
+            if (Auth::user()->role !== 'alumni') {
+                $request->validate([
+                    'course' => 'required',
+                    'batch' => 'required',
                 ]);
-
-                AlumniInformation::create([
-                    'user_id' => $user->id,
-                    'first_name' => $request->first_name,
-                    'middle_name' => $request->middle_name,
-                    'last_name' => $request->last_name,
-                    'suffix' => $request->suffix,
-                    'course' => $request->course,
-                    'batch' => $request->batch,
-                ]);
-            } else {
-                if ($request->role === 'alumni') {
+                if (Auth::user()->role === 'program_chair') {
+                    // first 2 letters of first name, last 2 letters of last name, and batch)
+                    $alumniTotalCount = User::where('role', 'alumni')->withTrashed()->count();
+                    $defaultPassword = strtoupper(substr($request->first_name, 0, 2)) . strtoupper(substr($request->last_name, -2)) . $request->batch;
+                    $formattedUsername = sprintf('%s-%07d', $request->batch, $alumniTotalCount++);
                     $user = User::create([
                         'email' => $request->email,
-                        'password' => bcrypt($request->password),
+                        'password' => bcrypt($defaultPassword),
                         'role' => 'alumni',
-                        'username' => $request->alumni_id,
+                        'username' => $formattedUsername,
                         'created_by' => Auth::user()->id,
-                        'approved_by' => Auth::user()->id,
-                        'approved_at' => Carbon::now(),
                     ]);
 
                     AlumniInformation::create([
@@ -247,36 +231,89 @@ class AccountController extends Controller
                         'batch' => $request->batch,
                     ]);
                 } else {
-                    $user = User::create([
-                        'email' => $request->email,
-                        'password' => bcrypt($request->password),
-                        'role' => 'admin',
-                        'username' => $request->alumni_id,
-                        'created_by' => Auth::user()->id,
-                        'approved_by' => Auth::user()->id,
-                        'approved_at' => Carbon::now(),
-                    ]);
+                    if ($request->role === 'alumni') {
+                        // first 2 letters of first name, last 2 letters of last name, and batch)
+                        $alumniTotalCount = User::where('role', 'alumni')->withTrashed()->count();
+                        $defaultPassword = strtoupper(substr($request->first_name, 0, 2)) . strtoupper(substr($request->last_name, -2)) . $request->batch;
+                        $formattedUsername = sprintf('%s-%07d', $request->batch, $alumniTotalCount++);
+                        if ($request->approved === 'yes') {
+                            $user = User::create([
+                                'email' => $request->email,
+                                'password' => bcrypt($defaultPassword),
+                                'role' => 'alumni',
+                                'username' => $formattedUsername,
+                                'created_by' => Auth::user()->id,
+                                'approved_by' => Auth::user()->id,
+                                'approved_at' => Carbon::now(),
+                            ]);
 
-                    AdminInformation::create([
-                        'user_id' => $user->id,
-                        'first_name' => $request->first_name,
-                        'middle_name' => $request->middle_name,
-                        'last_name' => $request->last_name,
-                        'suffix' => $request->suffix,
-                        'department' => $request->department,
-                    ]);
+                            AlumniInformation::create([
+                                'user_id' => $user->id,
+                                'first_name' => $request->first_name,
+                                'middle_name' => $request->middle_name,
+                                'last_name' => $request->last_name,
+                                'suffix' => $request->suffix,
+                                'course' => $request->course,
+                                'batch' => $request->batch,
+                            ]);
+                            $details = [
+                                'title' => 'Welcome Aboard: Access Your SSCR Alumni Portal Now!',
+                                'alumni_id' => $user->username,
+                                'name' => $request->first_name . ' ' . $request->last_name,
+                            ];
+                            \Mail::to($user->email)->send(new \App\Mail\AccountApproved($details));
+                        } else {
+                            $user = User::create([
+                                'email' => $request->email,
+                                'password' => bcrypt($defaultPassword),
+                                'role' => 'alumni',
+                                'username' => $formattedUsername,
+                                'created_by' => Auth::user()->id,
+                                'approved_by' => Auth::user()->id,
+                                'approved_at' => Carbon::now(),
+                            ]);
+
+                            AlumniInformation::create([
+                                'user_id' => $user->id,
+                                'first_name' => $request->first_name,
+                                'middle_name' => $request->middle_name,
+                                'last_name' => $request->last_name,
+                                'suffix' => $request->suffix,
+                                'course' => $request->course,
+                                'batch' => $request->batch,
+                            ]);
+                        }
+                    } else {
+                        $user = User::create([
+                            'email' => $request->email,
+                            'password' => bcrypt($request->password),
+                            'role' => $request->role,
+                            'username' => $request->email,
+                            'created_by' => Auth::user()->id,
+                            'approved_by' => Auth::user()->id,
+                            'approved_at' => Carbon::now(),
+                        ]);
+
+                        AdminInformation::create([
+                            'user_id' => $user->id,
+                            'first_name' => $request->first_name,
+                            'middle_name' => $request->middle_name,
+                            'last_name' => $request->last_name,
+                            'suffix' => $request->suffix,
+                            'department' => $request->department,
+                        ]);
+                    }
                 }
             }
-        }
 
-        DB::commit();
-        return response()->json(['message' => 'User created successfully'], 201);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        \Log::error('User creation failed: ' . $e->getMessage());
-        return response()->json(['message' => 'User creation failed', 'error' => $e->getMessage()], 500);
+            DB::commit();
+            return response()->json(['message' => 'User created successfully'], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('User creation failed: ' . $e->getMessage());
+            return response()->json(['message' => 'User creation failed', 'error' => $e->getMessage()], 500);
+        }
     }
-}
 
     /**
      * Display the specified resource.
@@ -293,6 +330,12 @@ class AccountController extends Controller
                     'approved_at' => Carbon::now(),
                 ]);
                 $user->save();
+                $details = [
+                    'title' => 'Welcome Aboard: Access Your SSCR Alumni Portal Now!',
+                    'alumni_id' => $user->username,
+                    'name' => $user->alumniInformation->first_name . ' ' . $user->alumniInformation->last_name,
+                ];
+                \Mail::to($user->email)->send(new \App\Mail\AccountApproved($details));
             } else if($request->status === 'reject') {
                 $user->update([
                     'rejected_by' => Auth::user()->id,
