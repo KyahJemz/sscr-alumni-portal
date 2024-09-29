@@ -3,15 +3,15 @@
 @section('content')
 
 <div class="container mx-auto px-4 py-6 max-w-7xl sm:px-6 lg:px-8 space-y-6">
-    <div class="bg-gray-100 shadow-md rounded-lg flex flex-col gap-6">
-        <div class="flex flex-row gap-6 bg-gray-300 p-6 rounded-lg">
-            <img src="{{ asset('storage/images/groups/' . $group->image ?? 'default.jpg') }}" alt="" class="w-48 h-48 rounded-lg">
+    <div class="rounded-lg flex flex-col gap-6">
+        <div class="flex flex-row gap-6 bg-white p-6 shadow-lg rounded-lg">
+            <img src="{{ asset('storage/groups/images/' . $group->image ?? 'default.jpg') }}" alt="" class="w-48 h-48 rounded-lg" onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';">
             <div class="flex flex-col relative w-full">
                 <p class="text-2xl text-sscr-red font-bold">{{ $group->name }}</p>
                 <p class="text-gray-900"> {{ $group->description }}</p>
                 <div class="flex gap-4 absolute right-0 bottom-0">
                     @if($isAdmin | Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
-                        <a class="cursor-pointer px-4 py-2 bg-sscr-red text-white rounded-lg">Edit</a>
+                        <a href="{{ route('groups.edit', ['group' => $group->id]) }}" class="cursor-pointer px-4 py-2 bg-sscr-red text-white rounded-lg">Manage</a>
                     @else
                         @if($status === 'not a member')
                             <form action="{{ route('group-members.store') }}" method="post">
@@ -33,10 +33,10 @@
                 </div>
             </div>
         </div>
-        <div class="px-6 pb-6 flex flex-row">
-            <div class="overflow-hidden sm:rounded-lg max-w-2xl mx-auto space-y-4 flex-1">
+        <div class=" pb-6 flex flex-row">
+            <div class="overflow-hidden sm:rounded-lg max-w-2xl mx-auto space-y-4 flex-1 w-3/4">
                 @if(Auth::user()->role !== 'alumni')
-                <div class="bg-white p-4 text-gray-900 border border-gray-200 shadow-md rounded-md">
+                <div class="bg-white p-4 text-gray-900 border border-gray-300 shadow-lg rounded-lg">
                     <form action="{{ route('api.group.posts.store', ['group' => $group->id]) }}" method="post" enctype="multipart/form-data" class="flex gap-4">
                         @csrf
                         @method('post')
@@ -143,14 +143,14 @@
 
                 </div>
             </div>
-            <div class="w-72 border-2 border-gray-400 bg-white shadow-md rounded">
-                <p class="p-2 border-b border-gray-500 flex text-sscr-red font-bold flex-row justify-between text-md">Founded {{ $group->created_at->format('F j, Y') }}<a href="">@include('components.icons.more')</a></p>
-                <div class="flex flex-row w-full justify-around border-b border-gray-500">
+            <div class="w-1/4 bg-white border border-gray-300 shadow-lg rounded-lg">
+                <p class="p-2 border-b border-gray-300 flex text-sscr-red font-bold flex-row justify-between text-md">Founded {{ $group->created_at->format('F j, Y') }}<a href="">@include('components.icons.more')</a></p>
+                <div class="flex flex-row w-full justify-around border-b border-gray-300">
                     <div class="flex flex-col items-center p-2 flex-1">
                         <p class="text-sscr-red font-bold text-xl">{{ (count($group_data['members'] ?? []) + count($group_data['admins'] ?? [])) ?? 0 }}</p>
                         <p class="font-light text-xs">Members</p>
                     </div>
-                    <div class="flex flex-col items-center p-2 border-x border-gray-500 flex-1">
+                    <div class="flex flex-col items-center p-2 border-x border-gray-300 flex-1">
                         <p class="text-sscr-red font-bold text-xl">{{ (count($group_data['posts']  ?? [])) ?? 0 }}</p>
                         <p class="font-light text-xs">Posts</p>
                     </div>
@@ -159,7 +159,7 @@
                         <p class="font-light text-xs">Events</p>
                     </div>
                 </div>
-                <div class="w-full p-2 flex flex-col gap-2 border-b border-gray-500">
+                <div class="w-full p-2 flex flex-col gap-2 border-b border-gray-300">
                     <p class="font-bold text-sscr-red">Admins ({{$group_data['admins'] ? count($group_data['admins']) : 0}})</p>
                     @forelse ($group_data['admins'] as $admin)
 
@@ -508,7 +508,7 @@
             `;
 
             const template = `
-                <div class="bg-white p-4 text-gray-900 border border-gray-200 shadow-md rounded-md mb-6">
+                <div class="bg-white p-4 text-gray-900 border border-gray-300 shadow-lg rounded-lg mb-6">
                     <div class="flex gap-4 border-b-2 border-gray-300 mb-4 pb-4 relative">
                         <img src="{{ asset('storage/profile/images') }}/${post.posted_by.image ?? 'default.jpg'}"
                             alt="Profile Image"

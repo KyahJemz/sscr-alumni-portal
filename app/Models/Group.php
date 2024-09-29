@@ -29,4 +29,20 @@ class Group extends Model
     {
         return $this->belongsToMany(User::class, 'group_admins', 'group_id', 'user_id');
     }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'group_id');
+    }
+
+    public function group_members()
+    {
+        return $this->hasMany(GroupMember::class, 'group_id');
+    }
+
+    public function group_admins()
+    {
+        return $this->hasMany(GroupAdmin::class, 'group_id');
+    }
+
 }

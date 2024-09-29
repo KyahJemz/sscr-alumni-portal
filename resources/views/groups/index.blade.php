@@ -24,59 +24,68 @@
             </div>
 
             @if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800">All Clubs</h2>
-                    <div id="recommended-clubs" class="flex flex-row flex-wrap space-x-4 py-4">
-                        @forelse ($recommended as $group)
-                            <a href="{{ route('groups.show', ['group' => $group->id]) }}"
-                                class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50 group-card"
-                                data-name="{{ $group->name }}">
-                                <img src="{{ asset('storage/groups/images/' . $group->image ?? 'default.jpg') }}"
-                                    onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';"
-                                    alt="{{ $group->name }}" class="w-24 h-24 rounded-full object-cover mb-2">
-                                <p class="text-sm font-medium text-gray-700">{{ $group->name }}</p>
-                            </a>
-                        @empty
-                            <p>No clubs</p>
-                        @endforelse
-                    </div>
+            <div>
+                <h2 class="text-xl font-semibold text-gray-800">All Clubs</h2>
+                <div id="recommended-clubs" class="flex flex-wrap justify-around items-center gap-4 py-4">
+                    @forelse ($recommended as $group)
+                        <a data-name="{{$group->name}}" href="{{ route('groups.show', ['group' => $group->id]) }}" class="flex flex-col items-center bg-white border border-gray-300 rounded-lg shadow-md hover:bg-gray-50 group-card flex-shrink-0 w-80 h-max">
+                            <img src="{{ asset('storage/groups/images/' . $group->image ?? 'default.jpg') }}"
+                                onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';"
+                                alt="{{ $group->name }}" class="h-44 w-full object-cover rounded-t-lg">
+                            <div class="flex flex-col px-4 py-2 w-full">
+                                <p class="group-name text-sm font-bold text-gray-700">{{ $group->name }}</p>
+                                <p class="text-sm font-medium text-gray-700">{{ $group->group_members->whereNotNull('approved_at')->whereNull('deleted_at')->count() + $group->group_admins->whereNull('deleted_at')->count() }} members * {{ $group->posts->whereNotNull('approved_at')->whereNull('deleted_at')->count() }} posts</p>
+                                <p class="text-sm font-light text-gray-400">Founded: {{ $group->created_at->format('F j, Y') }}</p>
+                            </div>
+                        </a>
+                    @empty
+                        <p>No clubs</p>
+                    @endforelse
                 </div>
+            </div>
+
+
             @else
                 <div>
                     <h2 class="text-xl font-semibold text-gray-800">My Clubs</h2>
-                    <div id="my-clubs" class="flex flex-row space-x-4 overflow-x-auto py-4">
-                        @forelse  ($myGroups as $group)
-                            <a href="{{ route('groups.show', ['group' => $group->id]) }}"
-                                class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50 group-card"
-                                data-name="{{ $group->name }}">
+                    <div id="my-clubs" class="flex flex-row gap-4 overflow-x-auto py-4">
+                        @forelse ($myGroups as $group)
+                            <a data-name="{{$group->name}}" href="{{ route('groups.show', ['group' => $group->id]) }}" class="flex flex-col items-center bg-white border border-gray-300 rounded-lg shadow-md hover:bg-gray-50 group-card flex-shrink-0 w-80 h-max">
                                 <img src="{{ asset('storage/groups/images/' . $group->image ?? 'default.jpg') }}"
                                     onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';"
-                                    alt="{{ $group->name }}" class="w-24 h-24 rounded-full object-cover mb-2">
-                                <p class="text-sm font-medium text-gray-700">{{ $group->name }}</p>
+                                    alt="{{ $group->name }}" class="h-44 w-full object-cover rounded-t-lg">
+                                <div class="flex flex-col px-4 py-2 w-full">
+                                    <p class="group-name text-md font-bold text-gray-700">{{ $group->name }}</p>
+                                    <p class="text-sm font-medium text-gray-700">{{ $group->group_members->whereNotNull('approved_at')->whereNull('deleted_at')->count() + $group->group_admins->whereNull('deleted_at')->count() }} members * {{ $group->posts->whereNotNull('approved_at')->whereNull('deleted_at')->count() }} posts</p>
+                                    <p class="text-sm font-light text-gray-400">Founded: {{ $group->created_at->format('F j, Y') }}</p>
+                                </div>
                             </a>
                         @empty
                             <a href="#"
-                                class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50">
+                                class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50 flex-shrink-0 w-48">
                                 Join some groups
                             </a>
                         @endforelse
                     </div>
                 </div>
+
                 <div>
                     <h2 class="text-xl font-semibold text-gray-800">Other Clubs</h2>
-                    <div id="recommended-clubs" class="flex flex-row space-x-4 overflow-x-auto py-4">
+                    <div id="recommended-clubs" class="flex flex-row gap-4 overflow-x-auto py-4">
                         @forelse ($recommended as $group)
-                            <a href="{{ route('groups.show', ['group' => $group->id]) }}"
-                                class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50 group-card"
-                                data-name="{{ $group->name }}">
+                            <a data-name="{{$group->name}}" href="{{ route('groups.show', ['group' => $group->id]) }}" class="flex flex-col items-center bg-white border border-gray-300 rounded-lg shadow-md hover:bg-gray-50 group-card flex-shrink-0 w-80 h-max">
                                 <img src="{{ asset('storage/groups/images/' . $group->image ?? 'default.jpg') }}"
                                     onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';"
-                                    alt="{{ $group->name }}" class="w-24 h-24 rounded-full object-cover mb-2">
-                                <p class="text-sm font-medium text-gray-700">{{ $group->name }}</p>
+                                    alt="{{ $group->name }}" class="h-44 w-full object-cover rounded-t-lg">
+                                <div class="flex flex-col px-4 py-2 w-full">
+                                    <p class="group-name text-sm font-bold text-gray-700">{{ $group->name }}</p>
+                                    <p class="text-sm font-medium text-gray-700">{{ $group->group_members->whereNotNull('approved_at')->whereNull('deleted_at')->count() + $group->group_admins->whereNull('deleted_at')->count() }} members * {{ $group->posts->whereNotNull('approved_at')->whereNull('deleted_at')->count() }} posts</p>
+                                    <p class="text-sm font-light text-gray-400">Founded: {{ $group->created_at->format('F j, Y') }}</p>
+                                </div>
                             </a>
                         @empty
                             <a href="#"
-                                class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50">
+                                class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50 flex-shrink-0 w-48">
                                 No groups to join
                             </a>
                         @endforelse

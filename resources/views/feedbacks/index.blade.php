@@ -56,7 +56,7 @@
             @forelse ($feedbacks as $feedback)
                 <div class="bg-white shadow-md rounded-lg p-4">
                     <div class="flex gap-4">
-                        <img class="w-12 h-12 rounded-full object-cover" src="{{ asset('storage/profile/images') }}/{{ $feedback->user->image }}" alt="User Image">
+                        <img class="w-12 h-12 rounded-full object-cover" src="{{ asset('storage/profile/images') }}/{{ $feedback->user->image }}" alt="User Image" onerror="this.onerror=null;this.src='{{ asset('storage/profile/images/default.jpg') }}';">
                         <div>
                             <div class="text-md font-semibold">{{ $feedback->user->alumniInformation->first_name }} {{ $feedback->user->alumniInformation->middle_name }} {{ $feedback->user->alumniInformation->last_name }} {{ $feedback->user->alumniInformation->suffix }}</div>
                             <div class="text-gray-500 font-light text-xs">Date: {{ $feedback->created_at->format('M. j, Y \a\t g:ia') }}</div>

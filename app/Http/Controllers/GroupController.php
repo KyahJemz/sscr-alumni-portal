@@ -156,7 +156,40 @@ class GroupController extends Controller
      */
     public function edit(Group $group)
     {
-        //
+        $user = Auth::user();
+        $groupManaged = $user->groupsManaged;
+        $isAdmin = $groupManaged->contains($group);
+
+        $groupMembers = GroupMember::where('group_id', $group->id)
+            ->where('user_id', $user->id)
+            ->whereNull('deleted_at')
+            ->latest()
+            ->first();
+        if ($groupMembers && !is_null($groupMembers->approved_at)) {
+            $status = 'member';
+        } elseif ($groupMembers && is_null($groupMembers->rejected_at) && is_null($groupMembers->approved_at)) {
+            $status = 'pending';
+        } else {
+            $status = 'not a member';
+        }
+
+        $group_data = [
+            'members' => GroupMember::where('group_id', $group->id)->whereNull('deleted_at')->whereNull('rejected_at')->whereNotNull('approved_at')->with(['user.alumniInformation', 'user.adminInformation'])->orderBy('created_at', 'desc')->get(),
+            'posts' => Post::where('group_id', $group->id)->whereNull('deleted_at')->whereNull('rejected_at')->whereNotNull('approved_at')->get(),
+            'events' => Post::where('group_id', $group->id)->whereNull('deleted_at')->whereNull('rejected_at')->whereNotNull('approved_at')->whereHas('event')->get(),
+            'admins' => GroupAdmin::where('group_id', $group->id)->whereNull('deleted_at')->orderBy('created_at', 'desc')->get(),
+        ];
+
+        $data = [
+            'group' => $group,
+            'status' => $status, // member, not a member, pending
+            'isAdmin' => $isAdmin,
+            'groupMember' => $groupMembers,
+            'user' => $user,
+            'group_data' => $group_data,
+        ];
+
+        return view('groups.manage.index', $data);
     }
 
     /**
