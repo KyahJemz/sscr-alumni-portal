@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\GroupMember;
+use App\Models\User;
 use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,11 +60,38 @@ class GroupMembersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(GroupMember $groupMember)
+    public function apiShow(Group $group)
     {
-        //
-    }
+        $members = $group->group_members()
+            ->whereNull('deleted_at')
+            ->whereNull('rejected_at')
+            ->whereNotNull('approved_at')
+            ->orderBy('created_at', 'desc')
+            ->with(['user.alumniInformation', 'user.adminInformation'])
+            ->get();
 
+        $members_Approval = $group->group_members()
+            ->whereNull('deleted_at')
+            ->whereNull('rejected_at')
+            ->whereNull('approved_at')
+            ->orderBy('created_at', 'desc')
+            ->with(['user.alumniInformation', 'user.adminInformation'])
+            ->get();
+
+        $admins = $group->group_admins()
+            ->whereNull('deleted_at')
+            ->orderBy('created_at', 'desc')
+            ->with(['user.alumniInformation', 'user.adminInformation'])
+            ->get();
+
+        $data = [
+            'members_list' => $members,
+            'members_approval_list' => $members_Approval,
+            'admins_list' => $admins
+        ];
+
+        return response()->json($data);
+    }
     /**
      * Show the form for editing the specified resource.
      */
@@ -75,9 +103,33 @@ class GroupMembersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, GroupMember $groupMember)
+    public function apiUpdate(Request $request, GroupMember $groupMember)
     {
-        //
+
+        $request->validate([
+            'status' => 'required|string|max:255',
+        ]);
+
+        try {
+
+            if ($request->status === 'approved') {
+                $groupMember->update([
+                    'approved_at' => now(),
+                    'approved_by' => Auth::user()->id
+                ]);
+            } else {
+                $groupMember->update([
+                    'rejected_at' => now(),
+                    'rejected_by' => Auth::user()->id
+                ]);
+            }
+            $groupMember->save();
+
+            return response()->json(['status' => 'success', 'message' => 'Successfully updated']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Failed to update group member: ' . $e->getMessage()]);
+        }
+
     }
 
     /**
@@ -96,6 +148,17 @@ class GroupMembersController extends Controller
             return redirect()->back()->with('status', 'Successfully left group');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Failed to leave group: ' . $e->getMessage());
+        }
+    }
+
+    public function apiDestroy(Group $group, User $user)
+    {
+        try {
+            $groupMember = GroupMember::where('group_id', $group->id)->where('user_id', $user->id)->whereNull('deleted_at')->latest()->first();
+            $groupMember->delete();
+            return response()->json(['status' => 'success', 'message' => 'Successfully removed from the group']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Failed to remove from the group: ' . $e->getMessage()]);
         }
     }
 }

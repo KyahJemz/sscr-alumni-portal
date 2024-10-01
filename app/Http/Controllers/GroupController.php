@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AlumniInformation;
 use App\Models\Group;
 use App\Models\GroupAdmin;
 use App\Models\GroupMember;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Js;
 
 class GroupController extends Controller
 {
@@ -54,59 +56,58 @@ class GroupController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    // Validate incoming request data
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'required|string|max:1000',
-        'admin_ids' => 'required|string',
-    ]);
-
-        $proposedAdmins = json_decode($request->admin_ids);
-
-        if (!is_array($proposedAdmins)) {
-            return redirect()->back()->withErrors('Invalid admin list format.');
-        }
-
-    $imageName = null;
-    if ($request->hasFile('image')) {
-        $imageFile = $request->file('image');
-        $originalName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $imageName = 't_' . $originalName . '_' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
-        $imageFile->storeAs('public/groups/images', $imageName);
-    }
-
-    DB::beginTransaction();
-
-    try {
-
-        $group = Group::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'created_by' => Auth::user()->id,
-            'image' => $imageName,
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:1000',
+            'admin_ids' => 'required|string',
         ]);
 
+            $proposedAdmins = json_decode($request->admin_ids);
 
-        foreach ($proposedAdmins as $adminId) {
-            GroupAdmin::create([
-                'group_id' => $group->id,
-                'user_id' => $adminId,
-                'created_by' => Auth::user()->id
-            ]);
+            if (!is_array($proposedAdmins)) {
+                return redirect()->back()->withErrors('Invalid admin list format.');
+            }
+
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $imageFile = $request->file('image');
+            $originalName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $imageName = 't_' . $originalName . '_' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
+            $imageFile->storeAs('public/groups/images', $imageName);
         }
 
-        DB::commit();
+        DB::beginTransaction();
 
-        return redirect()->route('groups.show', $group->id);
+        try {
 
-    } catch (\Exception $e) {
-        DB::rollback();
-        dd($e);
-        Log::error('Error creating group: ', ['error' => $e->getMessage()]);
-        return redirect()->back()->withErrors('Failed to create the group. Please try again.');
+            $group = Group::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'created_by' => Auth::user()->id,
+                'image' => $imageName,
+            ]);
+
+
+            foreach ($proposedAdmins as $adminId) {
+                GroupAdmin::create([
+                    'group_id' => $group->id,
+                    'user_id' => $adminId,
+                    'created_by' => Auth::user()->id
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('groups.show', $group->id);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            dd($e);
+            Log::error('Error creating group: ', ['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors('Failed to create the group. Please try again.');
+        }
     }
-}
 
 
     /**
@@ -187,7 +188,18 @@ class GroupController extends Controller
             'groupMember' => $groupMembers,
             'user' => $user,
             'group_data' => $group_data,
+            'batches' => AlumniInformation::distinct('batch')->orderBy('batch', 'desc')->get(['batch']),
+            'courses' => AlumniInformation::distinct('course')->orderBy('course', 'desc')->get(['course']),
         ];
+
+        if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') {
+            $data['alumni_list'] = User::where('role', 'alumni')
+                ->whereNull('deleted_at')
+                ->whereNotNull('approved_at')
+                ->whereHas('alumniInformation')
+                ->with('alumniInformation')
+                ->get()->all();
+        }
 
         return view('groups.manage.index', $data);
     }
@@ -195,9 +207,39 @@ class GroupController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Group $group)
+    public function apiUpdate(Request $request, Group $group)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:1000',
+        ]);
+
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $imageFile = $request->file('image');
+            $originalName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $imageName = 't_' . $originalName . '_' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
+            $imageFile->storeAs('public/groups/images', $imageName);
+        }
+
+    try {
+
+        $group->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'image' => $imageName ?? $group->image,
+        ]);
+        $group->save();
+
+        return redirect()->back()->with('status', 'group-updated');
+
+    } catch (\Exception $e) {
+        dd($e);
+        Log::error('Error creating group: ', ['error' => $e->getMessage()]);
+        return redirect()->back()->withErrors('Failed to update group.');
+    }
+
+
     }
 
     /**

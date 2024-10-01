@@ -175,8 +175,8 @@
                     <p class="font-bold text-sscr-red">Members ({{$group_data['members'] ? count($group_data['members']) : 0}})</p>
                     @forelse ($group_data['members'] as $member)
                         <div class="flex gap-2 items-center p-1 ">
-                            <img class="w-8 h-8 rounded-full" src="{{ $admin->user->image ? asset('storage/profile/images/' . $admin->user->image) : asset('storage/profile/images/default.jpg') }}" alt="">
-                            {{ $admin->user->alumniInformation->first_name ?? $admin->user->adminInformation->first_name }} {{ $admin->user->alumniInformation->last_name ?? $admin->user->adminInformation->last_name }}
+                            <img class="w-8 h-8 rounded-full" src="{{ $member->user->image ? asset('storage/profile/images/' . $member->user->image) : asset('storage/profile/images/default.jpg') }}" alt="">
+                            {{ $member->user->alumniInformation->first_name ?? $member->user->adminInformation->first_name }} {{ $member->user->alumniInformation->last_name ?? $member->user->adminInformation->last_name }}
                         </div>
                     @empty
                         <p>No Member</div>

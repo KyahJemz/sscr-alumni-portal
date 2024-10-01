@@ -178,6 +178,8 @@ return new class extends Migration
             $table->foreignId('approved_by')->nullable()->constrained('users');
             $table->foreignId('rejected_by')->nullable()->constrained('users');
             $table->foreignId('deleted_by')->nullable()->constrained('users');
+            $table->timestamp('is_invited_at')->nullable();
+            $table->foreignId('is_invited_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
             $table->timestamp('approved_at')->nullable();

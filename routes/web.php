@@ -6,6 +6,7 @@ use App\Http\Controllers\AlumniInformationController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\GroupAdminsController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupMembersController;
 use App\Http\Controllers\GroupPostController;
@@ -118,7 +119,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/groups', [GroupController::class, 'store'])->name('groups.store');
     Route::get('/groups/{group}', [GroupController::class, 'show'])->name('groups.show');
     Route::get('/groups/{group}/manage', [GroupController::class, 'edit'])->name('groups.edit');
-    Route::put('/groups/{group}', [GroupController::class, 'update'])->name('groups.update');
+    Route::put('/api/groups/{group}', [GroupController::class, 'apiUpdate'])->name('api.groups.update');
     Route::patch('/groups/{group}', [GroupController::class, 'update'])->name('groups.update');
     Route::delete('/groups/{group}', [GroupController::class, 'destroy'])->name('groups.destroy');
 
@@ -126,11 +127,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/group-members', [GroupMembersController::class, 'index'])->name('group-members.index');
     Route::get('/group-members/create', [GroupMembersController::class, 'create'])->name('group-members.create');
     Route::post('/group-members', [GroupMembersController::class, 'store'])->name('group-members.store');
-    Route::get('/group-members/{group}', [GroupMembersController::class, 'show'])->name('group-members.show');
+    Route::get('/api/group-members/{group}', [GroupMembersController::class, 'apiShow'])->name('api.group-members.show');
     Route::get('/group-members/{group}/edit', [GroupMembersController::class, 'edit'])->name('group-members.edit');
     Route::put('/group-members/{group}', [GroupMembersController::class, 'update'])->name('group-members.update');
-    Route::patch('/group-members/{group}', [GroupMembersController::class, 'update'])->name('group-members.update');
+    Route::patch('/api/group-members/{groupMember}', [GroupMembersController::class, 'apiUpdate'])->name('api.group-members.update');
     Route::delete('/group-members/{groupMember}', [GroupMembersController::class, 'destroy'])->name('group-members.destroy');
+    Route::delete('/api/group-members/{group}/{user}', [GroupMembersController::class, 'apiDestroy'])->name('api.group-members.destroy');
+
+    // GROUP ADMINS
+    Route::get('/group-admins', [GroupAdminsController::class, 'index'])->name('group-admins.index');
+    Route::get('/group-admins/create', [GroupAdminsController::class, 'create'])->name('group-admins.create');
+    Route::post('/group-admins/{group}', [GroupAdminsController::class, 'store'])->name('group-admins.store');
+    Route::get('/api/group-admins/{group}', [GroupAdminsController::class, 'apiShow'])->name('api.group-admins.show');
+    Route::get('/group-admins/{group}/edit', [GroupAdminsController::class, 'edit'])->name('group-admins.edit');
+    Route::put('/group-admins/{group}', [GroupAdminsController::class, 'update'])->name('group-admins.update');
+    Route::patch('/group-admins/{group}', [GroupAdminsController::class, 'update'])->name('group-admins.update');
+    Route::delete('/group-admins/{groupMember}', [GroupAdminsController::class, 'destroy'])->name('group-admins.destroy');
+    Route::delete('/api/group-admins/{group}/{user}', [GroupAdminsController::class, 'apiDestroy'])->name('api.group-admins.destroy');
 
     // FEEDBACK
     Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
