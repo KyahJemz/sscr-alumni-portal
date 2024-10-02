@@ -139,12 +139,23 @@
                     </form>
                 </div>
                 @endif
+                @if($isAdmin || Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator' || $status === 'member')
                 <div id="posts-container">
 
                 </div>
+                @else
+                    <div class="w-full bg-white border border-gray-300 shadow-lg rounded-lg p-6 shadow-lg">
+                        @include('groups.manage.about')
+                    </div>
+                @endif
             </div>
             <div class="w-1/4 bg-white border border-gray-300 shadow-lg rounded-lg">
-                <p class="p-2 border-b border-gray-300 flex text-sscr-red font-bold flex-row justify-between text-md">Founded {{ $group->created_at->format('F j, Y') }}<a href="">@include('components.icons.more')</a></p>
+                <p class="p-2 border-b border-gray-300 flex text-sscr-red font-bold flex-row justify-between text-md">
+                    Founded {{ $group->created_at->format('F j, Y') }}
+                    @if($isAdmin || Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator' || $status === 'member')
+                        <a href="{{ route('groups.edit', ['group' => $group->id]) }}">@include('components.icons.more')</a>
+                    @endif
+                </p>
                 <div class="flex flex-row w-full justify-around border-b border-gray-300">
                     <div class="flex flex-col items-center p-2 flex-1">
                         <p class="text-sscr-red font-bold text-xl">{{ (count($group_data['members'] ?? []) + count($group_data['admins'] ?? [])) ?? 0 }}</p>

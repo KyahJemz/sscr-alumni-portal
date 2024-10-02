@@ -10,13 +10,17 @@
                 class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 {{ (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') ? 'Organizations' : 'My Organizations' }}
             </a>
-            <a href="{{ route('home') }}"
+            <a href="{{ route('news.index') }}"
                 class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
-                Announcements
+                News
             </a>
-            <a href="{{ route('home') }}"
+            <a href="{{ route('events.index') }}"
                 class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 Events
+            </a>
+            <a href="{{ route('announcements.index') }}"
+                class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+                Announcements
             </a>
             @if (Auth::user()->role !== 'alumni')
                 <div class="relative">
@@ -69,8 +73,8 @@
                 class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 @include('components.icons.chat')
             </a>
-            <a href="{{ route('home') }}" title="Notifications"
-                class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+            <a onclick="document.getElementById('notifications-modal').classList.toggle('hidden');" title="Notifications"
+                class='cursor-pointer inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 @include('components.icons.bell')
             </a>
             <div id="dropdown" class="relative" title="Profile">
@@ -143,6 +147,23 @@
     </div>
 @endif
 
+<div id="notifications-modal" class="hidden fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
+    <div class="fixed inset-0 bg-black opacity-50"></div>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-96 p-4 relative">
+        <h2 class="text-md font-semibold text-gray-800 dark:text-gray-100">
+            Notifications
+            <button type="button" onclick="document.getElementById('notifications-modal').classList.toggle('hidden');" class="absolute top-4 right-4 text-sscr-red">@include('components.icons.x')</button>
+        </h2>
+        <div id="notifications-container" class="mt-4 space-y-2">
+
+        </div>
+        <div class="mt-4 flex justify-between">
+            <button id="prev-btn" class="bg-sscr-red text-white px-3 py-1 rounded disabled:opacity-50 text-xs" disabled>Previous</button>
+            <button id="next-btn" class="bg-sscr-red text-white px-3 py-1 rounded text-xs">Next</button>
+        </div>
+    </div>
+</div>
+
 @if (Auth::user()->role === 'alumni')
     <script>
             function setRating(rating) {
@@ -193,6 +214,78 @@
             menu.classList.add('hidden');
         }
     });
+
+    let notifications = [];
+    let currentPage = 1;
+    const pageSize = 5;
+
+    async function getNotification() {
+        const url = "{{ route('api.notification.index') }}";
+
+        try {
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+
+            const json = await response.json();
+            notifications = json.notifications;
+            displayNotifications();
+        } catch (error) {
+            console.error('Error fetching notifications:', error.message);
+        }
+    }
+
+    function displayNotifications() {
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+        const paginatedNotifications = notifications.slice(start, end);
+
+        const notificationsContainer = document.getElementById('notifications-container');
+        notificationsContainer.innerHTML = '';
+
+        if (paginatedNotifications.length > 0) {
+            paginatedNotifications.forEach(notification => {
+                notificationsContainer.innerHTML += `
+                    <a class="notification-item p-2 bg-gray-100 relative rounded block" ${notification?.url ? `href="${notification.url}"` : ''}>
+                        <p class="text-sm text-gray-800">${notification.content}</p>
+                        ${notification?.url ? `<p class="absolute bottom-1 font-bold text-sscr-red right-2 text-xs">--></p>` : ''}
+                        <p class="text-xs text-gray-500 mt-2">${new Date(notification.created_at).toLocaleString()}</p>
+                    </a>
+                `;
+            });
+        } else {
+            notificationsContainer.innerHTML = '<p class="text-sm text-gray-500">No notifications available.</p>';
+        }
+
+        updatePaginationButtons();
+    }
+
+    function updatePaginationButtons() {
+        const totalPages = Math.ceil(notifications.length / pageSize);
+
+        document.getElementById('prev-btn').disabled = currentPage === 1;
+        document.getElementById('next-btn').disabled = currentPage === totalPages;
+    }
+
+    document.getElementById('prev-btn').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            displayNotifications();
+        }
+    });
+
+    document.getElementById('next-btn').addEventListener('click', () => {
+        const totalPages = Math.ceil(notifications.length / pageSize);
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayNotifications();
+        }
+    });
+
+    getNotification();
+
 </script>
 
 

@@ -17,7 +17,9 @@
             <div id="nav-container" class="flex flex-row gap-4 border-t border-b border-gray-300 p-2 w-full rounded-t-lg">
                 <a onclick="changeTab(event, 'about-container')" class="nav-bar text-sscr-red font-bold text-md px-4 py-1 cursor-pointer">About</a>
                 <a onclick="changeTab(event, 'members-container')" class="nav-bar text-md px-4 py-1 cursor-pointer">Members</a>
-                <a onclick="changeTab(event, 'members-approval-container')" class="nav-bar text-md px-4 py-1 cursor-pointer">Members Approval</a>
+                @if($isAdmin || Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
+                    <a onclick="changeTab(event, 'members-approval-container')" class="nav-bar text-md px-4 py-1 cursor-pointer">Members Approval</a>
+                @endif
                 @if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
                     <a onclick="changeTab(event, 'admins-container')" class="nav-bar text-md px-4 py-1 cursor-pointer">Admins</a>
                 @endif
@@ -79,9 +81,113 @@
     </div>
 @endif
 
+<div id="invite-member-modal"
+    class="hidden fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
+    <div class="fixed inset-0 bg-black opacity-50"></div>
+    <div id=""
+        class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+            <h2
+                class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex justify-between items-center">
+                Invite
+                <button type="button"
+                    onclick="document.getElementById('invite-member-modal').classList.toggle('hidden');"
+                    class="text-sscr-red">
+                    @include('components.icons.x')
+                </button>
+            </h2>
+            <div class="flex flex-col flex-1 space-y-4">
+                <input name="search" id="search-alumni" type="text" oninput="searchAlumni(event)" placeholder="Search alumni..." class="border rounded-lg p-2 w-full text-xs" />
+                <div id="alumni-invite-list" class="flex flex-col">
+                    @foreach ($alumni_list->slice(0, 5) as $alumni)
+                    <div class="invite-list-item flex flex-row justify-between border-y border-gray-300 dark:border-gray-700 py-2 items-center">
+                        {{ $alumni->alumniInformation->first_name . ' ' . $alumni->alumniInformation->last_name }}
+                        <button onclick="sendInvite(event, {{ $alumni->id }}, {{ $group->id }}, '{{ $alumni->alumniInformation->first_name . ' ' . $alumni->alumniInformation->last_name }}')"
+                            class="text-sscr-red text-sm cursor-pointer border border-sscr-red px-3 py-1 rounded active:bg-sscr-red active:text-white transition duration-150 hover:bg-sscr-red/10">
+                            Invite
+                        </button>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
+
+    <script>
+        let alumniInviteList = @json($alumni_list);
+
+        function searchAlumni(event) {
+            const searchTerm = event.target.value.toLowerCase();
+
+            if (searchTerm === '') {
+                displayAlumniList(alumniInviteList.slice(0, 5));
+            } else {
+                const filteredAlumni = alumniInviteList.filter(alumni => {
+                    const fullName = (alumni.alumni_information.first_name + ' ' + alumni.alumni_information.last_name).toLowerCase();
+                    return fullName.includes(searchTerm);
+                });
+
+                displayAlumniList(filteredAlumni.slice(0, 5));
+            }
+        }
+
+        function displayAlumniList(alumni) {
+            const alumniListContainer = document.getElementById('alumni-invite-list');
+            alumniListContainer.innerHTML = '';
+
+            if (alumni.length === 0) {
+                alumniListContainer.innerHTML = '<div class="py-2">No alumni found.</div>';
+            } else {
+                alumni.forEach(alum => {
+                    const fullName = alum.alumni_information.first_name + ' ' + alum.alumni_information.last_name;
+                    alumniListContainer.innerHTML += `
+                        <div class="invite-list-item flex flex-row justify-between border-y border-gray-300 dark:border-gray-700 py-2 items-center">
+                            ${fullName}
+                            <button onclick="sendInvite(event, ${alum.id}, {{ $group->id }}, '${fullName}')"
+                                class="text-sscr-red text-sm cursor-pointer border border-sscr-red px-3 py-1 rounded active:bg-sscr-red active:text-white transition duration-150 hover:bg-sscr-red/10">
+                                Invite
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        async function sendInvite (e, user_id, group_id, name) {
+            confirmation(`Invite ${name} to the group?`, async function () {
+                const formData = new FormData();
+                formData.append("_token", "{{ csrf_token() }}");
+                formData.append("type", "invite");
+                formData.append("user_id", user_id);
+                formData.append("group_id", group_id);
+                const url = `{{route('api.group-members.store')}}`;
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content')
+                        }
+                    });
+                    if (!response.ok) {
+                        throw new Error(`Response status: ${response.status}`);
+                    }
+                    const json = await response.json();
+                    alertModal(json.message);
+                    e.target.innerHTML = 'Invited';
+                    e.target.disabled = true;
+                } catch (error) {
+                    alertModal(error.message);
+                    console.error(error.message);
+                }
+            });
+        }
+    </script>
 
     @if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
         <script>
@@ -278,11 +384,13 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account.username}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account.alumni_information?.batch ?? ''}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account.alumni_information?.course ?? ''}</td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center h-full">
-                        <button class="text-xs bg-red-500 hover:bg-red-600  py-1 px-2 rounded-lg underline" onclick="removeMember({{$group->id}},${account.id})">Remove</button>
-                    </div>
-                </td>
+                @if($isAdmin || Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center h-full">
+                            <button class="text-xs bg-red-500 hover:bg-red-600  py-1 px-2 rounded-lg underline" onclick="removeMember({{$group->id}},${account.id})">Remove</button>
+                        </div>
+                    </td>
+                @endif
             </tr>
         `;
             table.innerHTML += template;

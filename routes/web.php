@@ -3,8 +3,10 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminInformationController;
 use App\Http\Controllers\AlumniInformationController;
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\GroupAdminsController;
 use App\Http\Controllers\GroupController;
@@ -13,11 +15,14 @@ use App\Http\Controllers\GroupPostController;
 use App\Http\Controllers\HobbiesController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessagesController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserHobbiesController;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
 
 // 'roles' => [
@@ -103,6 +108,29 @@ Route::middleware('auth')->group(function () {
     Route::patch('/user-hobbies/{user_id}', [UserHobbiesController::class, 'update'])->name('user-hobbies.update');
     Route::delete('/user-hobbies/{user_id}', [UserHobbiesController::class, 'destroy'])->name('user-hobbies.destroy');
 
+    // NOTIFICATIONS
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notification.index');
+    Route::get('/api/notifications', [NotificationController::class, 'apiIndex'])->name('api.notification.index');
+    // Route::get('/user-hobbies/create', [UserHobbiesController::class, 'create'])->name('user-hobbies.create');
+    // Route::post('/user-hobbies', [UserHobbiesController::class, 'store'])->name('user-hobbies.store');
+    // Route::get('/user-hobbies/{user_id}', [UserHobbiesController::class, 'show'])->name('user-hobbies.show');
+    // Route::get('/user-hobbies/{user_id}/edit', [UserHobbiesController::class, 'edit'])->name('user-hobbies.edit');
+    // Route::put('/user-hobbies/{user_id}', [UserHobbiesController::class, 'update'])->name('user-hobbies.update');
+    // Route::patch('/user-hobbies/{user_id}', [UserHobbiesController::class, 'update'])->name('user-hobbies.update');
+    // Route::delete('/user-hobbies/{user_id}', [UserHobbiesController::class, 'destroy'])->name('user-hobbies.destroy');
+
+    // ANNOUNCEMENTS
+    Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
+    Route::get('/announcements/{post}', [AnnouncementController::class, 'show'])->name('announcements.show');
+
+    // EVENTS
+    Route::get('/events', [EventController::class, 'index'])->name('events.index');
+    Route::get('/events/{post}', [EventController::class, 'show'])->name('events.show');
+
+    // NEWS
+    Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+    Route::get('/news/{post}', [NewsController::class, 'show'])->name('news.show');
+
     // HOBBIES
     Route::get('/hobbies', [HobbiesController::class, 'index'])->name('hobbies.index');
     Route::get('/hobbies/create', [HobbiesController::class, 'create'])->name('hobbies.create');
@@ -127,6 +155,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/group-members', [GroupMembersController::class, 'index'])->name('group-members.index');
     Route::get('/group-members/create', [GroupMembersController::class, 'create'])->name('group-members.create');
     Route::post('/group-members', [GroupMembersController::class, 'store'])->name('group-members.store');
+    Route::post('/api/group-members', [GroupMembersController::class, 'apiStore'])->name('api.group-members.store');
     Route::get('/api/group-members/{group}', [GroupMembersController::class, 'apiShow'])->name('api.group-members.show');
     Route::get('/group-members/{group}/edit', [GroupMembersController::class, 'edit'])->name('group-members.edit');
     Route::put('/group-members/{group}', [GroupMembersController::class, 'update'])->name('group-members.update');
@@ -154,16 +183,6 @@ Route::middleware('auth')->group(function () {
     // Route::put('/feedback/{feedback}', [FeedbackController::class, 'update'])->name('feedback.update');
     // Route::patch('/feedback/{feedback}', [FeedbackController::class, 'update'])->name('feedback.update');
     // Route::delete('/feedback/{feedback}', [FeedbackController::class, 'destroy'])->name('feedback.destroy');
-
-    // GROUP ADMINS
-    // Route::get('/group-admins', [GroupAdminsController::class, 'index'])->name('group-members.index');
-    // Route::get('/group-admins/create', [GroupMembersController::class, 'create'])->name('group-members.create');
-    // Route::post('/group-admins', [GroupMembersController::class, 'store'])->name('group-members.store');
-    // Route::get('/group-admins/{group}', [GroupMembersController::class, 'show'])->name('group-members.show');
-    // Route::get('/group-admins/{group}/edit', [GroupMembersController::class, 'edit'])->name('group-members.edit');
-    // Route::put('/group-admins/{group}', [GroupMembersController::class, 'update'])->name('group-members.update');
-    // Route::patch('/group-admins/{group}', [GroupMembersController::class, 'update'])->name('group-members.update');
-    // Route::delete('/group-admins/{groupMember}', [GroupMembersController::class, 'destroy'])->name('group-members.destroy');
 
     // POSTS
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
@@ -224,18 +243,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
     Route::patch('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
     Route::delete('/chats/{id}', [ChatController::class, 'destroy'])->name('chats.destroy');
-
-
-
-    // POSTS
-    // Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-    // Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
-    // Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
-    // Route::get('/posts/{postId}', [PostController::class, 'show'])->name('posts.show');
-    // Route::get('/posts/{postId}/edit', [PostController::class, 'edit'])->name('posts.edit');
-    // Route::put('/posts/{postId}', [PostController::class, 'update'])->name('posts.update');
-    // Route::patch('/posts/{postId}', [PostController::class, 'update'])->name('posts.update');
-    // Route::delete('/posts/{postId}', [PostController::class, 'destroy'])->name('posts.destroy');
 
 
 

@@ -16,8 +16,8 @@
             border-radius: 5px;
             padding: 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            max-width: 600px; /* Limiting max width for larger screens */
-            margin: auto; /* Centering the container */
+            max-width: 600px;
+            margin: auto;
         }
         .header {
             text-align: center;
@@ -53,19 +53,18 @@
             margin-top: 20px;
         }
 
-        /* Responsive Styles */
         @media (max-width: 600px) {
             body {
-                padding: 10px; /* Reducing padding for mobile */
+                padding: 10px;
             }
             .container {
-                padding: 15px; /* Reducing container padding for mobile */
+                padding: 15px;
             }
             h1 {
-                font-size: 24px; /* Adjusting heading size for mobile */
+                font-size: 24px;
             }
             p, .credentials {
-                font-size: 14px; /* Reducing font size for better readability on mobile */
+                font-size: 14px;
             }
         }
     </style>

@@ -11,4 +11,10 @@ class Notification extends Model
     use HasFactory, SoftDeletes;
 
     public $table = "notifications";
+
+    protected $fillable = [
+        'type',
+        'content',
+        'url',
+    ];
 }

@@ -50,7 +50,12 @@
             </div>
         </div>
     </div>
-    <a class="bg-sscr-red text-white rounded-md h-max py-2 px-4 inline-flex items-center text-xs cursor-pointer" onclick="exportTable('group-members-table-body')">Export Table</a>
+    <div class="flex gap-2">
+        <a class="bg-sscr-red text-white rounded-md h-max py-2 px-4 inline-flex items-center text-xs cursor-pointer" onclick="document.getElementById('invite-member-modal').classList.toggle('hidden')">Invite</a>
+        @if($isAdmin || Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
+            <a class="bg-sscr-red text-white rounded-md h-max py-2 px-4 inline-flex items-center text-xs cursor-pointer" onclick="exportTable('group-members-table-body')">Export Table</a>
+        @endif
+    </div>
 </div>
 
 <div class="overflow-x-auto">
@@ -64,7 +69,9 @@
                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Alumni ID</th>
                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Batch</th>
                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Course</th>
+                @if($isAdmin || Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Actions</th>
+                @endif
             </tr>
         </thead>
         <tbody class="text-gray-700 dark:text-gray-300" id="group-members-table-body">

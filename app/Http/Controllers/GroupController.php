@@ -126,8 +126,10 @@ class GroupController extends Controller
             ->first();
         if ($groupMembers && !is_null($groupMembers->approved_at)) {
             $status = 'member';
-        } elseif ($groupMembers && is_null($groupMembers->rejected_at) && is_null($groupMembers->approved_at)) {
+        } elseif ($groupMembers && is_null($groupMembers->rejected_at) && is_null($groupMembers->approved_at) && is_null($groupMembers->is_invited_at)) {
             $status = 'pending';
+        } elseif ($groupMembers && !is_null($groupMembers->is_invited_at)) {
+            $status = 'not a member';
         } else {
             $status = 'not a member';
         }
@@ -192,14 +194,26 @@ class GroupController extends Controller
             'courses' => AlumniInformation::distinct('course')->orderBy('course', 'desc')->get(['course']),
         ];
 
-        if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') {
-            $data['alumni_list'] = User::where('role', 'alumni')
-                ->whereNull('deleted_at')
-                ->whereNotNull('approved_at')
-                ->whereHas('alumniInformation')
-                ->with('alumniInformation')
-                ->get()->all();
-        }
+        $memberUserIds = GroupMember::where('group_id', $group->id)
+            ->whereNull('deleted_at')
+            ->whereNull('rejected_at')
+            ->whereNotNull('approved_at')
+            ->pluck('user_id')
+            ->toArray();
+
+        $adminUserIds = GroupAdmin::where('group_id', $group->id)
+            ->whereNull('deleted_at')
+            ->pluck('user_id')
+            ->toArray();
+
+        $excludedUserIds = array_merge($memberUserIds, $adminUserIds);
+        $data['alumni_list'] = User::where('role', 'alumni')
+            ->whereNull('deleted_at')
+            ->whereNotNull('approved_at')
+            ->whereHas('alumniInformation')
+            ->with('alumniInformation')
+            ->whereNotIn('id', $excludedUserIds)
+            ->get();
 
         return view('groups.manage.index', $data);
     }

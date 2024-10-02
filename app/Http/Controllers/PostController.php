@@ -32,6 +32,9 @@ class PostController extends Controller
     {
         $posts = Post::with(['likes.user', 'comments.user', 'comments.deletedBy', 'postedBy.alumniInformation', 'postedBy.adminInformation', 'approvedBy', 'rejected_by', 'event', 'announcement', 'news'])
                 ->where('group_id', null)
+                ->whereNull('deleted_at')
+                ->whereNotNull('approved_at')
+                ->whereNull('rejected_at')
                 ->orderBy('created_at', 'desc')
                 ->get();
         $data = [

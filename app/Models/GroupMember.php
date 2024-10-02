@@ -12,7 +12,7 @@ class GroupMember extends Model
 
     public $table = 'group_members';
 
-    protected $fillable = ['user_id', 'group_id', 'approved_at', 'rejected_at', 'approved_by', 'rejected_by'];
+    protected $fillable = ['user_id', 'group_id', 'approved_at', 'rejected_at', 'approved_by', 'rejected_by', 'is_invited_by', 'is_invited_at'];
 
     public function group()
     {
@@ -22,5 +22,10 @@ class GroupMember extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function invitedBy()
+    {
+        return $this->belongsTo(User::class, 'is_invited_by');
     }
 }

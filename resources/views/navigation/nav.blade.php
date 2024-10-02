@@ -1,10 +1,9 @@
 <nav class="bg-sscr-red dark:bg-sscr-red border-b border-gray-200 dark:border-gray-700">
-    <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 relative">
-        <div class="flex w-full justify-between h-max py-4 sm:py-2 px-2">
-            <div class="shrink-0 flex items-center">
+        <div class="flex w-full justify-between h-max py-4 sm:py-2 px-2 itesms-center relative">
+            <div class="absolute">
                 <a href="{{ route('home') }}">
-                    <x-application-logo />
+                    <img class="h-16 w-auto" src="{{ asset('storage/stags.png') }}" alt="San Sebastian College - Recoletos de Cavite">
                 </a>
             </div>
             <div class="flex sm:flex shrink-0 flex-1 items-center text-center flex-col">
@@ -25,7 +24,6 @@
             </div>
         </div>
 
-        <!-- Responsive Navigation Menu -->
         <div id="responsiveMenu" class="hidden sm:hidden">
             <div class="pt-2 pb-3 space-y-1">
                 <a href="{{ route('home') }}"
@@ -34,7 +32,6 @@
                 </a>
             </div>
 
-            <!-- Responsive Settings Options -->
             <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
                 <div class="px-4">
                     <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
@@ -47,7 +44,6 @@
                         Profile
                     </a>
 
-                    <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <a href="{{ route('logout') }}"

@@ -7,6 +7,7 @@ use App\Models\GroupMember;
 use App\Models\User;
 use Error;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class GroupMembersController extends Controller
@@ -39,8 +40,19 @@ class GroupMembersController extends Controller
                 'group_id' => 'required|exists:groups,id'
             ]);
 
+            $ifHasInvite = GroupMember::where('user_id', $user->id)->where('group_id', $request->group_id)->whereNull('deleted_at')->whereNotNull('is_invited_at')->whereNull('approved_at')->whereNull('rejected_at')->latest()->first();
+
+            if($ifHasInvite) {
+                $ifHasInvite->update([
+                    'deleted_by' => Auth::user()->id,
+                ]);
+                $ifHasInvite->save();
+                $ifHasInvite->delete();
+            }
+
             $existingMember = GroupMember::where('user_id', $user->id)
                 ->where('group_id', $request->group_id)
+                ->whereNull('deleted_at')
                 ->latest()
                 ->first();
             if ($existingMember && !is_null($existingMember->approved_at)) {
@@ -57,6 +69,59 @@ class GroupMembersController extends Controller
             return redirect()->back()->with('errors', $e->getMessage());
         }
     }
+
+    public function apiStore(Request $request)
+    {
+        $request->validate([
+            'group_id' => 'required|exists:groups,id',
+            'user_id' => 'required|exists:users,id',
+            'type' => 'required|string|max:255',
+        ]);
+
+        if ($request->type === 'invite') {
+            try {
+                $user = Auth::user();
+
+                $existingMember = GroupMember::where('user_id', $request->user_id)
+                    ->where('group_id', $request->group_id)
+                    ->whereNull('deleted_at')
+                    ->whereNull('rejected_at')
+                    ->latest()
+                    ->first();
+                if ($existingMember && !is_null($existingMember->approved_at)) {
+                    return response()->json(['status' => 'error', 'message' => 'already a member of this group.']);
+                } else if ($existingMember && is_null($existingMember->approved_at)) {
+                    return response()->json(['status' => 'error', 'message' => 'pending member of this group.']);
+                }
+
+                if ($user->role === 'cict_admin' || $user->role === 'alumni_coordinator') {
+                    GroupMember::create([
+                        'user_id' => $request->user_id,
+                        'group_id' => $request->group_id,
+                        'is_invited_by' => $user->id,
+                        'is_invited_at' => Carbon::now(),
+                        'approved_at' => Carbon::now(),
+                        'approved_by' => $user->id
+                    ]);
+                    return response()->json(['status' => 'success', 'message' => 'Successfully added to the group']);
+                } else {
+                    GroupMember::create([
+                        'user_id' => $request->user_id,
+                        'group_id' => $request->group_id,
+                        'is_invited_by' => $user->id,
+                        'is_invited_at' => Carbon::now(),
+                    ]);
+                    return response()->json(['status' => 'success', 'message' => 'Successfully invited group']);
+                }
+
+            } catch (\Exception $e) {
+                return response()->json(['status' => 'error', 'message' => 'Failed to invite group: ' . $e->getMessage()]);
+            }
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Invalid request']);
+        }
+    }
+
     /**
      * Display the specified resource.
      */

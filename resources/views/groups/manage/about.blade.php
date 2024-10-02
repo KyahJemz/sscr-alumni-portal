@@ -1,8 +1,10 @@
 <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex justify-between items-center mb-4">
     <p>About</p>
+    @if($isAdmin || Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
     <a onclick="document.getElementById('update-group-modal').classList.toggle('hidden');" class="text-gray-800 font-bold py-2 px-4 rounded cursor-pointer">
         @include('components.icons.edit')
     </a>
+    @endif
 </h2>
 
 <div class="">
