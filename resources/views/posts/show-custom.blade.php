@@ -63,7 +63,7 @@
 
             const userFullName = "{{ optional($user->alumni_information)->first_name ?? optional($user->admin_information)->first_name }} {{ optional($user->alumni_information)->last_name ?? optional($user->admin_information)->last_name }}";
 
-            const type = `${post.type.charAt(0).toUpperCase() + post.type.slice(1)} on ${getHumanReadableDate(new Date(post.created_at))}`;
+            const type = `${getHumanReadableDate(new Date(post.created_at))}`;
             const hrs = getTimeAgo(new Date(post.approved_at ?? post.created_at));
 
             const images = ((post.videos && Array.isArray(JSON.parse(post.videos)) && JSON.parse(post.videos).length > 0) ||
@@ -196,14 +196,21 @@
 
             const template = `
                 <div class="bg-white p-4 text-gray-900 border border-gray-200 shadow-md rounded-md mb-6">
-                    <div class="flex gap-4 border-b-2 border-gray-300 mb-4 pb-4 relative">
-                        <img src="{{ asset('storage/profile/images') }}/${post.posted_by.image ?? 'default.jpg'}"
-                            alt="Profile Image"
-                            class="border border-gray-300 dark:border-gray-700 w-12 h-12 rounded-full bg-gray-200">
-                        <div class="flex-1">
-                            <p class="text-md font-bold">${postFullName}</p>
-                            <p class="text-xs font-light">${type}</p>
-                            <p class="text-xs font-light">${hrs}</p>
+
+                    ${post?.announcement || post?.new || post?.event ? `
+                        <div class="text-2xl font-bold mb-2 flex justify-center">
+                            ${post.announcement ? post.announcement.title.replace(/\n/g, '<br>') : ''}
+                            ${post.news ? post.news.title.replace(/\n/g, '<br>') : ''}
+                        </div>
+                    `: ""}
+
+                    <div class="flex flex-row gap-4 mb-4 pb-4 relative">
+                        <div class="flex-1 border-y-2 border-gray-300 py-2 flex gap-2 items-center">
+                            <span class="text-xs font-bold">Posted by ${postFullName}</span>
+<span style=" font-size: 10px; color: #000000;">●</span>
+                            <span class="text-xs font-light">${type}</span>
+<span style=" font-size: 10px; color: #000000;">●</span>
+                            <span class="text-xs font-light">${hrs}</span>
                         </div>
                         ${post.posted_by.id === +"{{Auth::user()->id}}" || "{{Auth::user()->role}}" === 'cict_admin' || "{{Auth::user()->role}}" === 'alumni_coordinator' ? `
                             <button class="text-sscr-red absolute top-0 right-0" onclick="openPostOptions(${post.id})">
@@ -224,12 +231,8 @@
                             @include('components.icons.calendar')
                             <div>
                                 <div class="text-md font-bold text-sscr-red">${getHumanReadableDate(new Date(post.event.start_date))}${post?.event?.end_date ? ' to ' + getHumanReadableDate(new Date(post.event.end_date)) : ''}</div>
-                                <div class="text-md text-gray-500 font-semibold">${post.event.title}</div>
                                 <div class="text-sm text-gray-500 ">${post.event.location}</div>
                             </div>
-                        </div>
-                        <div class="text-md text-gray-700 font-light my-4 ">
-                            ${post.event.description.replace(/\n/g, '<br>')}
                         </div>
                         ${post.event?.contributions || post.event?.amount ? `
                             <div class="text-sm text-gray-700 my-4 font-bold">Notes:
@@ -246,14 +249,7 @@
                         ` : ""}
                     ` : ""}
 
-                    ${post?.announcement || post?.news ? `
-                        <div class="text-md font-bold mb-2">
-                            ${post.announcement ? post.announcement.title.replace(/\n/g, '<br>') : ''}
-                            ${post.news ? post.news.title.replace(/\n/g, '<br>') : ''}
-                        </div>
-                    `: ""}
-
-                    ${post?.announcement || post?.news ? `
+                    ${post?.announcement || post?.news || post?.event  ? `
                         <div class="text-sm font-light mb-2">
                             ${post.announcement ? post.announcement.description.replace(/\n/g, '<br>') : ''}
                             ${post.news ? post.news.description.replace(/\n/g, '<br>') : ''}
@@ -263,6 +259,27 @@
                     ${images}
 
                     ${post.files !== '[]' ? files : ""}
+
+                    <div class="flex gap-4 mb-4 pb-4 relative">
+                        <img src="{{ asset('storage/profile/images') }}/${post.posted_by.image ?? 'default.jpg'}"
+                            alt="Profile Image"
+                            class="border border-gray-300 dark:border-gray-700 w-12 h-12 rounded-full bg-gray-200">
+                        <div class="flex-1">
+                            <p class="text-md font-bold">Posted by ${postFullName}</p>
+                            <p class="text-xs font-light">${type}</p>
+                            <p class="text-xs font-light">${hrs}</p>
+                        </div>
+                        ${post.posted_by.id === +"{{Auth::user()->id}}" || "{{Auth::user()->role}}" === 'cict_admin' || "{{Auth::user()->role}}" === 'alumni_coordinator' ? `
+                            <button class="text-sscr-red absolute top-0 right-0" onclick="openPostOptions(${post.id})">
+                                @include('components.icons.more')
+                            </button>
+                            <div class="hidden absolute top-7 right-0 border border-gray-300 dark:border-gray-700 rounded-md px-4 py-2 space-y-2 bg-white"
+                                id="post-options-${post.id}">
+                                <a href="/posts/${post.id}/edit" class="text-sm font-light cursor-pointer">Edit</a>
+                                <div onclick="deletePostConfirmation(${post.id})" class="text-sm font-light cursor-pointer">Delete</div>
+                            </div>
+                        ` : ''}
+                    </div>
 
                     ${likeSection}
 

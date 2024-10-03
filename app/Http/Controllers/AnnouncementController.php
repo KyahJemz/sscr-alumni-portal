@@ -47,10 +47,10 @@ class AnnouncementController extends Controller
         if($post) {
             $data = [
                 'user' => $user,
-                'post_id' => $post->load(['postedBy', 'event', 'announcement', 'news']),
+                'post_id' => $post->id,
             ];
         }
-        return view('announcements.show', $data);
+        return view('posts.show-custom', $data);
     }
 
     /**

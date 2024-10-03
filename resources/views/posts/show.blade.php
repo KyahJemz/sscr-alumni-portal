@@ -141,6 +141,8 @@
                 </div>
             ` : '';
 
+            console.log(post);
+
             const likeSection = `
                 <div class="flex justify-around items-center mt-4 text-gray-700 border-y-2 border-gray-300 py-2 w-full">
                     ${userHasLiked ? `
@@ -176,11 +178,11 @@
                             </form>
                         </div>
                     </div>
-                    ${post.comments.slice(-2).map(comment => `
+                    ${post.comments.map(comment => `
                         <div class="bg-gray-100 p-2 rounded-md mb-2 flex gap-2 items-start shadow-md">
                             <img src="{{ asset('storage/profile/images') }}/${comment.user.image || 'default.jpg'}" alt="Profile Image" class="w-8 h-8 rounded-full object-cover bg-gray-200">
                             <div class="flex-1 relative">
-                                <p class="text-sm font-bold">${(comment.user.alumni_information?.first_name ?? comment.user.admin_information?.first_name) + ' ' + (comment.user.alumni_information?.last_name ?? comment.user.admin_information?.last_name)}</p>
+                                <p class="text-sm font-bold">${(comment.user.alumni_information?.first_name || comment.user.admin_information?.first_name || '') + ' ' + (comment.user.alumni_information?.last_name || comment.user.admin_information?.last_name || '')}</p>
                                 <p class="text-xs font-light">${comment.content.replace(/\n/g, '<br>')}</p>
                                 <p class="text-xs text-gray-400">${getTimeAgo(new Date(comment.created_at))}</p>
                                 ${comment.user.id === +"{{Auth::user()->id}}" || "{{Auth::user()->role}}" === 'cict_admin' || "{{Auth::user()->role}}" === 'alumni_coordinator' ? `

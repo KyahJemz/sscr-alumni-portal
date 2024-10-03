@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\GroupAdmin;
+use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,12 @@ class GroupAdminsController extends Controller
                     'group_id' => $group->id,
                     'user_id' => $adminId,
                     'created_by' => Auth::user()->id
+                ]);
+                Notification::create([
+                    'type' => 'group',
+                    'user_id' => $adminId,
+                    'content' => "You have been added as a group admin in " . $group->name,
+                    'url' => "/groups/{$group->id}",
                 ]);
             }
 
@@ -117,6 +124,12 @@ class GroupAdminsController extends Controller
         try {
             $groupAdmin = GroupAdmin::where('group_id', $group->id)->where('user_id', $user->id)->whereNull('deleted_at')->latest()->first();
             $groupAdmin->delete();
+            Notification::create([
+                'type' => 'group',
+                'user_id' => $user->id,
+                'content' => "You have been removed as a group admin in " . $group->name,
+                'url' => "/groups/{$group->id}",
+            ]);
             return response()->json(['status' => 'success', 'message' => 'Successfully removed from the group']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => 'Failed to remove from the group: ' . $e->getMessage()]);

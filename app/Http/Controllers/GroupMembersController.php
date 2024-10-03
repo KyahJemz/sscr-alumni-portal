@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\GroupMember;
+use App\Models\Notification;
 use App\Models\User;
 use Error;
 use Illuminate\Http\Request;
@@ -103,13 +104,24 @@ class GroupMembersController extends Controller
                         'approved_at' => Carbon::now(),
                         'approved_by' => $user->id
                     ]);
+                    Notification::create([
+                        'user_id' => $request->user_id,
+                        'type' => 'group',
+                        'content' => "You have been added as a member of the group " . Group::find($request->group_id)->name . " by "
+                            . ($user?->adminInformation?->first_name ?? $user?->alumniInformation?->first_name ?? '') . " "
+                            . ($user?->adminInformation?->last_name ?? $user?->alumniInformation?->last_name ?? ''),
+                        'url' => "/groups/{$request->group_id}",
+                    ]);
                     return response()->json(['status' => 'success', 'message' => 'Successfully added to the group']);
                 } else {
-                    GroupMember::create([
+                    Notification::create([
                         'user_id' => $request->user_id,
-                        'group_id' => $request->group_id,
-                        'is_invited_by' => $user->id,
-                        'is_invited_at' => Carbon::now(),
+                        'type' => 'group',
+                        'content' => "You have been invited to join the group " . Group::find($request->group_id)->name . " by "
+                            . ($user?->adminInformation?->first_name ?? $user?->alumniInformation?->first_name ?? '') . " "
+                            . ($user?->adminInformation?->last_name ?? $user?->alumniInformation?->last_name ?? ''),
+
+                        'url' => "/groups/{$request->group_id}",
                     ]);
                     return response()->json(['status' => 'success', 'message' => 'Successfully invited group']);
                 }
@@ -182,10 +194,22 @@ class GroupMembersController extends Controller
                     'approved_at' => now(),
                     'approved_by' => Auth::user()->id
                 ]);
+                Notification::create([
+                    'type' => 'group',
+                    'user_id' => $groupMember->user_id,
+                    'content' => "You have been approved as a member of the group " . Group::find($groupMember->group_id)->name,
+                    'url' => "/groups/{$groupMember->group_id}",
+                ]);
             } else {
                 $groupMember->update([
                     'rejected_at' => now(),
                     'rejected_by' => Auth::user()->id
+                ]);
+                Notification::create([
+                    'type' => 'group',
+                    'user_id' => $groupMember->user_id,
+                    'content' => "You have been rejected from the group " . Group::find($groupMember->group_id)->name,
+                    'url' => "/groups/{$groupMember->group_id}",
                 ]);
             }
             $groupMember->save();
@@ -221,6 +245,12 @@ class GroupMembersController extends Controller
         try {
             $groupMember = GroupMember::where('group_id', $group->id)->where('user_id', $user->id)->whereNull('deleted_at')->latest()->first();
             $groupMember->delete();
+            Notification::create([
+                'type' => 'group',
+                'user_id' => $user->id,
+                'content' => "You have been removed from the group " . $group->name,
+                'url' => "/groups/{$group->id}",
+            ]);
             return response()->json(['status' => 'success', 'message' => 'Successfully removed from the group']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => 'Failed to remove from the group: ' . $e->getMessage()]);

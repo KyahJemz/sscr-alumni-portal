@@ -470,9 +470,13 @@
                     json.members_list.forEach((account, index) => {
                         updateMembersTable(account.user, index)
                     });
+                };
+                if (json.members_approval_list.length !== 0) {
                     json.members_approval_list.forEach((account, index) => {
                         updateMembersApprovalTable(account.user, index, account)
                     });
+                };
+                if (json.admins_list.length !== 0) {
                     @if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
                         json.admins_list.forEach((account, index) => {
                             updateAdminsTable(account.user, index)

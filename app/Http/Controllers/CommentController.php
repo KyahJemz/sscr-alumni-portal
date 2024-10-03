@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Notification;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,6 +34,13 @@ class CommentController extends Controller
                 'commented_by' => Auth::user()->id,
                 'deleted_by' => null,
                 'content' => $request->comment,
+            ]);
+
+            Notification::create([
+                'type' => 'post',
+                'user_id' => Post::find($request->post_id)->created_by,
+                'content' => (optional(Auth::user()->alumniInformation)->getName() ?? optional(Auth::user()->adminInformation)->getName() ?? Auth::user()->username) . " commented on your post",
+                'url' => "/posts/{$request->post_id}",
             ]);
 
             return response()->json([

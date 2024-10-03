@@ -30,7 +30,7 @@ class PostController extends Controller
     }
     public function apiIndex()
     {
-        $posts = Post::with(['likes.user', 'comments.user', 'comments.deletedBy', 'postedBy.alumniInformation', 'postedBy.adminInformation', 'approvedBy', 'rejected_by', 'event', 'announcement', 'news'])
+        $posts = Post::with(['likes.user', 'comments.user.adminInformation', 'comments.user.alumniInformation', 'comments.deletedBy', 'postedBy.alumniInformation', 'postedBy.adminInformation', 'approvedBy', 'rejected_by', 'event', 'announcement', 'news'])
                 ->where('group_id', null)
                 ->whereNull('deleted_at')
                 ->whereNotNull('approved_at')
@@ -202,7 +202,7 @@ class PostController extends Controller
     public function apiShow(string $id)
     {
         $data = [
-            'post' => Post::with(['likes.user', 'comments.user', 'comments.deletedBy', 'postedBy.alumniInformation', 'postedBy.adminInformation', 'approvedBy', 'rejected_by', 'event', 'announcement', 'news'])->where('group_id', null)->where('id', $id)->first(),
+            'post' => Post::with(['likes.user', 'comments.user.adminInformation', 'comments.user.alumniInformation', 'comments.deletedBy', 'postedBy.alumniInformation', 'postedBy.adminInformation', 'approvedBy', 'rejected_by', 'event', 'announcement', 'news'])->where('group_id', null)->where('id', $id)->first(),
         ];
         return response()->json([
             'data' => $data,
