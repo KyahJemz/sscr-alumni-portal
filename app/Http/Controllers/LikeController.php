@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Like;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LikeController extends Controller
 {
@@ -46,7 +47,7 @@ class LikeController extends Controller
                 'message' => 'Successfully added like',
             ], 201);
         } catch (\Exception $e) {
-            \Log::error($e->getMessage());
+            Log::error($e->getMessage());
 
             return response()->json([
                 'message' => 'Failed to add like',

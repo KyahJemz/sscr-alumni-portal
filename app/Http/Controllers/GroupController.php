@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AlumniInformation;
 use App\Models\Group;
 use App\Models\GroupAdmin;
+use App\Models\GroupChat;
 use App\Models\GroupMember;
 use App\Models\Post;
 use App\Models\User;
@@ -95,7 +96,13 @@ class GroupController extends Controller
                     'user_id' => $adminId,
                     'created_by' => Auth::user()->id
                 ]);
-            }
+            };
+
+            GroupChat::create([
+                    'sent_by' => Auth::id(),
+                    'group_id' => $group->id,
+                    'message' => '- - Group chat created - -'
+            ]);
 
             DB::commit();
 

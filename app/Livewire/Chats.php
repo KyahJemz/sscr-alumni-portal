@@ -1,16 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Livewire;
 
 use App\Models\Chat;
 use App\Models\GroupChat;
-use Illuminate\Http\Request;
+use App\Models\GroupMember;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
-class TestController extends Controller
+class Chats extends Component
 {
-    public function index()
+
+    protected $listeners = ['refreshChatList' => 'render'];
+
+    public function render()
     {
+
         $myGroups = Auth::user()->groups;
         $managedGroups = Auth::user()->groupsManaged;
 
@@ -37,6 +42,6 @@ class TestController extends Controller
 
         $mergedChats = $groupChatHeads->merge($chatHeads)->sortByDesc('created_at');
 
-        return dd($mergedChats);
+        return view('livewire.chats', ['chats' => $mergedChats ?? []]);
     }
 }

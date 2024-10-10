@@ -14,13 +14,18 @@
                             alt=""
                             class="border border-gray-300 dark:border-gray-700 w-16 h-16 rounded-full bg-gray-200">
                         <div class="w-full space-y-2">
-                            <select id="post-type-selector" name="type"
-                                class="text-xs font-light px-2 py-1 pr-8 cursor-pointer rounded">
-                                <option class="cursor-pointer" value="post">Create Post</option>
-                                <option class="cursor-pointer" value="announcement">Create Announcement</option>
-                                <option class="cursor-pointer" value="event">Create Event</option>
-                                <option class="cursor-pointer" value="news">Create News</option>
-                            </select>
+                            <div class="flex justify-between">
+                                <select id="post-type-selector" name="type" class="text-xs font-light px-2 py-1 pr-8 cursor-pointer rounded">
+                                    <option class="cursor-pointer" value="post">Create Post</option>
+                                    <option class="cursor-pointer" value="announcement">Create Announcement</option>
+                                    <option class="cursor-pointer" value="event">Create Event</option>
+                                    <option class="cursor-pointer" value="news">Create News</option>
+                                </select>
+                                @if (Auth::user()->role === 'alumni_coordinator' || Auth::user()->role === 'cict_admin')
+                                    <a class="text-xs font-light px-2 py-1 rounded bg-sscr-red text-white shadow" href="{{ route('post-approvals.index') }}">View aprovals</a>
+                                @endif
+                            </div>
+
                             <p class="text-xs font-light pb-2">Creating as:
                                 {{ optional($user->alumniInformation)->getName() ??
                                     (optional($user->adminInformation)->getName() ?? $user->username) }}

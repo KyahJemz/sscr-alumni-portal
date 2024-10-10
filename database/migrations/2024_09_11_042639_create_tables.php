@@ -154,21 +154,9 @@ return new class extends Migration
             $table->text('message')->nullable();
             $table->string('file')->nullable();
             $table->text('image')->nullable();
+            $table->timestamp('read_at')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
-        });
-
-        Schema::create('post_edit_approvals', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('post_id')->constrained('posts');
-            $table->foreignId('approved_by')->nullable()->constrained('users');
-            $table->foreignId('rejected_by')->nullable()->constrained('users');
-            $table->foreignId('created_by')->constrained('users');
-            $table->json('request');
-            $table->timestamps();
-            $table->softDeletes();
-            $table->timestamp('rejected_at')->nullable();
-            $table->timestamp('approved_at')->nullable();
         });
 
         Schema::create('group_members', function (Blueprint $table) {
@@ -204,6 +192,7 @@ return new class extends Migration
             $table->text('message');
             $table->string('files')->nullable();
             $table->text('images')->nullable();
+            $table->timestamp('read_at')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
         });

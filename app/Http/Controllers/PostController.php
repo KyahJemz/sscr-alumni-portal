@@ -7,7 +7,6 @@ use App\Models\Event;
 use App\Models\Group;
 use App\Models\News;
 use App\Models\Post;
-use App\Models\PostEditApproval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -162,8 +161,8 @@ class PostController extends Controller
             Post::create([
                 'type' => $request->type,
                 'created_by' => $user->id,
-                'approved_by' => null,
-                'approved_at' => null,
+                'approved_by' => (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') ? $user->id : null,
+                'approved_at' => (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') ? Carbon::now() : null,
                 'group_id' => null,
                 'event_id' => $event ? $event->id : null,
                 'news_id' => $news ? $news->id : null,
@@ -288,76 +287,64 @@ class PostController extends Controller
             $thumbnailToSave = $thumbnailName;
         }
 
-        if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator' || Auth::user()->role === 'program_chair') {
-            switch ($post->type) {
-                case 'event':
-                    $request->validate([
-                        'startDate' => 'nullable|date',
-                        'endDate' => 'nullable|date',
-                        'location' => 'nullable|string',
-                        'description' => 'required|string',
-                        'title' => 'required|string',
-                    ]);
-                    $startDate = $request->startDate ? Carbon::createFromFormat('Y-m-d\TH:i', $request->startDate)->format('Y-m-d H:i:s') : null;
-                    $endDate = $request->endDate ? Carbon::createFromFormat('Y-m-d\TH:i', $request->endDate)->format('Y-m-d H:i:s') : null;
+        switch ($post->type) {
+            case 'event':
+                $request->validate([
+                    'startDate' => 'nullable|date',
+                    'endDate' => 'nullable|date',
+                    'location' => 'nullable|string',
+                    'description' => 'required|string',
+                    'title' => 'required|string',
+                ]);
+                $startDate = $request->startDate ? Carbon::createFromFormat('Y-m-d\TH:i', $request->startDate)->format('Y-m-d H:i:s') : null;
+                $endDate = $request->endDate ? Carbon::createFromFormat('Y-m-d\TH:i', $request->endDate)->format('Y-m-d H:i:s') : null;
 
-                    if (!$endDate || $endDate === '1970-01-01 00:00:00') {
-                        $endDate = null;
-                    }
-                    $post->event()->update([
-                        'title' => $request->title,
-                        'description' => $request->description,
-                        'location' => $request->location,
-                        'start_date' => $startDate,
-                        'end_date' => $endDate,
-                        'status' => 'active',
-                        'thumbnail' => $thumbnailToSave,
-                    ]);
-                    break;
+                if (!$endDate || $endDate === '1970-01-01 00:00:00') {
+                    $endDate = null;
+                }
+                $post->event()->update([
+                    'title' => $request->title,
+                    'description' => $request->description,
+                    'location' => $request->location,
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                    'status' => 'active',
+                    'thumbnail' => $thumbnailToSave,
+                ]);
+                break;
 
-                case 'announcement':
-                    $request->validate([
-                        'description' => 'required|string',
-                        'title' => 'required|string',
-                    ]);
+            case 'announcement':
+                $request->validate([
+                    'description' => 'required|string',
+                    'title' => 'required|string',
+                ]);
 
-                    $post->announcement()->update([
-                        'title' => $request->title,
-                        'description' => $request->description,
-                        'thumbnail' => $thumbnailToSave,
-                    ]);
-                    break;
+                $post->announcement()->update([
+                    'title' => $request->title,
+                    'description' => $request->description,
+                    'thumbnail' => $thumbnailToSave,
+                ]);
+                break;
 
-                case 'news':
-                    $request->validate([
-                        'description' => 'required|string',
-                        'title' => 'required|string',
-                    ]);
+            case 'news':
+                $request->validate([
+                    'description' => 'required|string',
+                    'title' => 'required|string',
+                ]);
 
-                    $post->news()->update([
-                        'title' => $request->title,
-                        'description' => $request->description,
-                        'thumbnail' => $thumbnailToSave,
-                    ]);
-                    break;
-            }
-
-            $post->update([
-                'content' => $request->content ?? $post->content,
-                'images' => ((count($imagePaths) !== 0) ? json_encode($imagePaths) : ($isImagesChanged ? json_encode([]) : $post->images)),
-                'videos' => ((count($videosPaths) !== 0) ? json_encode($videosPaths) : ($isVideosChanged ? json_encode([]) : $post->videos)),
-                'files' => ((count($filesPaths) !== 0) ? json_encode($filesPaths) : ($isFilesChanged ? json_encode([]) : $post->files)),
-            ]);
+                $post->news()->update([
+                    'title' => $request->title,
+                    'description' => $request->description,
+                    'thumbnail' => $thumbnailToSave,
+                ]);
+                break;
         }
 
-        PostEditApproval::create([
-            'post_id' => $post->id,
-            'approved_by' => (Auth::user()->role !== 'alumni') ? Auth::user()->id : null,
-            'rejected_by' => null,
-            'created_by' => $post->created_by,
-            'request' => json_encode($request->all()),
-            'approved_at' => (Auth::user()->role !== 'alumni') ? Carbon::now() : null,
-            'rejected_at' => null,
+        $post->update([
+            'content' => $request->content ?? $post->content,
+            'images' => ((count($imagePaths) !== 0) ? json_encode($imagePaths) : ($isImagesChanged ? json_encode([]) : $post->images)),
+            'videos' => ((count($videosPaths) !== 0) ? json_encode($videosPaths) : ($isVideosChanged ? json_encode([]) : $post->videos)),
+            'files' => ((count($filesPaths) !== 0) ? json_encode($filesPaths) : ($isFilesChanged ? json_encode([]) : $post->files)),
         ]);
 
         DB::commit();

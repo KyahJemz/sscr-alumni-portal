@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Models\GroupChat;
 use App\Models\GroupMember;
 use App\Models\Notification;
 use App\Models\User;

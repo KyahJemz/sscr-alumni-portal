@@ -17,11 +17,14 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PostApproval;
+use App\Http\Controllers\PostApprovalController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserHobbiesController;
+use App\Livewire\Messages;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
 
@@ -226,13 +229,15 @@ Route::middleware('auth')->group(function () {
 
     // MESSAGES
     Route::get('/messages', [MessagesController::class, 'index'])->name('messages.index');
-    Route::get('/messages/create', [MessagesController::class, 'create'])->name('messages.create');
+    // Route::get('/messages/create', [MessagesController::class, 'create'])->name('messages.create');
     Route::post('/messages', [MessagesController::class, 'store'])->name('messages.store');
-    Route::get('/messages/{message}', [MessagesController::class, 'show'])->name('messages.show');
-    Route::get('/messages/{message}/edit', [MessagesController::class, 'edit'])->name('messages.edit');
-    Route::put('/messages/{message}', [MessagesController::class, 'update'])->name('messages.update');
-    Route::patch('/messages/{message}', [MessagesController::class, 'update'])->name('messages.update');
+    Route::get('/messages/{user}/{group?}', [MessagesController::class, 'show'])->name('messages.show');
+    // Route::get('/messages/{message}/edit', [MessagesController::class, 'edit'])->name('messages.edit');
+    // Route::put('/messages/{message}', [MessagesController::class, 'update'])->name('messages.update');
+    // Route::patch('/messages/{message}', [MessagesController::class, 'update'])->name('messages.update');
     Route::delete('/messages/{message}', [MessagesController::class, 'destroy'])->name('messages.destroy');
+
+    Route::get('/counter', Messages::class);
 
     // CHAT
     Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
@@ -245,16 +250,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/chats/{id}', [ChatController::class, 'destroy'])->name('chats.destroy');
 
 
-
-
-
-
-
-
-
-
-
-
+    Route::get('/post-approvals/{group?}', [PostApprovalController::class, 'index'])->name('post-approvals.index');
+    Route::get('/api/post-approvals/{group?}', [PostApprovalController::class, 'apiIndex'])->name('api.post-approvals.index');
+    Route::patch('/api/post-approvals/{post}/{group?}', [PostApprovalController::class, 'apiUpdate'])->name('api.post-approvals.update');
 });
 
 // Route::get('/accounts/{accountId}', [AccountsController::class, 'showById'])
