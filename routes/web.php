@@ -10,6 +10,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\GroupAdminsController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupHobbiesController;
 use App\Http\Controllers\GroupMembersController;
 use App\Http\Controllers\GroupPostController;
 use App\Http\Controllers\HobbiesController;
@@ -17,7 +18,6 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\PostApproval;
 use App\Http\Controllers\PostApprovalController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -25,7 +25,6 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserHobbiesController;
 use App\Livewire\Messages;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
 
 // 'roles' => [
@@ -136,13 +135,14 @@ Route::middleware('auth')->group(function () {
 
     // HOBBIES
     Route::get('/hobbies', [HobbiesController::class, 'index'])->name('hobbies.index');
-    Route::get('/hobbies/create', [HobbiesController::class, 'create'])->name('hobbies.create');
-    Route::post('/hobbies', [HobbiesController::class, 'store'])->name('hobbies.store');
-    Route::get('/hobbies/{hobbies}', [HobbiesController::class, 'show'])->name('hobbies.show');
-    Route::get('/hobbies/{hobbies}/edit', [HobbiesController::class, 'edit'])->name('hobbies.edit');
-    Route::put('/hobbies/{hobbies}', [HobbiesController::class, 'update'])->name('hobbies.update');
-    Route::patch('/hobbies/{hobbies}', [HobbiesController::class, 'update'])->name('hobbies.update');
-    Route::delete('/hobbies/{hobbies}', [HobbiesController::class, 'destroy'])->name('hobbies.destroy');
+    Route::get('/api/hobbies', [HobbiesController::class, 'apiIndex'])->name('api.hobbies.index');
+    Route::post('/api/hobbies', [HobbiesController::class, 'apiStore'])->name('api.hobbies.store');
+    Route::patch('/api/hobbies/{hobbies}', [HobbiesController::class, 'apiUpdate'])->name('api.hobbies.update');
+    Route::delete('/api/hobbies/{hobbies}', [HobbiesController::class, 'apiDestroy'])->name('api.hobbies.destroy');
+
+    // GROUP HOBBIES
+    Route::post('/api/group-hobbies', [GroupHobbiesController::class, 'apiStore'])->name('api.group-hobbies.store');
+    Route::delete('/api/group-hobbies', [GroupHobbiesController::class, 'apiDestroy'])->name('api.group-hobbies.destroy');
 
     // GROUP
     Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');

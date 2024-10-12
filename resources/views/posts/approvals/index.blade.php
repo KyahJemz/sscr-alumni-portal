@@ -6,7 +6,6 @@
             <div class="overflow-hidden max-w-2xl mx-auto space-y-4">
                 <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center mb-4 bg-white p-2 shadow rounded flex justify-between">
                     Pending Posts Approvals
-                    <a href="{{ route('post-edit-approvals.index') }}" class="text-sscr-red font-light text-xs hover:font-bold hover:italic hover:underline">View Edit Approvals</a>
                 </h2>
                 <div id="posts-container">
 
