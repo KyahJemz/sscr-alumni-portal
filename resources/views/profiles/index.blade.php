@@ -29,7 +29,7 @@
                         <p class="text-sm italic text-sscr-yellow">Caritas et Scientia</p>
                     </div>
 
-                    <p class="text-sm font-light text-sscr-red px-4 pt-2">Alumni Id: – {{ $user->username }}</p>
+                    <p class="text-sm font-light text-sscr-red px-4 pt-2">Alumni Id: {{ $user->username }}</p>
 
                     <div class="flex space-x-4 pt-2 px-4">
                         <div class="w-32 h-32 rounded-lg">
@@ -66,8 +66,10 @@
         <div class="bg-white shadow-md rounded-lg p-6 flex flex-col gap-6">
             <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center">
                 User Information
-                <a href="{{ route('user.edit', ['user' => $user->id]) }}"
-                    class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
+                @if (Auth::user()->role === 'cict_admin' || Auth::user()->rol === 'alumni_coordinator' || Auth::user()->id === $user->id)
+                    <a href="{{ route('user.edit', ['user' => $user->id]) }}"
+                        class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
+                @endif
             </h2>
             <div class="flex flex-col md:flex-row gap-6 items-start">
                 <div class="w-32 h-32">
@@ -123,12 +125,14 @@
             <div class="bg-white shadow-md rounded-lg p-6 space-y-6">
                 <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center">
                     More Information
-                    @if ($user->role === 'alumni')
-                        <a href="{{ route('alumni-information.edit', ['alumniInformation' => $user->id]) }}"
-                            class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
-                    @else
-                        <a href="{{ route('admin-information.edit', ['alumniInformation' => $user->id]) }}"
-                            class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
+                    @if (Auth::user()->role === 'cict_admin' || Auth::user()->rol === 'alumni_coordinator' || Auth::user()->id === $user->id)
+                        @if ($user->role === 'alumni')
+                            <a href="{{ route('alumni-information.edit', ['alumniInformation' => $user->id]) }}"
+                                class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
+                        @else
+                            <a href="{{ route('admin-information.edit', ['alumniInformation' => $user->id]) }}"
+                                class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
+                        @endif
                     @endif
                 </h2>
                 <div class="border-b border-gray-200 pb-6 mb-6">
@@ -207,9 +211,11 @@
             <div class="bg-white shadow-md rounded-lg p-6 space-y-6">
                 <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center">
                     User Hobbies
-                    @if ($user->role === 'alumni')
-                        <a href="{{ route('user-hobbies.edit', ['user_id' => $user->id]) }}"
-                            class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
+                    @if (Auth::user()->role === 'cict_admin' || Auth::user()->rol === 'alumni_coordinator' || Auth::user()->id === $user->id)
+                        @if ($user->role === 'alumni')
+                            <a href="{{ route('user-hobbies.edit', ['user_id' => $user->id]) }}"
+                                class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
+                        @endif
                     @endif
                 </h2>
                 <div>

@@ -29,12 +29,15 @@
 
             <div class="md:w-2/3 bg-white p-4 rounded-lg flex flex-col flex-1 rounded-lg border border-gray-300">
                 <div class="flex justify-between items-center border-b pb-3 mb-4 dark:border-gray-700">
-                    <div class="text-lg font-semibold text-gray-700">
+                    <a
+                        class="text-lg font-semibold text-gray-700 hover:text-gray-500 hover:font-light cursor-pointer"
+                        href="{{ $group->name ? route('groups.show', ['group' => $group->id]) : route('user.index', ['id' => $receiver->id]) }}"
+                    >
                         {{ $group->name ??
                             (optional($receiver->alumniInformation)->first_name . ' ' . optional($receiver->alumniInformation)->last_name) ??
                             (optional($receiver->adminInformation)->first_name . ' ' . optional($receiver->adminInformation)->last_name) ??
                             'Unknown' }}
-                    </div>
+                    </a>
                     <div class="flex space-x-4">
                         {{-- <button class="text-gray-600 dark:text-gray-300 hover:text-blue-500">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" stroke="currentColor" fill="none">
