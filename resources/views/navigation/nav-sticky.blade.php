@@ -1,5 +1,5 @@
 <div id="sticky-navbar"
-    class="md:flex lg:flex border-t border-sscr-yellow sticky top-0 z-10 transition ease-in-out duration-500 bg-sscr-yellow">
+    class="sm:hidden md:flex lg:flex border-t border-sscr-yellow sticky top-0 z-10 transition ease-in-out duration-500 bg-sscr-yellow">
     <div class="max-w-7xl mx-auto sm:flex md:flex lg:flex justify-between py-1 w-full">
         <div class="sm:-my-px sm:flex">
             <a href="{{ route('home') }}"

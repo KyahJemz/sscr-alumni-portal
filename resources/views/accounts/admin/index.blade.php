@@ -1,13 +1,13 @@
 @extends('master')
 
 @section('content')
-    <div class="container mx-auto px-4 py-6 max-w-7xl sm:px-6 lg:px-8 space-y-6">
+<div class="container mx-auto max-w-7xl sm:p-2 md:p-6 space-y-6">
         <div class="bg-white shadow-md rounded-lg p-6 flex flex-col gap-6">
             <div class="flex justify-between items-center">
                 <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center">
                     Admin Accounts Management
                 </h2>
-                <button onclick="document.getElementById('add-account-modal').classList.toggle('hidden');" class="text-xs items-center transition duration-150 ease-in-out flex gap-1 text-white bg-sscr-red hover:bg-sscr-red/80 active:bg-sscr-red/60 border border-sscr-red px-3 py-1 rounded">
+                <button onclick="document.getElementById('add-account-modal').classList.toggle('hidden');" class="sm:hidden md:flex text-xs items-center transition duration-150 ease-in-out gap-1 text-white bg-sscr-red hover:bg-sscr-red/80 active:bg-sscr-red/60 border border-sscr-red px-3 py-1 rounded">
                     @include('components.icons.add')Add Account
                 </button>
             </div>
@@ -16,6 +16,9 @@
                     <label for="search" class="text-SM text-gray-500">Search: </label>
                     <input name="search" id="search" type="text" oninput="searchAdmin(event)" placeholder="Search admin..." class="border rounded-lg p-2 w-full text-xs" />
                 </div>
+                <button onclick="document.getElementById('add-account-modal').classList.toggle('hidden');" class="sm:flex md:hidden text-xs mb-4 items-center transition duration-150 ease-in-out gap-1 text-white bg-sscr-red hover:bg-sscr-red/80 active:bg-sscr-red/60 border border-sscr-red px-3 py-1 rounded">
+                    @include('components.icons.add')Add Account
+                </button>
 
                 <div class="overflow-x-auto">
                     <table class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 rounded">

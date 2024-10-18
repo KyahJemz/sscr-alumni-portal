@@ -210,6 +210,7 @@ class GroupPostController extends Controller
                 ->first(),
             ];
         }
+        // dd($data);
         return view('groups.post-edit', $data);
     }
 
@@ -338,17 +339,12 @@ class GroupPostController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'message' => (Auth::user()->role !== 'alumni') ? 'Post edit is approved.' : 'Post edit is already for approval.',
-            ], 200);
+            return redirect()->back()->with('status', 'Post updated successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Post Update Error: ' . $e->getMessage());
 
-            return response()->json([
-                'error' => 'An error occurred while updating the post. Please try again.',
-                'details' => $e->getMessage(),
-            ], 500);
+            return redirect()->back()->with('status', 'Post update failed');
         }
     }
 

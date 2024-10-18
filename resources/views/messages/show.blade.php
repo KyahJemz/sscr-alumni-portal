@@ -9,18 +9,28 @@
 
             <div class="md:w-1/3 bg-white rounded-lg overflow-y-auto h-full relative scrollbar-hide border border-gray-300">
                 <div class="p-4 sticky top-0 bg-white rounded-lg space-y-4 relative">
-                    <div class="text-lg font-semibold text-gray-700 dark:text-gray-200">Messages</div>
+                    <div class="text-lg font-semibold text-gray-700 dark:text-gray-200 flex justify-between">
+                        <span class="chat-full">Messages</span>
+                        <button id="toggle-chat-list" class=" sm:flex md:hidden p-1 text-gray-700 dark:text-gray-200 focus:outline-none items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125Z" />
+                              </svg>
+                        </button>
+                    </div>
                     <input type="text" placeholder="Search people..." oninput="searchPeople(event)"
-                        class="w-full text-sm px-4 py-2 border border-gray-300 rounded-lg text-gray-700 dark:text-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <span class="absolute top-12 right-5 flex items-center text-gray-400">
+                        class="chat-full w-full text-sm px-4 py-2 border border-gray-300 rounded-lg text-gray-700 dark:text-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <span class="chat-full absolute top-12 right-5 flex items-center text-gray-400">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                         </svg>
                     </span>
                 </div>
 
-                <div id="chat-list" class="space-y-2 px-4 w-full">
+                <div id="chat-list" class="space-y-2 px-4 w-full chat-full">
                     @livewire('chats')
+                </div>
+                <div id="chat-list-heads" class="space-y-2 px-2 w-full hidden chat-full">
+                    @livewire('chats-hide')
                 </div>
                 <div id="people-list" class="hidden space-y-2 px-4 w-full">
 
@@ -63,6 +73,14 @@
 @endsection
 
 @section('scripts')
+
+<script>
+    let chatListWindow = true;
+    document.getElementById('toggle-chat-list').addEventListener('click', function () {
+        document.querySelectorAll('.chat-full').forEach(e => e.classList.toggle('hidden'));
+        chatListWindow = !chatListWindow;
+    });
+</script>
 
     <script>
         const people = @json($users);

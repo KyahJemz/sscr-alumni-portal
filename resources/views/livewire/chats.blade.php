@@ -4,7 +4,7 @@
             <a href="{{ route('messages.show', ['user' => Auth::user()->id, 'group' => $chat->group->id]) }}" class="w-full bg-white dark:bg-gray-700 p-2 rounded-lg flex items-center gap-4 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600">
                 <img class="w-10 h-10 rounded-full object-cover bg-gray-300"
                     src="{{ asset('storage/groups/images/' . ($chat->group->image ?? 'default.jpg')) }}" onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';" alt="Person 1">
-                <div class="flex flex-col w-full">
+                <div class="flex flex-col w-full ">
                     <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{ $chat->group->name }}
                     </p>
                     <div class="text-xs text-gray-500 dark:text-gray-400 flex justify-between w-full {{ ($chat->sent_by === Auth::user()->id) ? 'font-light' : ($chat->read_at ? 'font-light' : 'font-black text-black') }}">
@@ -28,7 +28,7 @@
                 <img class="w-10 h-10 rounded-full object-cover bg-gray-300"
                     src="{{ asset('storage/profile/images/' . ($chat->sender->image ?? 'default.jpg')) }}" onerror="this.onerror=null;this.src='{{ asset('storage/profile/images/default.jpg') }}';" alt="Person 1">
                 @endif
-                <div class="flex flex-col w-full">
+                <div class="flex flex-col w-full ">
                     @if ($chat->sent_by === Auth::user()->id)
                         <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">
                             {{ optional($chat->receiver->alumniInformation)->first_name . ' ' . optional($chat->receiver->alumniInformation)->last_name ??

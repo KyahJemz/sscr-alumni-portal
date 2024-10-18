@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-2 lg:px-6">
             <div class="overflow-hidden sm:rounded-lg max-w-2xl mx-auto space-y-4">
                 <div id="posts-container">
 

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-2 lg:px-6">
             <div class="overflow-hidden sm:rounded-lg max-w-2xl mx-auto space-y-4">
                 <div id="posts-container">
 
@@ -80,7 +80,7 @@
                                     </div>
                                 ` : ''}
 
-                                ${post.news && post.news.thumbnail ? `
+                                ${post.news && post.newws.thumbnail ? `
                                     <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
                                         <img src="{{ asset('storage/posts/thumbnails/') }}/${post.news.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
                                     </div>
@@ -149,18 +149,18 @@
                         <form onsubmit="deleteLike(event)" class="flex items-center gap-2 text-sscr-red">
                             <input type="hidden" name="post_id" value="${post.id}">
                             <button type="submit" class="like">@include('components.icons.heart-filled')</button>
-                            <a href="/posts/${post.id}" class="text-sm hover:text-sscr-red text-gray-600 hover:underline">${post.likes.length > 1 ? "you and " + (post.likes.length - 1) + " others" : "you"} liked</a>
+                            <a class="text-sm hover:text-sscr-red text-gray-600">${post.likes.length > 1 ? "you and " + (post.likes.length - 1) + " others" : "you"} liked</a>
                         </form>
                     ` : `
                         <form onsubmit="sendLike(event)" class="flex items-center gap-2 text-sscr-red">
                             <input type="hidden" name="post_id" value="${post.id}">
                             <button type="submit" class="like">@include('components.icons.heart')</button>
-                            <a class="text-sm hover:text-sscr-red text-gray-600 hover:underline">${post.likes.length} Likes</a>
+                            <a class="text-sm hover:text-sscr-red text-gray-600">${post.likes.length} Likes</a>
                         </form>
                     `}
-                    <a class="flex items-center gap-2 text-sscr-red text-sm" href="/posts/${post.id}">
+                    <a class="flex items-center gap-2 text-sscr-red text-sm">
                         @include('components.icons.comment')
-                        <span class="text-sm hover:text-sscr-red text-gray-600 hover:underline">${post.comments.length} Comments</span>
+                        <span class="text-sm hover:text-sscr-red text-gray-600">${post.comments.length} Comments</span>
                     </a>
                 </div>
             `;
@@ -201,27 +201,20 @@
                         <div class="text-2xl font-bold mb-2 flex justify-center">
                             ${post.announcement ? post.announcement.title.replace(/\n/g, '<br>') : ''}
                             ${post.news ? post.news.title.replace(/\n/g, '<br>') : ''}
+                            ${post.event ? post.event.title.replace(/\n/g, '<br>') : ''}
                         </div>
                     `: ""}
 
                     <div class="flex flex-row gap-4 mb-4 pb-4 relative">
-                        <div class="flex-1 border-y-2 border-gray-300 py-2 flex gap-2 items-center">
-                            <span class="text-xs font-bold">Posted by ${postFullName}</span>
-<span style=" font-size: 10px; color: #000000;">●</span>
-                            <span class="text-xs font-light">${type}</span>
-<span style=" font-size: 10px; color: #000000;">●</span>
-                            <span class="text-xs font-light">${hrs}</span>
-                        </div>
-                        ${post.posted_by.id === +"{{Auth::user()->id}}" || "{{Auth::user()->role}}" === 'cict_admin' || "{{Auth::user()->role}}" === 'alumni_coordinator' ? `
-                            <button class="text-sscr-red absolute top-0 right-0" onclick="openPostOptions(${post.id})">
-                                @include('components.icons.more')
-                            </button>
-                            <div class="hidden absolute top-7 right-0 border border-gray-300 dark:border-gray-700 rounded-md px-4 py-2 space-y-2 bg-white"
-                                id="post-options-${post.id}">
-                                <a href="/posts/${post.id}/edit" class="text-sm font-light cursor-pointer">Edit</a>
-                                <div onclick="deletePostConfirmation(${post.id})" class="text-sm font-light cursor-pointer">Delete</div>
+                        <div class="flex-1 border-y-2 border-gray-300 py-2 flex gap-2 md:items-center sm:flex-col md:flex-row sm:items:left">
+                            <span class="text-xs font-bold text-left">Posted by ${postFullName}</span>
+                            <div class="flex gap-2 items-center">
+                                <span class="sm:hidden md:inline" style=" font-size: 10px; color: #000000;">●</span>
+                                <span class="text-xs font-light">${type}</span>
+                                <span style=" font-size: 10px; color: #000000;">●</span>
+                                <span class="text-xs font-light">${hrs}</span>
                             </div>
-                        ` : ''}
+                        </div>
                     </div>
 
                     ${post?.content ? `<div class="text-sm font-light mb-4">${post?.content ? post.content.replace(/\n/g, '<br>') : ''}</div>` : ""}
@@ -230,8 +223,8 @@
                         <div class="bg-gray-100 p-4 border border-gray-300 rounded-lg flex flex-row gap-4 items-center">
                             @include('components.icons.calendar')
                             <div>
-                                <div class="text-md font-bold text-sscr-red">${getHumanReadableDate(new Date(post.event.start_date))}${post?.event?.end_date ? ' to ' + getHumanReadableDate(new Date(post.event.end_date)) : ''}</div>
-                                <div class="text-sm text-gray-500 ">${post.event.location}</div>
+                                <div class="md:text-md sm:text-sm font-bold text-sscr-red">${getHumanReadableDate(new Date(post.event.start_date))}${post?.event?.end_date ? ' to ' + getHumanReadableDate(new Date(post.event.end_date)) : ''}</div>
+                                <div class="md:text-sm sm:text-sm text-gray-500 ">${post.event.location}</div>
                             </div>
                         </div>
                         ${post.event?.contributions || post.event?.amount ? `
@@ -253,33 +246,13 @@
                         <div class="text-sm font-light mb-2">
                             ${post.announcement ? post.announcement.description.replace(/\n/g, '<br>') : ''}
                             ${post.news ? post.news.description.replace(/\n/g, '<br>') : ''}
+                            ${post.event ? post.event.description.replace(/\n/g, '<br>') : ''}
                         </div>
                     `: ""}
 
                     ${images}
 
                     ${post.files !== '[]' ? files : ""}
-
-                    <div class="flex gap-4 mb-4 pb-4 relative">
-                        <img src="{{ asset('storage/profile/images') }}/${post.posted_by.image ?? 'default.jpg'}"
-                            alt="Profile Image"
-                            class="border border-gray-300 dark:border-gray-700 w-12 h-12 rounded-full bg-gray-200">
-                        <div class="flex-1">
-                            <p class="text-md font-bold">Posted by ${postFullName}</p>
-                            <p class="text-xs font-light">${type}</p>
-                            <p class="text-xs font-light">${hrs}</p>
-                        </div>
-                        ${post.posted_by.id === +"{{Auth::user()->id}}" || "{{Auth::user()->role}}" === 'cict_admin' || "{{Auth::user()->role}}" === 'alumni_coordinator' ? `
-                            <button class="text-sscr-red absolute top-0 right-0" onclick="openPostOptions(${post.id})">
-                                @include('components.icons.more')
-                            </button>
-                            <div class="hidden absolute top-7 right-0 border border-gray-300 dark:border-gray-700 rounded-md px-4 py-2 space-y-2 bg-white"
-                                id="post-options-${post.id}">
-                                <a href="/posts/${post.id}/edit" class="text-sm font-light cursor-pointer">Edit</a>
-                                <div onclick="deletePostConfirmation(${post.id})" class="text-sm font-light cursor-pointer">Delete</div>
-                            </div>
-                        ` : ''}
-                    </div>
 
                     ${likeSection}
 

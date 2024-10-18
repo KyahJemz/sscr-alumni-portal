@@ -41,7 +41,13 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('username', 'password'), $this->boolean('remember'))) {
+        $credentials = $this->only('username', 'password');
+
+        if (! Auth::attemptWhen($credentials, function ($user) {
+            return is_null($user->deleted_at)   // User should not be soft-deleted
+                && !($user->role === 'alumni' && is_null($user->approved_at)) // User should be approved
+                && is_null($user->disabled_at); // User should not be disabled
+        }, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

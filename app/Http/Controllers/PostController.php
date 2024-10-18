@@ -219,6 +219,7 @@ class PostController extends Controller
                 'post' => Post::with(['postedBy.alumniInformation', 'postedBy.adminInformation', 'event', 'announcement', 'news'])->where('id', $post->id)->first(),
             ];
         }
+        // dd($data);
         return view('posts.edit', $data);
     }
 
@@ -349,18 +350,13 @@ class PostController extends Controller
 
         DB::commit();
 
-        return response()->json([
-            'message' => (Auth::user()->role !== 'alumni') ? 'Post edit is approved.' : 'Post edit is already for approval.',
-        ], 200);
+        return redirect()->back()->with('status', 'Post updated successfully');
 
     } catch (\Exception $e) {
         DB::rollBack();
         Log::error('Post Update Error: ' . $e->getMessage());
 
-        return response()->json([
-            'error' => 'An error occurred while updating the post. Please try again.',
-            'details' => $e->getMessage(),
-        ], 500);
+        return redirect()->back()->with('status', 'Something went wrong. Please try again.');
     }
 }
 

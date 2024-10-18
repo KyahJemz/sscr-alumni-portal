@@ -1,54 +1,98 @@
-<nav class="bg-sscr-red dark:bg-sscr-red border-b border-gray-200 dark:border-gray-700">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 relative">
-        <div class="flex w-full justify-between h-max py-4 sm:py-2 px-2 itesms-center relative">
-            <div class="absolute">
+<nav class="bg-sscr-red border-b border-gray-200 sm:sticky top-0 md:relative z-10">
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 relative">
+        <div class="flex w-full justify-between h-max py-4 sm:py-2 items-center relative">
+            <div class="sm:hidden md:flex absolute items-center">
                 <a href="{{ route('home') }}">
                     <img class="h-16 w-auto" src="{{ asset('storage/stags.png') }}" alt="San Sebastian College - Recoletos de Cavite">
                 </a>
             </div>
-            <div class="flex sm:flex shrink-0 flex-1 items-center text-center flex-col">
-                <p class="sm:text-3xl text-md text-sscr-yellow dark:text-sscr-yellow">San Sebastian College - Recoletos
-                    de Cavite</p>
-                <p class="sm:text-lg text-xs text-sscr-yellow dark:text-sscr-yellow">Alumni Portal</p>
+            <div class="sm:hidden md:flex shrink-0 flex-1 items-center text-center flex-col">
+                <p class="text-3xl text-sscr-yellow">San Sebastian College - Recoletos de Cavite</p>
+                <p class="text-lg text-sscr-yellow">Alumni Portal</p>
             </div>
-            <div class="hidden -me-2 flex items-center sm:hidden">
-                <button id="menuToggle"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path id="menuIconOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                        <path id="menuIconClose" class="hidden" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <div class="sm:flex md:hidden shrink-0 flex-1 items-center text-center flex-col">
+                <p class="text-2xl text-sscr-yellow">SSC-RdC Alumni Portal</p>
+            </div>
+
+            <div class="sm:flex md:hidden items-center">
+                <button id="menuToggle" class="inline-flex items-center justify-center p-2 rounded-md text-gray-200 hover:text-gray-200 focus:outline-none transition duration-150 ease-in-out">
+                    <svg id="menuIconOpen" class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                    <svg id="menuIconClose" class="hidden h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
             </div>
         </div>
 
-        <div id="responsiveMenu" class="hidden sm:hidden">
-            <div class="pt-2 pb-3 space-y-1">
-                <a href="{{ route('home') }}"
-                    class="{{ request()->routeIs('home') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-900 dark:hover:text-gray-400 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-                    Home
+        <div id="responsiveMenu" class="hidden sm:flex sm:flex-col md:hidden rounded-b-xl absolute bg-sscr-red w-full z-10 -mx-6 p-6">
+            <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-gray-300' : 'text-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium border-t-2 border-gray-300">
+                Home
+            </a>
+            <a href="{{ route('groups.index') }}" class="{{ request()->routeIs('groups.index') ? 'text-gray-300' : 'text-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium">
+                {{ (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') ? 'Organizations' : 'My Organizations' }}
+            </a>
+            <a href="{{ route('news.index') }}" class="{{ request()->routeIs('news.index') ? 'text-gray-300' : 'text-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium">
+                News
+            </a>
+            <a href="{{ route('events.index') }}" class="{{ request()->routeIs('events.index') ? 'text-gray-300' : 'text-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium">
+                Events
+            </a>
+            <a href="{{ route('announcements.index') }}" class="{{ request()->routeIs('announcements.index') ? 'text-gray-300' : 'text-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium">
+                Announcements
+            </a>
+            <a href="{{ route('messages.index') }}" title="Messages" class="{{ request()->routeIs('messages.index') ? 'text-gray-300' : 'text-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium">
+                Chats
+            </a>
+            <a onclick="document.getElementById('notifications-modal').classList.toggle('hidden');" title="Notifications" class="{{ request()->routeIs('notifications.index') ? 'text-gray-300' : 'text-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium">
+                Notifications
+            </a>
+            @if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator' || Auth::user()->role === 'program_chair')
+                <a href="{{ route('feedback.index') }}"
+                    class="block pl-3 pr-4 py-2 text-base font-medium text-gray-300">
+                    Feedback
                 </a>
-            </div>
+            @else
+                <a id="send-feedback-trigger"
+                    type="button"
+                    onclick="document.getElementById('send-feedback-modal').classList.toggle('hidden');"
+                    class="block pl-3 pr-4 py-2 text-base font-medium text-gray-300">
+                    Send Feedback
+                </a>
+            @endif
+            @if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
+                <a href="{{ route('hobbies.index') }}"
+                    class="block pl-3 pr-4 py-2 text-base font-medium text-gray-300">
+                    Hobbies Management
+                </a>
+            @endif
+            @if (Auth::user()->role !== 'alumni')
+                <a href="{{ route('account.index', ['type'=>'alumni']) }}" class='text-gray-300 block pl-3 pr-4 py-2 text-base font-medium'>
+                    Alumni Accounts
+                </a>
+                <a href="{{ route('account.index', ['type'=>'graduates']) }}" class='text-gray-300 block pl-3 pr-4 py-2 text-base font-medium'>
+                    Graduation List
+                </a>
+                @if(Auth::user()->role === 'cict_admin')
+                    <a href="{{ route('account.index', ['type'=>'admins']) }}" class='text-gray-300 block pl-3 pr-4 py-2 text-base font-medium'>
+                        Management Accounts
+                    </a>
+                @endif
+            @endif
 
-            <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
-                <div class="px-4">
-                    <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+            <div class="pt-4 pb-1 border-t-2 border-gray-300">
+                <div class="px-3">
+                    <div class="font-medium text-base text-gray-300">{{ Auth::user()->name }}</div>
+                    <div class="font-medium text-sm text-gray-300">{{ Auth::user()->email }}</div>
                 </div>
-
                 <div class="mt-3 space-y-1">
-                    <a href="{{ route('profile.edit') }}"
-                        class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium hover:text-gray-900 dark:hover:text-gray-400">
+                    <a href="{{ route('user.index') }}" class="text-gray-300 block pl-3 pr-4 py-2 text-base font-medium">
                         Profile
                     </a>
-
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <a href="{{ route('logout') }}"
-                            class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium hover:text-gray-900 dark:hover:text-gray-400"
-                            onclick="event.preventDefault(); this.closest('form').submit();">
+                        <a href="{{ route('logout') }}" class="text-gray-300 block pl-3 pr-4 py-2 text-base font-medium" onclick="event.preventDefault(); this.closest('form').submit();">
                             Log Out
                         </a>
                     </form>
@@ -59,19 +103,14 @@
 </nav>
 
 <script>
-    document.getElementById('menuToggle').addEventListener('click', function() {
-            var menu = document.getElementById('responsiveMenu');
-            var openIcon = document.getElementById('menuIconOpen');
-            var closeIcon = document.getElementById('menuIconClose');
+    const menuToggle = document.getElementById('menuToggle');
+    const menu = document.getElementById('responsiveMenu');
+    const openIcon = document.getElementById('menuIconOpen');
+    const closeIcon = document.getElementById('menuIconClose');
 
-            if (menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden');
-                openIcon.classList.add('hidden');
-                closeIcon.classList.remove('hidden');
-            } else {
-                menu.classList.add('hidden');
-                openIcon.classList.remove('hidden');
-                closeIcon.classList.add('hidden');
-            }
-        });
+    menuToggle.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+        openIcon.classList.toggle('hidden');
+        closeIcon.classList.toggle('hidden');
+    });
 </script>

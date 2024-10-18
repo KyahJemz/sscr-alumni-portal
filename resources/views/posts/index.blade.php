@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-2 lg:px-6">
             <div class="overflow-hidden sm:rounded-lg max-w-2xl mx-auto space-y-4">
                 @if(Auth::user()->role !== 'alumni')
                 <div class="bg-white p-4 text-gray-900 border border-gray-200 shadow-md rounded-md">
@@ -113,7 +113,7 @@
                     </form>
                 </div>
                 @endif
-                <div id="posts-container">
+                <div id="posts-container" class="sm:space-y-2 md:space-y-6">
 
                 </div>
             </div>

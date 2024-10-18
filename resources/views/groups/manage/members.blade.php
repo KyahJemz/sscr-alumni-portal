@@ -6,12 +6,12 @@
     <label for="search" class="text-SM text-gray-500">Search: </label>
     <input name="search" id="search" type="text" oninput="searchMembers(event)" placeholder="Search members..." class="border rounded-lg p-2 w-full text-xs" />
 </div>
-<div id="filters" class="flex justify-between w-full">
+<div id="filters" class="flex justify-between w-full sm:flex-col md:flex-row my-4">
     <div class="flex mb-4 gap-4 items-center">
         <p class="text-md">Filters:</p>
         <div class="relative">
             <button id="batch-filter-dropdown-btn" class="dropdown-btn bg-gray-200 text-gray-700 rounded-md px-4 py-2 inline-flex items-center text-xs">
-                Select Batch Numbers
+                Batch Numbers
                 <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                 </svg>
@@ -31,7 +31,7 @@
         </div>
         <div class="relative">
             <button id="course-filter-dropdown-btn" class="dropdown-btn bg-gray-200 text-gray-700 rounded-md px-4 py-2 inline-flex items-center text-xs">
-                Select Courses
+                Courses
                 <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                 </svg>

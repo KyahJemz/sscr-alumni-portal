@@ -2,9 +2,9 @@
 
 @section('content')
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-2 lg:px-6">
             <div class="overflow-hidden sm:rounded-lg max-w-2xl mx-auto space-y-4">
-                @if(Auth::user()->role !== 'alumni')
+                @if(Auth::user()->role !== 'alumni' || Auth::user()->id === $post->created_by)
                 <div class="bg-white p-4 text-gray-900 border border-gray-200 shadow-md rounded-md">
                     <form action="{{ route('posts.update', ['post' => $post->id]) }}" method="post" enctype="multipart/form-data" class="flex gap-4">
                         @csrf
@@ -12,7 +12,7 @@
                         <img src="{{ $user->image ? asset('storage/profile/images/' . $user->image) : asset('storage/profile/images/default.jpg') }}"
                             onerror="this.onerror=null;this.src='{{ asset('storage/profile/images/default.jpg') }}';"
                             alt=""
-                            class="border border-gray-300 dark:border-gray-700 w-16 h-16 rounded-full bg-gray-200">
+                            class="border border-gray-300 dark:border-gray-700 w-16 h-16 rounded-full bg-gray-200 sm:hidden md:block">
                         <div class="w-full space-y-2">
                             <select id="post-type-selector" name="type"
                                 class="text-xs font-light px-2 py-1 pr-8 cursor-pointer rounded" disabled>

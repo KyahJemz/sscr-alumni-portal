@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-2 lg:px-6">
             <div class="overflow-hidden max-w-2xl mx-auto space-y-4">
                 <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center mb-4 bg-white p-2 shadow rounded">
                     Pending Group Posts Approvals

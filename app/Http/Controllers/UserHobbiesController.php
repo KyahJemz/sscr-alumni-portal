@@ -65,6 +65,7 @@ class UserHobbiesController extends Controller
      */
     public function update(Request $request, $user_id)
     {
+
         try {
             // $request->validate([
             //     'hobbies_id.*' => 'required|integer|exists:hobbies,id',
@@ -90,7 +91,7 @@ class UserHobbiesController extends Controller
                     }
                 }
             }
-            return back()->with('status', 'No changes were made to the profile.');
+            return back();
 
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());

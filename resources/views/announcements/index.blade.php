@@ -3,7 +3,7 @@
 @section('content')
     <div class="container mx-auto px-4 py-6 max-w-7xl sm:px-6 lg:px-8 space-y-4 bg-white">
 
-        <div class="container mx-auto p-4">
+        <div class="mx-auto md:p-4 sm:p-0">
             <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center mb-4">
                 Announcements
             </h2>
@@ -38,10 +38,10 @@
             </div>
         </div>
 
-        <div class="container mx-auto p-4">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="mx-auto md:p-4 sm:p-0">
+            <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 @forelse ($announcements->slice(3) as $announcement)
-                    <a class="flex mb-4 border border-gray-300 rounded-md p-4" href="{{ route('announcements.show', ['post' => $announcement->id]) }}">
+                    <a class="flex sm:flex-1 mb-4 border border-gray-300 rounded-md p-4" href="{{ route('announcements.show', ['post' => $announcement->id]) }}">
                         <img src="{{ asset('storage/posts/thumbnails/' . $announcement->announcement->thumbnail) }}" onerror="this.onerror=null;this.src='{{ asset('storage/posts/thumbnails/default.jpg') }}';" alt="{{ $announcement->announcement->title }}" class="w-36 h-36 object-cover rounded-md shadow-lg mr-4">
                         <div>
                             <h3 class="font-semibold text-lg">{{ $announcement->announcement->title }}</h3>

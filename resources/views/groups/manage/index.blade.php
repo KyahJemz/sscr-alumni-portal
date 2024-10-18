@@ -2,12 +2,12 @@
 
 @section('content')
 
-<div class="container mx-auto px-4 py-6 max-w-7xl sm:px-6 lg:px-8 space-y-6">
-    <div class="rounded-lg flex flex-col gap-6">
+<div class="container mx-auto max-w-7xl sm:p-2 md:px-8 md:py-6space-y-6">
+    <div class="rounded-lg flex flex-col  md:gap-6 sm:gap-2">
         <div class="flex flex-row gap-6 bg-white p-6 shadow-lg rounded-lg">
-            <img src="{{ asset('storage/groups/images/' . $group->image ?? 'default.jpg') }}" alt="" class="w-48 h-48 rounded-lg" onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';">
+            <img src="{{ asset('storage/groups/images/' . $group->image ?? 'default.jpg') }}" alt="" class="sm:w-20 sm:h-20 md:w-48 md:h-48  rounded-lg" onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';">
             <div class="flex flex-col relative w-full">
-                <p class="text-2xl text-sscr-red font-bold">{{ $group->name }}</p>
+                <p class="md:text-2xl sm:text-lg text-sscr-red font-bold">{{ $group->name }}</p>
                 <p class="text-gray-900"> {{ $group->description }}</p>
                 <div class="flex gap-4 absolute right-0 bottom-0">
                 </div>
@@ -379,7 +379,7 @@
                 <td class="px-6 py-4 w-12 whitespace-nowrap text-sm">
                     <img class="h-12 m-auto w-12 rounded-full object-cover" src="{{ asset('storage/profile/images') }}/${account.image ?? 'default.jpg'}" alt="User Image" onerror="this.onerror=null; this.src='{{ asset('storage/profile/images/default.jpg') }}';">
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm">${account.alumni_information?.first_name ?? ''} ${account.alumni_information?.middle_name ?? ''} ${account.alumni_information?.last_name ?? ''}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="/user/${account.id}">${account.alumni_information?.first_name ?? ''} ${account.alumni_information?.middle_name ?? ''} ${account.alumni_information?.last_name ?? ''}</a></td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account.email}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account.username}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account.alumni_information?.batch ?? ''}</td>
@@ -404,7 +404,7 @@
                 <td class="px-6 py-4 w-12 whitespace-nowrap text-sm">
                     <img class="h-12 m-auto w-12 rounded-full object-cover" src="{{ asset('storage/profile/images') }}/${account.image ?? 'default.jpg'}" alt="User Image" onerror="this.onerror=null; this.src='{{ asset('storage/profile/images/default.jpg') }}';">
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm">${account.alumni_information?.first_name ?? ''} ${account.alumni_information?.middle_name ?? ''} ${account.alumni_information?.last_name ?? ''}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="/user/${account.id}">${account.alumni_information?.first_name ?? ''} ${account.alumni_information?.middle_name ?? ''} ${account.alumni_information?.last_name ?? ''}</a></td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account.email}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account.username}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account?.alumni_information?.batch ?? ''}</td>
@@ -429,7 +429,7 @@
                     <td class="px-6 py-4 w-12 whitespace-nowrap text-sm">
                         <img class="h-12 m-auto w-12 rounded-full object-cover" src="{{ asset('storage/profile/images') }}/${account.image ?? 'default.jpg'}" alt="User Image" onerror="this.onerror=null; this.src='{{ asset('storage/profile/images/default.jpg') }}';">
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm">${account.alumni_information?.first_name ?? ''} ${account.alumni_information?.middle_name ?? ''} ${account.alumni_information?.last_name ?? ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="/user/${account.id}">${account.alumni_information?.first_name ?? ''} ${account.alumni_information?.middle_name ?? ''} ${account.alumni_information?.last_name ?? ''}</a></td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm">${account.email}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm">${account.username}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm">${account.alumni_information?.batch ?? ''}</td>

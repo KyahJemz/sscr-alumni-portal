@@ -3,7 +3,7 @@
 @section('css')
     @if($user->role === 'alumni')
         <style>
-            #alumni-id-card {
+            .alumni-id-card {
                 background-image: url("{{ asset('storage/school.jpg') }}");
                 background-repeat: no-repeat;
                 background-size: cover;
@@ -16,13 +16,13 @@
 @endsection
 
 @section('content')
-    <div class="container mx-auto px-4 py-6 max-w-7xl sm:px-6 lg:px-8 space-y-6">
+    <div class="container mx-auto py-2 max-w-7xl sm:p-2 md:p-6 md:py-6 md:space-y-6 sm:space-y-2">
         @if($user->role === 'alumni')
             <div class="bg-white shadow-md rounded-lg p-6 flex flex-col gap-6">
                 <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center">
                     Alumni Digital Identification Card
                 </h2>
-                <div id="alumni-id-card" class="relative w-[500px] h-[300px] bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500 m-auto mb-10">
+                <div id="alumni-id-card" class="sm:hidden md:block alumni-id-card relative w-[500px] h-[300px] bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500 m-auto mb-10">
                     <div class="text-center bg-sscr-red pb-2 p-4 rounded-t-lg">
                         <p class="text-sm font-semibold text-sscr-yellow">San Sebastian College - Recoletos de Cavite</p>
                         <p class="text-lg font-semibold text-sscr-yellow">SSCR Alumni Identification Card</p>
@@ -59,6 +59,46 @@
 
                     <div class="absolute top-4 right-4">
                         <img src="{{ asset('/storage/oar_logo.png') }}" alt="Seal" class="w-12 h-12">
+                    </div>
+                </div>
+
+                <div id="alumni-id-card" class="md:hidden sm:block alumni-id-card relative w-[350px] h-max bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500 m-auto mb-10">
+                    <div class="text-center bg-sscr-red pb-2 p-4 rounded-t-lg">
+                        <p class="text-xs font-semibold text-sscr-yellow">San Sebastian College - Recoletos de Cavite</p>
+                        <p class="text-md font-semibold text-sscr-yellow">SSCR Alumni Identification Card</p>
+                        <p class="text-xs italic text-sscr-yellow">Caritas et Scientia</p>
+                    </div>
+
+                    <p class="text-xs font-light text-sscr-red px-4 pt-2">Alumni Id: {{ $user->username }}</p>
+
+                    <div class="flex space-x-4 pt-2 px-4">
+                        <div class="w-20 h-20 rounded-lg">
+                            <img id="profile-preview"
+                                src="{{ $user->image ? asset('storage/profile/images/' . $user->image) : asset('storage/profile/images/default.jpg') }}"
+                                onerror="this.onerror=null;this.src='{{ asset('storage/profile/images/default.jpg') }}';"
+                                alt="Profile Image" class="rounded-lg w-full h-full object-cover">
+                        </div>
+
+                        <div class="text-xs mb-8">
+                            <p><span class="font-semibold">Last Name: </span> {{ $information->last_name ?? 'N/A' }}</p>
+                            <p><span class="font-semibold">Given Name: </span> {{ $information->first_name ?? 'N/A' }}</p>
+                            <p><span class="font-semibold">Middle Name: </span> {{ $information->middle_name ?? 'N/A' }}</p>
+                            <p><span class="font-semibold">Date of Birth: </span> {{ $information->birth_date ?? 'N/A' }}</p>
+                            <p><span class="font-semibold">Course: </span> {{ $information->course ?? 'N/A' }}</p>
+                            <p><span class="font-semibold">Batch: </span> {{ $information->batch ?? 'N/A' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="absolute bottom-4 left-4 text-xs">
+                        <p><span class="font-semibold">Address:</span> {{ $address ?? false ? $address : 'N/A' }}</p>
+                    </div>
+
+                    <div class="absolute top-4 left-4">
+                        <img src="{{ asset('/storage/logo.png') }}" alt="Seal" class="w-8 h-8">
+                    </div>
+
+                    <div class="absolute top-4 right-4">
+                        <img src="{{ asset('/storage/oar_logo.png') }}" alt="Seal" class="w-8 h-8">
                     </div>
                 </div>
             </div>
@@ -201,7 +241,8 @@
                             <p class="font-light text-gray-500">Phone</p>
                         </div>
                         <div class="flex flex-col">
-                            <p class="font-semibold">{{ !empty($information->birth_date) ? $information->birth_date->format('d/m/Y') : 'N/A' }}</p>
+                            <p class="font-semibold">{{ !empty($information->birth_date) ? \Carbon\Carbon::parse($information->birth_date)->format('d F Y') : 'N/A' }}</p>
+
                             <p class="font-light text-gray-500">Birth Date</p>
                         </div>
                     </div>

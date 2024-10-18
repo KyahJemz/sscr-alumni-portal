@@ -2,13 +2,15 @@
     <p>Admins</p>
 </h2>
 
-<div id=search class="flex mb-4 gap-4 items-center mt-4 w-full justify-between">
-    <div class="flex-1 flex gap-4 items-center">
+<div id=search class="flex mb-4 gap-4 mt-4 w-full sm:flex-col md:flex-row">
+    <div class="flex-1 flex gap-4 items-center w-full">
         <label for="search" class="text-SM text-gray-500">Search: </label>
         <input name="search" id="search" type="text" oninput="searchAdmins(event)" placeholder="Search admins..." class="border rounded-lg p-2 w-full text-xs" />
     </div>
-    <a class="bg-sscr-red text-white rounded-md h-max py-2 px-4 inline-flex items-center text-xs cursor-pointer" onclick="exportTable('group-admins-table-body')">Export Table</a>
-    <a class="bg-sscr-red text-white rounded-md h-max py-2 px-4 inline-flex items-center text-xs cursor-pointer" onclick="document.getElementById('add-admin-modal').classList.toggle('hidden')">New admin</a>
+    <div>
+        <a class="bg-sscr-red text-white rounded-md h-max py-2 px-4 inline-flex items-center text-xs cursor-pointer" onclick="exportTable('group-admins-table-body')">Export Table</a>
+        <a class="bg-sscr-red text-white rounded-md h-max py-2 px-4 inline-flex items-center text-xs cursor-pointer" onclick="document.getElementById('add-admin-modal').classList.toggle('hidden')">New admin</a>
+    </div>
 </div>
 
 <div class="overflow-x-auto">

@@ -3,7 +3,7 @@
 @section('content')
     <div class="container mx-auto px-4 py-6 max-w-7xl sm:px-6 lg:px-8 space-y-4 bg-white">
 
-        <div class="container mx-auto p-4">
+        <div class="mx-auto md:p-4 sm:p-0">
             <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center mb-4">
                 News
             </h2>
@@ -38,8 +38,8 @@
             </div>
         </div>
 
-        <div class="container mx-auto p-4">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="mx-auto md:p-4 sm:p-0">
+            <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 @forelse ($news->slice(3) as $newsItem)
                     <a class="flex mb-4 border border-gray-300 rounded-md p-4" href="{{ route('news.show', ['post' => $newsItem->id]) }}">
                         <img src="{{ asset('storage/posts/thumbnails/' . $newsItem->news->thumbnail) }}" onerror="this.onerror=null;this.src='{{ asset('storage/posts/thumbnails/default.jpg') }}';" alt="{{ $newsItem->news->title }}" class="w-36 h-36 object-cover rounded-md shadow-lg mr-4">

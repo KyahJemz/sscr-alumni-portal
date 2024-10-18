@@ -2,12 +2,12 @@
 
 @section('content')
 
-<div class="container mx-auto px-4 py-6 max-w-7xl sm:px-6 lg:px-8 space-y-6">
-    <div class="rounded-lg flex flex-col gap-6">
+<div class="container mx-auto max-w-7xl sm:p-2 md:px-8 md:py-6 space-y-6">
+    <div class="rounded-lg flex flex-col md:gap-6 sm:gap-2">
         <div class="flex flex-row gap-6 bg-white p-6 shadow-lg rounded-lg">
-            <img src="{{ asset('storage/groups/images/' . $group->image ?? 'default.jpg') }}" alt="" class="w-48 h-48 rounded-lg" onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';">
+            <img src="{{ asset('storage/groups/images/' . $group->image ?? 'default.jpg') }}" alt="" class="sm:w-20 sm:h-20 md:w-48 md:h-48 rounded-lg" onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';">
             <div class="flex flex-col relative w-full">
-                <p class="text-2xl text-sscr-red font-bold">{{ $group->name }}</p>
+                <p class="md:text-2xl sm:text-lg text-sscr-red font-bold">{{ $group->name }}</p>
                 <p class="text-gray-900"> {{ $group->description }}</p>
                 <div class="flex gap-4 absolute right-0 bottom-0">
                     @if($isAdmin | Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
@@ -30,11 +30,15 @@
                             </form>
                         @endif
                     @endif
+                    @if(!$isAdmin && !Auth::user()->role === 'cict_admin' && !Auth::user()->role === 'alumni_coordinator' || $status === 'member')
+                        <a class="text-sscr-red cursor-pointer sm:block md:hidden" href="{{ route('groups.edit', ['group' => $group->id]) }}">About</a>
+                    @endif
                 </div>
             </div>
         </div>
         <div class=" pb-6 flex flex-row">
             <div class="overflow-hidden sm:rounded-lg max-w-2xl mx-auto space-y-4 flex-1 w-3/4">
+                @if($isAdmin || Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator' || $status === 'member')
                 <div class="bg-white p-4 text-gray-900 border border-gray-300 shadow-lg rounded-lg">
                     <form action="{{ route('api.group.posts.store', ['group' => $group->id]) }}" method="post" enctype="multipart/form-data" class="flex gap-4">
                         @csrf
@@ -143,7 +147,6 @@
                         </div>
                     </form>
                 </div>
-                @if($isAdmin || Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator' || $status === 'member')
                 <div id="posts-container">
 
                 </div>
@@ -153,7 +156,7 @@
                     </div>
                 @endif
             </div>
-            <div class="w-1/4 bg-white border border-gray-300 shadow-lg rounded-lg">
+            <div class="w-1/4 bg-white border border-gray-300 shadow-lg rounded-lg sm:hidden md:block">
                 <p class="p-2 border-b border-gray-300 flex text-sscr-red font-bold flex-row justify-between text-md">
                     Founded {{ $group->created_at->format('F j, Y') }}
                     @if($isAdmin || Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator' || $status === 'member')
