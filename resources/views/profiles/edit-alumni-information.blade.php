@@ -48,7 +48,7 @@
                         <div class="w-full md:w-1/4 px-3">
                             <label for="nationality" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Nationality</label>
                             <input list="nationalities" id="nationality" name="nationality"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('nationality', $information->nationality) }}" />
                             <datalist id="nationalities">
                                 @foreach ($nationalities as $nationality)
@@ -59,7 +59,7 @@
                         <div class="w-full md:w-1/4 px-3">
                             <label for="civil_status" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Civil Status</label>
                             <input list="civil_statuses" id="civil_status" name="civil_status"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('civil_status', $information->civil_status) }}" />
                             <datalist id="civil_statuses">
                                 @foreach ($civilStatus as $status)
@@ -82,7 +82,7 @@
                         <div class="w-full md:w-1/4 px-3">
                             <label for="gender" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Gender</label>
                             <input list="genders" id="gender" name="gender"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('gender', $information->gender) }}" />
                             <datalist id="genders">
                                 @foreach ($genders as $gender)
@@ -109,7 +109,7 @@
                         <div class="w-full md:w-1/4 px-3">
                             <label for="country" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Country</label>
                             <input list="countries" id="country" name="country"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('country', $information->country) }}" />
                             <datalist id="countries">
                                 @foreach ($countries as $country)
@@ -120,7 +120,7 @@
                         <div class="w-full md:w-1/4 px-3">
                             <label for="region" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Region</label>
                             <input list="regions" id="region" name="region"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('region', $information->region) }}" />
                             <datalist id="regions">
                                 @foreach ($regions as $region)
@@ -131,7 +131,7 @@
                         <div class="w-full md:w-1/4 px-3">
                             <label for="province" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Province</label>
                             <input list="provinces" id="province" name="province"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('province', $information->province) }}" />
                             <datalist id="provinces">
                                 @foreach ($provinces as $province)
@@ -142,7 +142,7 @@
                         <div class="w-full md:w-1/4 px-3">
                             <label for="city" class="block font-medium text-sm text-gray-700 dark:text-gray-300">City</label>
                             <input list="cities" id="city" name="city"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('city', $information->city) }}" />
                             <datalist id="cities">
                                 @foreach ($cities as $city)
@@ -156,7 +156,7 @@
                         <div class="w-full md:w-1/4 px-3">
                             <label for="barangay" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Barangay</label>
                             <input list="barangays" id="barangay" name="barangay"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3 "
                                 value="{{ old('barangay', $information->barangay) }}" />
                             <datalist id="barangays">
                                 @foreach ($barangays as $barangay)
@@ -180,7 +180,7 @@
                         <div class="w-full md:w-1/4 px-3">
                             <label for="education_level" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Education Level</label>
                             <input list="education_levels" id="education_level" name="education_level"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('education_level', $information->education_level) }}" />
                             <datalist id="education_levels">
                                 @foreach ($educationLevels as $educationLevel)
@@ -197,7 +197,7 @@
                         <div class="w-full md:w-1/4 px-3">
                             <label for="course" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Course</label>
                             <input list="courses" id="course" name="course"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('course', $information->course) }}" />
                             <datalist id="courses">
                                 @foreach ($courses as $course)
@@ -216,7 +216,7 @@
                         <div class="w-full md:w-1/4 px-3">
                             <label for="occupation" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Occupation</label>
                             <input list="occupations" id="occupation" name="occupation"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('occupation', $information->occupation) }}" />
                             <datalist id="occupations">
                                 @foreach ($occupations as $occupation)

@@ -297,6 +297,8 @@ class PostController extends Controller
                     'location' => 'nullable|string',
                     'description' => 'required|string',
                     'title' => 'required|string',
+                    'contributions' => 'nullable|string',
+                    'amount' => 'nullable|string',
                 ]);
                 $startDate = $request->startDate ? Carbon::createFromFormat('Y-m-d\TH:i', $request->startDate)->format('Y-m-d H:i:s') : null;
                 $endDate = $request->endDate ? Carbon::createFromFormat('Y-m-d\TH:i', $request->endDate)->format('Y-m-d H:i:s') : null;
@@ -312,6 +314,8 @@ class PostController extends Controller
                     'end_date' => $endDate,
                     'status' => 'active',
                     'thumbnail' => $thumbnailToSave,
+                    'contribution' => $request->contributions,
+                    'amount' => $request->amount,
                 ]);
                 break;
 

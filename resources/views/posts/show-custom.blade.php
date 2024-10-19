@@ -71,7 +71,7 @@
                     (post.event && post.event.thumbnail)  ||
                     (post.news && post.news.thumbnail)  ||
                     (post.announcement && post.announcement.thumbnail) ? `
-                    <div class="space-y-4">
+                    <div class="space-y-4 mt-4">
                         <div id="media-slider-${post.id}" class="relative w-full" data-carousel="slide">
                             <div class="relative h-56 overflow-hidden rounded-lg">
                                 ${post.event && post.event.thumbnail ? `
@@ -80,7 +80,7 @@
                                     </div>
                                 ` : ''}
 
-                                ${post.news && post.newws.thumbnail ? `
+                                ${post.news && post.news.thumbnail ? `
                                     <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
                                         <img src="{{ asset('storage/posts/thumbnails/') }}/${post.news.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
                                     </div>
@@ -197,7 +197,7 @@
             const template = `
                 <div class="bg-white p-4 text-gray-900 border border-gray-200 shadow-md rounded-md mb-6">
 
-                    ${post?.announcement || post?.new || post?.event ? `
+                    ${post?.announcement || post?.news || post?.event ? `
                         <div class="text-2xl font-bold mb-2 flex justify-center">
                             ${post.announcement ? post.announcement.title.replace(/\n/g, '<br>') : ''}
                             ${post.news ? post.news.title.replace(/\n/g, '<br>') : ''}
@@ -205,7 +205,7 @@
                         </div>
                     `: ""}
 
-                    <div class="flex flex-row gap-4 mb-4 pb-4 relative">
+                    <div class="flex flex-row gap-4 pb-4 relative">
                         <div class="flex-1 border-y-2 border-gray-300 py-2 flex gap-2 md:items-center sm:flex-col md:flex-row sm:items:left">
                             <span class="text-xs font-bold text-left">Posted by ${postFullName}</span>
                             <div class="flex gap-2 items-center">
@@ -407,7 +407,7 @@
                     method: 'POST',
                     body: formData,
                     headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-R    equested-With': 'XMLHttpRequest',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
                             'content')
                     }
