@@ -10,7 +10,7 @@
             <div class="md:w-1/3 bg-white rounded-lg overflow-y-auto h-full relative scrollbar-hide border border-gray-300">
                 <div class="p-4 sticky top-0 bg-white rounded-lg space-y-4 relative">
                     <div class="text-lg font-semibold text-gray-700 dark:text-gray-200 flex justify-between">
-                        <span class="chat-full">Messages</span>
+                        <span class="chat-full">Messages<span class="text-xs"> - ({{ count(array_filter((array) $onlineStatus, fn($status) => $status)) }}) Active User</span></span>
                         <button id="toggle-chat-list" class=" sm:flex md:hidden p-1 text-gray-700 dark:text-gray-200 focus:outline-none items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125Z" />
@@ -87,6 +87,7 @@
 
     <script>
         const people = @json($users);
+        const onlineStatus = @json($onlineStatus);
 
         function searchPeople(event) {
             let searchValue = event.target.value.toLowerCase();
@@ -109,8 +110,15 @@
                 if (fullName.includes(searchValue)) {
                     peopleList.innerHTML += `
                         <a href="/messages/${user.id}" class="w-full bg-white dark:bg-gray-700 p-2 rounded-lg flex items-center gap-4 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600">
-                            <img class="w-10 h-10 rounded-full object-cover bg-gray-300" src="{{ asset('storage/profile/images')}}/${user?.image ?? 'default.jpg'}" alt="Person">
-                            <div class="flex flex-col w-full">
+                            <div class="relative">
+                                <img class="w-10 h-10 rounded-full object-cover bg-gray-300" src="{{ asset('storage/profile/images')}}/${user?.image ?? 'default.jpg'}" alt="Person">
+                                ${onlineStatus[user.id] ? `
+                                    <svg class="absolute left-0 bottom-0" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 20 20">
+                                        <circle cx="10" cy="10" r="10" fill="green"/>
+                                    </svg>
+                                ` : ''}
+                            </div>
+                            <div class="flex flex-col w-full chat-full">
                                 <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">${fullName}</p>
                             </div>
                         </a>

@@ -17,9 +17,25 @@ class MessagesController extends Controller
      */
     public function index()
     {
+
+        $onlineStatus = [];
+        $timeoutMinutes = 5;
+        $allUsers = User::with('adminInformation', 'alumniInformation')->pluck('id')->toArray();
+
+        foreach ($allUsers as $id) {
+            $session = \DB::table('sessions')->where('user_id', $id)->first();
+            if ($session && isset($session->last_activity)) {
+                $lastActivity = \Carbon\Carbon::createFromTimestamp($session->last_activity);
+                $onlineStatus[$id] = $lastActivity->diffInMinutes(now()) < $timeoutMinutes;
+            } else {
+                $onlineStatus[$id] = false;
+            }
+        }
+
         $data = [
             'user' => Auth::user(),
             'users' => User::with('adminInformation', 'alumniInformation')->get(),
+            'onlineStatus' => $onlineStatus
         ];
         return view('messages.index', $data);
     }
@@ -75,6 +91,19 @@ class MessagesController extends Controller
      */
     public function show(User $user, Group $group)
     {
+        $onlineStatus = [];
+        $timeoutMinutes = 5;
+        $allUsers = User::with('adminInformation', 'alumniInformation')->pluck('id')->toArray();
+
+        foreach ($allUsers as $id) {
+            $session = \DB::table('sessions')->where('user_id', $id)->first();
+            if ($session && isset($session->last_activity)) {
+                $lastActivity = \Carbon\Carbon::createFromTimestamp($session->last_activity);
+                $onlineStatus[$id] = $lastActivity->diffInMinutes(now()) < $timeoutMinutes;
+            } else {
+                $onlineStatus[$id] = false;
+            }
+        }
 
         if ($group->id) {
             $myGroups = Auth::user()->groups;
@@ -93,6 +122,7 @@ class MessagesController extends Controller
                     'group' => $group,
                     'receiver' => $user,
                     'users' => User::with('adminInformation', 'alumniInformation')->get(),
+                    'onlineStatus' => $onlineStatus
                 ];
 
                 return view('messages.show', $data);
@@ -101,6 +131,7 @@ class MessagesController extends Controller
             }
         } else {
             $user->load(['alumniInformation', 'adminInformation']);
+
             $data = [
                 'isGroup' => $group->id ? true : false,
                 'chatId' => $group->id ? $group->id : $user->id,
@@ -108,6 +139,7 @@ class MessagesController extends Controller
                 'group' => $group,
                 'receiver' => $user,
                 'users' => User::with('adminInformation', 'alumniInformation')->get(),
+                'onlineStatus' => $onlineStatus
             ];
             return view('messages.show', $data);
         }

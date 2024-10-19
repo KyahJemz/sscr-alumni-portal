@@ -15,7 +15,6 @@ class Chats extends Component
 
     public function render()
     {
-
         $myGroups = Auth::user()->groups;
         $managedGroups = Auth::user()->groupsManaged;
 
@@ -42,6 +41,23 @@ class Chats extends Component
 
         $mergedChats = $groupChatHeads->merge($chatHeads)->sortByDesc('created_at');
 
-        return view('livewire.chats', ['chats' => $mergedChats ?? []]);
+        $userIds = $chatHeads->pluck('sent_by')->merge($chatHeads->pluck('received_by'))->unique();
+        $onlineStatus = [];
+        $timeoutMinutes = 5;
+
+        foreach ($userIds as $userId) {
+            $session = \DB::table('sessions')->where('user_id', $userId)->first();
+            if ($session && isset($session->last_activity)) {
+                $lastActivity = \Carbon\Carbon::createFromTimestamp($session->last_activity);
+                $onlineStatus[$userId] = $lastActivity->diffInMinutes(now()) < $timeoutMinutes;
+            } else {
+                $onlineStatus[$userId] = false;
+            }
+        }
+
+        return view('livewire.chats', [
+            'chats' => $mergedChats ?? [],
+            'onlineStatus' => $onlineStatus,
+        ]);
     }
 }
