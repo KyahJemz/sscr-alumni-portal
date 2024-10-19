@@ -120,6 +120,7 @@ class UserController extends Controller
             return back()->with('status', 'No changes were made to the profile.');
 
         } catch (\Exception $e) {
+            dd($e);
             return back()->with('error', $e->getMessage());
         }
     }

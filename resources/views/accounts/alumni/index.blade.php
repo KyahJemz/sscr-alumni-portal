@@ -383,6 +383,7 @@
             const formData = new FormData(e.target);
             const url = "{{ route('api.account.store') }}";
             try {
+                document.getElementById('add-account-modal').classList.toggle('hidden');
                 const response = await fetch(url, {
                     method: 'POST',
                     body: formData,
@@ -399,6 +400,7 @@
                 alertModal(json.message);
                 getAccounts();
             } catch (error) {
+                document.getElementById('add-account-modal').classList.toggle('hidden');
                 alertModal(error.message);
                 console.error(error.message);
             }
