@@ -96,7 +96,7 @@ class HobbiesController extends Controller
      */
     public function apiDestroy(Hobbies $hobbies)
     {
-        $hobbies->update(['deleted_at' => Carbon::now(), 'deleted_by' => Auth::user()->id]);
+        $hobbies->update(['deleted_at' => Carbon::now('Asia/Manila'), 'deleted_by' => Auth::user()->id]);
         $hobbies->save();
         $hobbies->delete();
 

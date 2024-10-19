@@ -23,9 +23,9 @@ class InformationSeeder extends Seeder
                 'last_name' => 'Admin',
                 'middle_name' => 'x',
                 'department' => 'CICT',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'approved_at' => Carbon::now(),
+                'created_at' => Carbon::now('Asia/Manila'),
+                'updated_at' => Carbon::now('Asia/Manila'),
+                'approved_at' => Carbon::now('Asia/Manila'),
             ],
             [
                 'user_id' => 3,
@@ -34,9 +34,9 @@ class InformationSeeder extends Seeder
                 'last_name' => 'Admin',
                 'middle_name' => 'x',
                 'department' => 'Program',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'approved_at' => Carbon::now(),
+                'created_at' => Carbon::now('Asia/Manila'),
+                'updated_at' => Carbon::now('Asia/Manila'),
+                'approved_at' => Carbon::now('Asia/Manila'),
             ],
             [
                 'user_id' => 4,
@@ -45,9 +45,9 @@ class InformationSeeder extends Seeder
                 'last_name' => 'Admin',
                 'middle_name' => 'x',
                 'department' => 'Alumni Coordinator',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'approved_at' => Carbon::now(),
+                'created_at' => Carbon::now('Asia/Manila'),
+                'updated_at' => Carbon::now('Asia/Manila'),
+                'approved_at' => Carbon::now('Asia/Manila'),
             ],
         ];
 
@@ -59,8 +59,8 @@ class InformationSeeder extends Seeder
                 'course' => 'Bachelor of Science in Information Technology',
                 'batch' => '2024',
                 'middle_name' => 'x',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
+                'created_at' => Carbon::now('Asia/Manila'),
+                'updated_at' => Carbon::now('Asia/Manila'),
             ],
         ];
 

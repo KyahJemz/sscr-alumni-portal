@@ -43,10 +43,13 @@
                         class="text-lg font-semibold text-gray-700 hover:text-gray-500 hover:font-light cursor-pointer"
                         href="{{ $group->name ? route('groups.show', ['group' => $group->id]) : route('user.index', ['id' => $receiver->id]) }}"
                     >
-                        {{ $group->name ??
-                            (optional($receiver->alumniInformation)->first_name . ' ' . optional($receiver->alumniInformation)->last_name) ??
-                            (optional($receiver->adminInformation)->first_name . ' ' . optional($receiver->adminInformation)->last_name) ??
-                            'Unknown' }}
+                    {{ $group->name
+                        ?? (optional($receiver->alumniInformation)->first_name
+                            ? optional($receiver->alumniInformation)->first_name . ' ' . optional($receiver->alumniInformation)->last_name
+                            : (optional($receiver->adminInformation)->first_name
+                                ? optional($receiver->adminInformation)->first_name . ' ' . optional($receiver->adminInformation)->last_name
+                                : 'Unknown'))
+                    }}
                     </a>
                     <div class="flex space-x-4">
                         {{-- <button class="text-gray-600 dark:text-gray-300 hover:text-blue-500">

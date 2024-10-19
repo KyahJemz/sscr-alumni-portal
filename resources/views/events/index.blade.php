@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('content')
-    <div class="container mx-auto px-4 py-6 max-w-7xl sm:px-6 lg:px-8 space-y-4 bg-white">
+    <div class="container mx-auto px-4 py-6 max-w-7xl sm:px-6 lg:px-8 space-y-4 bg-white sm:my-2 md:my-6 rounded-lg">
         <div class="mx-auto md:p-4 sm:p-0">
             <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center mb-4">
                 Events
@@ -12,7 +12,7 @@
                     <a class="lg:col-span-2" href="{{ route('events.show', ['post' => $events[0]->id]) }}">
                         <div class="relative">
                             <img src="{{ asset('storage/posts/thumbnails/' . $events[0]->event->thumbnail) }}" onerror="this.onerror=null;this.src='{{ asset('storage/posts/thumbnails/default.jpg') }}';" alt="{{ $events[0]->event->title }}" class="w-full h-96 object-cover rounded-md shadow-lg">
-                            <div class="absolute bottom-0 bg-black bg-opacity-50 text-white p-4 w-full">
+                            <div class="absolute bottom-0 bg-gray-900/50 text-white p-4 w-full">
                                 <span class="text-red-500 font-bold">Latest</span>
                                 <h2 class="text-xl font-semibold">{{ $events[0]->event->title }}</h2>
                                 <p class="text-sm flex items-center gap-2 rounded-md shadow-sm px-2 py-1 w-max my-1 text-gray-800 bg-white border border-gray-300">
@@ -21,7 +21,7 @@
                                     </svg>
                                     {{ \Carbon\Carbon::parse($events[0]->event->start_date)->format('F j, Y') }}
                                 </p>
-                                <p class="text-sm">{{ \Carbon\Carbon::parse($events[0]->event->created_at)->diffForHumans() }}</p>
+                                <p class="text-sm">{{ \Carbon\Carbon::parse($events[0]->approved_at, 'Asia/Manila')->diffForHumans() }}</p>
                             </div>
                         </div>
                     </a>
@@ -39,7 +39,7 @@
                                     </svg>
                                     {{ \Carbon\Carbon::parse($event->event->start_date)->format('F j, Y') }}
                                 </p>
-                                <p class="text-sm text-gray-600">{{ \Carbon\Carbon::parse($event->event->created_at)->diffForHumans() }}</p>
+                                <p class="text-sm text-gray-600">{{ \Carbon\Carbon::parse($event->approved_at, 'Asia/Manila')->diffForHumans() }}</p>
                             </div>
                         </a>
                     @empty
@@ -62,7 +62,7 @@
                                 </svg>
                                 {{ \Carbon\Carbon::parse($event->event->start_date)->format('F j, Y') }}
                             </p>
-                            <p class="text-sm text-gray-600">{{ \Carbon\Carbon::parse($event->event->created_at)->diffForHumans() }}</p>
+                            <p class="text-sm text-gray-600">{{ \Carbon\Carbon::parse($event->approved_at, 'Asia/Manila')->diffForHumans() }}</p>
                         </div>
                     </a>
                 @empty

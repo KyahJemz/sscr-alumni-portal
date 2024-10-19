@@ -16,7 +16,7 @@
                             <div class="absolute bottom-0 bg-black bg-opacity-50 text-white p-4 w-full">
                                 <span class="text-red-500 font-bold">Latest</span>
                                 <h2 class="text-xl font-semibold">{{ $events[0]->events->title }}</h2>
-                                <p class="text-sm">{{ \Carbon\Carbon::parse($events[0]->events->created_at)->diffForHumans() }}</p>
+                                <p class="text-sm">{{ \Carbon\Carbon::parse($events[0]->approved_at, 'Asia/Manila')->diffForHumans() }}</p>
                             </div>
                         </div>
                     </a>
@@ -28,7 +28,7 @@
                             <img src="{{ asset('storage/posts/thumbnails/' . $events->events->thumbnail) }}" onerror="this.onerror=null;this.src='{{ asset('storage/posts/thumbnails/default.jpg') }}';" alt="{{ $events->events->title }}" class="w-36 h-36 object-cover rounded-md shadow-lg mr-4">
                             <div>
                                 <h3 class="font-semibold text-lg">{{ $events->events->title }}</h3>
-                                <p class="text-sm text-gray-600">{{ \Carbon\Carbon::parse($events->events->created_at)->diffForHumans() }}</p>
+                                <p class="text-sm text-gray-600">{{ \Carbon\Carbon::parse($events->approved_at, 'Asia/Manila')->diffForHumans() }}</p>
                             </div>
                         </a>
                     @empty
@@ -45,7 +45,7 @@
                         <img src="{{ asset('storage/posts/thumbnails/' . $events->events->thumbnail) }}" onerror="this.onerror=null;this.src='{{ asset('storage/posts/thumbnails/default.jpg') }}';" alt="{{ $events->events->title }}" class="w-36 h-36 object-cover rounded-md shadow-lg mr-4">
                         <div>
                             <h3 class="font-semibold text-lg">{{ $events->events->title }}</h3>
-                            <p class="text-sm text-gray-600">{{ \Carbon\Carbon::parse($events->events->created_at)->diffForHumans() }}</p>
+                            <p class="text-sm text-gray-600">{{ \Carbon\Carbon::parse($events->approved_at, 'Asia/Manila')->diffForHumans() }}</p>
                         </div>
                     </a>
                 @empty

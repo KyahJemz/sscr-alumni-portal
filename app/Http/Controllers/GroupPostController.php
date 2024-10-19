@@ -106,7 +106,7 @@ class GroupPostController extends Controller
                         'end_date' => $request->endDate,
                         'status' => 'active',
                         'thumbnail' => $thumbnail,
-                        'contributions' => $request->contributions,
+                        'contribution' => $request->contributions,
                         'amount' => $request->amount,
                     ]);
                     break;
@@ -147,7 +147,7 @@ class GroupPostController extends Controller
                 'type' => $request->type,
                 'created_by' => $user->id,
                 'approved_by' => (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') ? $user->id : null,
-                'approved_at' => (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') ? Carbon::now() : null,
+                'approved_at' => (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') ? Carbon::now('Asia/Manila') : null,
                 'group_id' => $group->id,
                 'event_id' => $event ? $event->id : null,
                 'news_id' => $news ? $news->id : null,

@@ -87,10 +87,10 @@ class AdminInformationController extends Controller
 
             if (!empty($updatedFields)) {
                 $adminInformation->update($updatedFields);
-                return back()->with('status', 'Information updated successfully.');
+                return redirect()->back()->with('success', 'Profile updated successfully.');
             }
 
-            return back()->with('status', 'No changes were made to the information.');
+            return redirect()->back()->with('info', 'No changes were made.');
 
         } catch (\Exception $e) {
             dd($e->getMessage());

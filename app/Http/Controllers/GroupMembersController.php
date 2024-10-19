@@ -101,8 +101,8 @@ class GroupMembersController extends Controller
                         'user_id' => $request->user_id,
                         'group_id' => $request->group_id,
                         'is_invited_by' => $user->id,
-                        'is_invited_at' => Carbon::now(),
-                        'approved_at' => Carbon::now(),
+                        'is_invited_at' => Carbon::now('Asia/Manila'),
+                        'approved_at' => Carbon::now('Asia/Manila'),
                         'approved_by' => $user->id
                     ]);
                     Notification::create([

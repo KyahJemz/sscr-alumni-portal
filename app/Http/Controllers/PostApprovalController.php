@@ -66,12 +66,12 @@ class PostApprovalController extends Controller
         if ($group->id) {
             if ($request->status === 'approved') {
                 $post->update([
-                    'approved_at' => Carbon::now(),
+                    'approved_at' => Carbon::now('Asia/Manila'),
                     'approved_by' => Auth::user()->id,
                 ]);
             } else {
                 $post->update([
-                    'rejected_at' => Carbon::now(),
+                    'rejected_at' => Carbon::now('Asia/Manila'),
                     'rejected_by' => Auth::user()->id,
                 ]);
             }
@@ -82,12 +82,12 @@ class PostApprovalController extends Controller
         } else {
             if ($request->status === 'approved') {
                 $post->update([
-                    'approved_at' => Carbon::now(),
+                    'approved_at' => Carbon::now('Asia/Manila'),
                     'approved_by' => Auth::user()->id,
                 ]);
             } else {
                 $post->update([
-                    'rejected_at' => Carbon::now(),
+                    'rejected_at' => Carbon::now('Asia/Manila'),
                     'rejected_by' => Auth::user()->id,
                 ]);
             }

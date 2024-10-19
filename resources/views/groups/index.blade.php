@@ -49,7 +49,7 @@
                 <div>
                     <h2 class="text-xl font-semibold text-gray-800">My Clubs</h2>
                     <div id="my-clubs" class="flex flex-row gap-4 overflow-x-auto py-4">
-                        @forelse ($myGroups as $group)
+                        @forelse ($myGroupsMerged as $group)
                             <a data-name="{{$group->name}}" href="{{ route('groups.show', ['group' => $group->id]) }}" class="flex flex-col items-center bg-white border border-gray-300 rounded-lg shadow-md hover:bg-gray-50 group-card flex-shrink-0 w-80 h-max">
                                 <img src="{{ asset('storage/groups/images/' . $group->image ?? 'default.jpg') }}"
                                     onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';"

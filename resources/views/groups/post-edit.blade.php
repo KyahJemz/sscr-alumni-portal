@@ -37,7 +37,7 @@
                             </div>
 
                             <div id="event-form" class="w-full hidden space-y-2">
-                                <input type="text" name="contributions" class="w-full p-2 rounded text-sm" placeholder="Contributions (optional)" value="{{optional($post->event)->contributions ?? ''}}">
+                                <input type="text" name="contributions" class="w-full p-2 rounded text-sm" placeholder="Contributions (optional)" value="{{optional($post->event)->contribution ?? ''}}">
                                 <input type="text" name="amount" class="w-full p-2 rounded text-sm" placeholder="Amount (optional)" value="{{optional($post->event)->amount ?? ''}}">
                                 <input type="text" name="location" class="w-full p-2 rounded -mt-2 text-sm"
                                     placeholder="Event location (optional)" value="{{optional($post->event)->location ?? ''}}">

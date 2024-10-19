@@ -132,14 +132,14 @@ class AlumniInformationController extends Controller
 
             if (!empty($updatedFields)) {
                 $alumniInformation->update($updatedFields);
-                return back()->with('status', 'Information updated successfully.');
+                return redirect()->back()->with('status', 'Information updated successfully.');
             }
 
-            return back()->with('status', 'No changes were made to the information.');
+            return redirect()->back()->with('status', 'No changes were made.')->withInput();
 
         } catch (\Exception $e) {
             dd($e->getMessage());
-            return back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 

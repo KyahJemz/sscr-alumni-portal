@@ -29,18 +29,27 @@
                     src="{{ asset('storage/profile/images/' . ($chat->sender->image ?? 'default.jpg')) }}" onerror="this.onerror=null;this.src='{{ asset('storage/profile/images/default.jpg') }}';" alt="Person 1">
                 @endif
                 <div class="flex flex-col w-full ">
-                    @if ($chat->sent_by === Auth::user()->id)
-                        <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                            {{ optional($chat->receiver->alumniInformation)->first_name . ' ' . optional($chat->receiver->alumniInformation)->last_name ??
-                            optional($chat->receiver->adminInformation)->first_name . ' ' . optional($chat->receiver->adminInformation)->last_name ?? '' }}
-                        </p>
+                    @if ($chat->sent_by === Auth::user()->id && $chat->received_by === Auth::user()->id)
+                        <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">You</p>
                     @else
-                        <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                            {{ optional($chat->sender->alumniInformation)->first_name . ' ' . optional($chat->sender->alumniInformation)->last_name ??
-                            optional($chat->sender->adminInformation)->first_name . ' ' . optional($chat->sender->adminInformation)->last_name ?? '' }}
-                        </p>
+                        @if ($chat->sent_by === Auth::user()->id)
+                            <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                                {{ optional($chat->receiver->alumniInformation)->first_name
+                                    ? optional($chat->receiver->alumniInformation)->first_name . ' ' . optional($chat->receiver->alumniInformation)->last_name
+                                    : (optional($chat->receiver->adminInformation)->first_name
+                                        ? optional($chat->receiver->adminInformation)->first_name . ' ' . optional($chat->receiver->adminInformation)->last_name
+                                        : 'Unknown') }}
+                            </p>
+                        @else
+                            <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                                {{ optional($chat->sender->alumniInformation)->first_name
+                                    ? optional($chat->sender->alumniInformation)->first_name . ' ' . optional($chat->sender->alumniInformation)->last_name
+                                    : (optional($chat->sender->adminInformation)->first_name
+                                        ? optional($chat->sender->adminInformation)->first_name . ' ' . optional($chat->sender->adminInformation)->last_name
+                                        : 'Unknown') }}
+                            </p>
+                        @endif
                     @endif
-                    </p>
                     <div class="text-xs text-gray-500 dark:text-gray-400 flex justify-between w-full {{ ($chat->sent_by === Auth::user()->id) ? 'font-light' : ($chat->read_at ? 'font-light' : 'font-black text-black') }}">
                         <p class="truncate">
                             @if ($chat->sent_by === Auth::user()->id)

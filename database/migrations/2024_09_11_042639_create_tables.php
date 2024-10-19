@@ -80,6 +80,7 @@ return new class extends Migration
             $table->foreignId('rejected_by')->nullable()->constrained('users');
             $table->text('content')->nullable();
             $table->text('images')->nullable();
+            $table->text('videos')->nullable();
             $table->string('files')->nullable();
             $table->string('type');
             $table->timestamps();

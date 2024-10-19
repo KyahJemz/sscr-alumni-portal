@@ -227,11 +227,11 @@
                                 <div class="md:text-sm sm:text-sm text-gray-500 ">${post.event.location}</div>
                             </div>
                         </div>
-                        ${post.event?.contributions || post.event?.amount ? `
+                        ${post.event?.contribution || post.event?.amount ? `
                             <div class="text-sm text-gray-700 my-4 font-bold">Notes:
-                            ${post.event?.contributions ? `
+                            ${post.event?.contribution ? `
                                 <div class="text-sm text-gray-700 font-light px-4">
-                                    Contributions: ${post.event.contributions}
+                                    Contributions: ${post.event.contribution}
                                 </div>
                             ` : ""}
                             ${post.event?.amount ? `

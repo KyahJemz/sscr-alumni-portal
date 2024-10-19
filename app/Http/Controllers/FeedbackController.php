@@ -23,17 +23,25 @@ class FeedbackController extends Controller
             ['rating'=>5, 'count'=>0, 'percentage'=>0],
         ];
 
-        foreach ($ratings as $value) {
-            $sum += $value->rating;
-            $ratingsSummary[$value->rating - 1]['count'] += 1;
-            $ratingsSummary[$value->rating - 1]['percentage'] = round(($ratingsSummary[$value->rating - 1]['count'] / count($ratings)) * 100, 2);
+        $totalRatings = count($ratings);
+
+        if ($totalRatings > 0) {
+            foreach ($ratings as $value) {
+                $sum += $value->rating;
+                $ratingsSummary[$value->rating - 1]['count'] += 1;
+                $ratingsSummary[$value->rating - 1]['percentage'] = round(($ratingsSummary[$value->rating - 1]['count'] / $totalRatings) * 100, 2);
+            }
+
+            $averageRating = round($sum / $totalRatings, 2);
+        } else {
+            $averageRating = 0;
         }
 
         $data = [
             'feedbacks' => $ratings,
             'ratings' => $ratingsSummary,
-            'counts' => count($ratings),
-            'total' => round($sum / count($ratings), 2),
+            'counts' => $totalRatings,
+            'total' => $averageRating,
         ];
 
         return view('feedbacks.index', $data);

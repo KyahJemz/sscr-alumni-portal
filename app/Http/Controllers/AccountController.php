@@ -18,14 +18,13 @@ class AccountController extends Controller
     public function export(Request $request)
     {
         $request->validate([
-            'data' => 'required|array',
             'headers' => 'required|array'
         ]);
 
-        $data = $request->input('data');
+        $data = $request->data ? $request->input('data') : [];
         $headers = $request->input('headers');
 
-        return Excel::download(new CustomExport($data, $headers), 'export-' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx');
+        return Excel::download(new CustomExport($data, $headers), 'export-' . Carbon::now('Asia/Manila')->format('Y-m-d_H-i-s') . '.xlsx');
     }
 
     public function apiImport(Request $request)
@@ -244,7 +243,7 @@ class AccountController extends Controller
                                 'username' => $formattedUsername,
                                 'created_by' => Auth::user()->id,
                                 'approved_by' => Auth::user()->id,
-                                'approved_at' => Carbon::now(),
+                                'approved_at' => Carbon::now('Asia/Manila'),
                             ]);
 
                             AlumniInformation::create([
@@ -270,7 +269,7 @@ class AccountController extends Controller
                                 'username' => $formattedUsername,
                                 'created_by' => Auth::user()->id,
                                 'approved_by' => Auth::user()->id,
-                                'approved_at' => Carbon::now(),
+                                'approved_at' => Carbon::now('Asia/Manila'),
                             ]);
 
                             AlumniInformation::create([
@@ -291,7 +290,7 @@ class AccountController extends Controller
                             'username' => $request->email,
                             'created_by' => Auth::user()->id,
                             'approved_by' => Auth::user()->id,
-                            'approved_at' => Carbon::now(),
+                            'approved_at' => Carbon::now('Asia/Manila'),
                         ]);
 
                         AdminInformation::create([
@@ -327,7 +326,7 @@ class AccountController extends Controller
             if($request->status === 'approve') {
                 $user->update([
                     'approved_by' => Auth::user()->id,
-                    'approved_at' => Carbon::now(),
+                    'approved_at' => Carbon::now('Asia/Manila'),
                 ]);
                 $user->save();
                 $details = [
@@ -339,7 +338,7 @@ class AccountController extends Controller
             } else if($request->status === 'reject') {
                 $user->update([
                     'rejected_by' => Auth::user()->id,
-                    'rejected_at' => Carbon::now(),
+                    'rejected_at' => Carbon::now('Asia/Manila'),
                 ]);
                 $user->save();
             } else {
@@ -365,7 +364,7 @@ class AccountController extends Controller
                 $user->save();
             } else if($request->status === 'deactivate') {
                 $user->update([
-                    'disabled_at' => Carbon::now(),
+                    'disabled_at' => Carbon::now('Asia/Manila'),
                     'disabled_by' => Auth::user()->id,
                 ]);
                 $user->save();
@@ -383,7 +382,7 @@ class AccountController extends Controller
     {
         if(Auth::user()->role !== 'alumni' && Auth::user()->role !== 'program_chair') {
             $user->update([
-                'deleted_at' => Carbon::now(),
+                'deleted_at' => Carbon::now('Asia/Manila'),
                 'deleted_by' => Auth::user()->id,
             ]);
             $user->save();

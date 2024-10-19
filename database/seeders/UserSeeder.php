@@ -20,8 +20,10 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Alumni User',
                 'email' => 'alumni@test.com',
-                'username' => 'Alumni',
+                'username' => 'alumni',
                 'role' => 'alumni',
+                'approved_at' => Carbon::now('Asia/Manila'),
+                'approved_by' => 2,
             ],
             [
                 'name' => 'CICT Admin',
@@ -32,13 +34,13 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Program Chair',
                 'email' => 'program_chair@test.com',
-                'username' => 'ProgramChair',
+                'username' => 'progchair',
                 'role' => 'program_chair',
             ],
             [
                 'name' => 'Alumni Coordinator',
                 'email' => 'alumni_coordinator@test.com',
-                'username' => 'AlumniCoordinator',
+                'username' => 'alumnicoordinator',
                 'role' => 'alumni_coordinator',
             ],
         ];

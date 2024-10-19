@@ -22,28 +22,38 @@ class GroupController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $groups = Group::all();
-        $myGroups = Auth::user()->groups;
-        $recommended = $groups->diff($myGroups);
-        $user = Auth::user();
-        $data = [
-            'groups' => $groups,
-            'myGroups' => $myGroups,
-            'recommended' => $recommended,
-            'user' => $user
-        ];
-        if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') {
-            $data['alumni_list'] = User::where('role', 'alumni')
-                ->whereNull('deleted_at')
-                ->whereNotNull('approved_at')
-                ->whereHas('alumniInformation')
-                ->with('alumniInformation')
-                ->get()->all();
-        }
+{
+    $groups = Group::all();
+    $myGroups = Auth::user()->groups;
+    $myManagedGroups = Auth::user()->groupsManaged;
 
-        return view('groups.index', $data);
+    $myGroupsMerged = $myGroups->merge($myManagedGroups)->unique();
+
+    $recommended = $groups->diff($myGroupsMerged);
+
+    $user = Auth::user();
+
+    $data = [
+        'groups' => $groups,
+        'myGroups' => $myGroups,
+        'myManagedGroups' => $myManagedGroups,
+        'myGroupsMerged' => $myGroupsMerged,
+        'recommended' => $recommended,
+        'user' => $user
+    ];
+
+    if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') {
+        $data['alumni_list'] = User::where('role', 'alumni')
+            ->whereNull('deleted_at')
+            ->whereNotNull('approved_at')
+            ->whereHas('alumniInformation')
+            ->with('alumniInformation')
+            ->get();
     }
+
+    return view('groups.index', $data);
+}
+
 
     /**
      * Show the form for creating a new resource.
