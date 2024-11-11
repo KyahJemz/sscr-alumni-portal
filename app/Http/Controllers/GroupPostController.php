@@ -21,7 +21,7 @@ class GroupPostController extends Controller
      */
     public function apiIndex(Group $group)
     {
-        $posts = Post::with(['likes.user', 'comments.user', 'comments.deletedBy', 'postedBy.alumniInformation', 'postedBy.adminInformation', 'approvedBy', 'rejected_by', 'event', 'announcement', 'news'])
+        $posts = Post::with(['likes.user', 'comments.user', 'comments.user.alumniInformation', 'comments.user.adminInformation', 'comments.deletedBy', 'postedBy.alumniInformation', 'postedBy.adminInformation', 'approvedBy', 'rejected_by', 'event', 'announcement', 'news'])
             ->where('group_id', $group->id)
             ->whereNull('deleted_at')
             ->whereNotNull('approved_at')
@@ -143,11 +143,14 @@ class GroupPostController extends Controller
                     break;
             }
 
+            $groupManaged = $user->groupsManaged;
+            $isAdmin = $groupManaged->contains($group);
+
             Post::create([
                 'type' => $request->type,
                 'created_by' => $user->id,
-                'approved_by' => (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') ? $user->id : null,
-                'approved_at' => (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') ? Carbon::now('Asia/Manila') : null,
+                'approved_by' => (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator' || $isAdmin) ? $user->id : null,
+                'approved_at' => (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') || $isAdmin ? Carbon::now('Asia/Manila') : null,
                 'group_id' => $group->id,
                 'event_id' => $event ? $event->id : null,
                 'news_id' => $news ? $news->id : null,

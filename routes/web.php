@@ -56,7 +56,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/user', [UserController::class, 'store'])->name('user.store');
     Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show');
     Route::get('/user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
-    Route::put('/user/{user}', [UserController::class, 'update'])->name('user.update');
     Route::patch('/user/{user}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 
@@ -76,7 +75,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/accounts/{user}', [AccountController::class, 'show'])->name('account.show');
     Route::get('/accounts/{user}/edit', [AccountController::class, 'edit'])->name('account.edit');
-    Route::put('/accounts/{user}', [AccountController::class, 'update'])->name('account.update');
     Route::patch('/api/accounts/{user}', [AccountController::class, 'update'])->name('account.update');
 
 
@@ -86,7 +84,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/alumni-information', [AlumniInformationController::class, 'store'])->name('alumni-information.store');
     Route::get('/alumni-information/{alumniInformation}', [AlumniInformationController::class, 'show'])->name('alumni-information.show');
     Route::get('/alumni-information/{alumniInformation}/edit', [AlumniInformationController::class, 'edit'])->name('alumni-information.edit');
-    Route::put('/alumni-information/{alumniInformation}', [AlumniInformationController::class, 'update'])->name('alumni-information.update');
     Route::patch('/alumni-information/{alumniInformation}', [AlumniInformationController::class, 'update'])->name('alumni-information.update');
     Route::delete('/alumni-information/{alumniInformation}', [AlumniInformationController::class, 'destroy'])->name('alumni-information.destroy');
 
@@ -96,7 +93,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin-information', [AdminInformationController::class, 'store'])->name('admin-information.store');
     Route::get('/admin-information/{adminInformation}', [AdminInformationController::class, 'show'])->name('admin-information.show');
     Route::get('/admin-information/{adminInformation}/edit', [AdminInformationController::class, 'edit'])->name('admin-information.edit');
-    Route::put('/admin-information/{adminInformation}', [AdminInformationController::class, 'update'])->name('admin-information.update');
     Route::patch('/admin-information/{adminInformation}', [AdminInformationController::class, 'update'])->name('admin-information.update');
     Route::delete('/admin-information/{adminInformation}', [AdminInformationController::class, 'destroy'])->name('admin-information.destroy');
 
@@ -106,7 +102,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/user-hobbies', [UserHobbiesController::class, 'store'])->name('user-hobbies.store');
     Route::get('/user-hobbies/{user_id}', [UserHobbiesController::class, 'show'])->name('user-hobbies.show');
     Route::get('/user-hobbies/{user_id}/edit', [UserHobbiesController::class, 'edit'])->name('user-hobbies.edit');
-    Route::put('/user-hobbies/{user_id}', [UserHobbiesController::class, 'update'])->name('user-hobbies.update');
     Route::patch('/user-hobbies/{user_id}', [UserHobbiesController::class, 'update'])->name('user-hobbies.update');
     Route::delete('/user-hobbies/{user_id}', [UserHobbiesController::class, 'destroy'])->name('user-hobbies.destroy');
 
@@ -172,7 +167,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/group-admins/{group}', [GroupAdminsController::class, 'store'])->name('group-admins.store');
     Route::get('/api/group-admins/{group}', [GroupAdminsController::class, 'apiShow'])->name('api.group-admins.show');
     Route::get('/group-admins/{group}/edit', [GroupAdminsController::class, 'edit'])->name('group-admins.edit');
-    Route::put('/group-admins/{group}', [GroupAdminsController::class, 'update'])->name('group-admins.update');
     Route::patch('/group-admins/{group}', [GroupAdminsController::class, 'update'])->name('group-admins.update');
     Route::delete('/group-admins/{groupMember}', [GroupAdminsController::class, 'destroy'])->name('group-admins.destroy');
     Route::delete('/api/group-admins/{group}/{user}', [GroupAdminsController::class, 'apiDestroy'])->name('api.group-admins.destroy');
@@ -245,7 +239,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/chats', [ChatController::class, 'store'])->name('chats.store');
     Route::get('/chats/{id}', [ChatController::class, 'show'])->name('chats.show');
     Route::get('/chats/{id}/edit', [ChatController::class, 'edit'])->name('chats.edit');
-    Route::put('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
     Route::patch('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
     Route::delete('/chats/{id}', [ChatController::class, 'destroy'])->name('chats.destroy');
 

@@ -84,8 +84,8 @@
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Fullname</th>
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Email</th>
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Alumni ID</th>
-                                <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Course</th>
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Batch</th>
+                                <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Course</th>
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Actions</th>
                             </tr>
                         </thead>
@@ -275,7 +275,6 @@
             });
         }
 
-
         function updateAlumniTable(account, index, status) {
             const table = document.getElementById('alumni-table-body');
             const template = `
@@ -292,13 +291,15 @@
                 <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center h-full">
                         <button class="text-xs bg-blue-500 hover:bg-blue-600 py-1 px-2 rounded-lg underline" onclick="editAccount(${account.id})">Edit</button>
-                        ${account.approved_at ?
-                        account.disabled_at
-                            ? `<button class="text-xs bg-yellow-500 hover:bg-yellow-600 py-1 px-2 rounded-lg underline" onclick="activateAccount(${account.id})">Activate</button>`
-                            : `<button class="text-xs bg-yellow-500 hover:bg-yellow-600 py-1 px-2 rounded-lg underline" onclick="deactivateAccount(${account.id})">Deactivate</button>`
-                            : `<button class="text-xs bg-yellow-500 hover:bg-yellow-600  py-1 px-2 rounded-lg underline" onclick="approveAccount(${account.id})">Approve</button>
-                            <button class="text-xs bg-yellow-500 hover:bg-yellow-600  py-1 px-2 rounded-lg underline" onclick="rejectAccount(${account.id})">Reject</button>`
-                        }
+                        @if(Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
+                            ${account.approved_at ?
+                            account.disabled_at
+                                ? `<button class="text-xs bg-yellow-500 hover:bg-yellow-600 py-1 px-2 rounded-lg underline" onclick="activateAccount(${account.id})">Activate</button>`
+                                : `<button class="text-xs bg-yellow-500 hover:bg-yellow-600 py-1 px-2 rounded-lg underline" onclick="deactivateAccount(${account.id})">Deactivate</button>`
+                                : `<button class="text-xs bg-yellow-500 hover:bg-yellow-600  py-1 px-2 rounded-lg underline" onclick="approveAccount(${account.id})">Approve</button>
+                                <button class="text-xs bg-yellow-500 hover:bg-yellow-600  py-1 px-2 rounded-lg underline" onclick="rejectAccount(${account.id})">Reject</button>`
+                            }
+                        @endif
                         <button class="text-xs bg-red-500 hover:bg-red-600  py-1 px-2 rounded-lg underline" onclick="deleteAccount(${account.id})">Delete</button>
                     </div>
                 </td>

@@ -31,10 +31,12 @@
                         </svg>
                     </button>
                     <div id="dropdownMenu" class="hidden absolute mt-2 w-48 bg-white rounded-md shadow-lg z-20 transform transition duration-150 ease-in-out">
-                        <a href="{{ route('account.index', ['type'=>'alumni']) }}"
-                            class='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-sscr-red hover:font-bold transition duration-150 ease-in-out'>
-                            Alumni Accounts
-                        </a>
+                        @if(Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
+                            <a href="{{ route('account.index', ['type'=>'alumni']) }}"
+                                class='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-sscr-red hover:font-bold transition duration-150 ease-in-out'>
+                                Alumni Accounts
+                            </a>
+                        @endif
                         <a href="{{ route('account.index', ['type'=>'graduates']) }}"
                             class='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-sscr-red hover:font-bold transition duration-150 ease-in-out'>
                             Graduation List

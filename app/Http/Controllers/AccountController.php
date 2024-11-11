@@ -146,7 +146,7 @@ class AccountController extends Controller
             case 'alumni':
                 if (Auth::user()->role != 'alumni') {
                     $data = [
-                        'alumni_list' => User::with(['alumniInformation'])->whereNull('deleted_at')->where('role', 'alumni')->whereNotNull('approved_at')->whereNull('rejected_at')->get()->all(),
+                        'alumni_list' => User::with(['alumniInformation'])->whereNull('deleted_at')->where('role', 'alumni')->whereNotNull('approved_at')->whereNull('rejected_at')->get(),
                     ];
                 } else {
                     return abort(401, 'Unauthorized');
@@ -155,7 +155,7 @@ class AccountController extends Controller
             case 'admins':
                 if (Auth::user()->role === 'cict_admin') {
                     $data = [
-                        'admin_list' => User::with(['adminInformation'])->whereNull('deleted_at')->whereNot('role', 'alumni')->get()->all(),
+                        'admin_list' => User::with(['adminInformation'])->whereNull('deleted_at')->whereNot('role', 'alumni')->get(),
                     ];
                 } else {
                     return abort(401, 'Unauthorized');
@@ -164,7 +164,7 @@ class AccountController extends Controller
             case 'graduates':
                 if (Auth::user()->role != 'alumni') {
                     $data = [
-                        'alumni_list' => User::with(['alumniInformation'])->whereNull('deleted_at')->where('role', 'alumni')->whereNull('approved_at')->whereNull('rejected_at')->get()->all(),
+                        'alumni_list' => User::with(['alumniInformation'])->whereNull('deleted_at')->where('role', 'alumni')->whereNull('approved_at')->whereNull('rejected_at')->get(),
                     ];
                 } else {
                     return abort(401, 'Unauthorized');
@@ -268,11 +268,11 @@ class AccountController extends Controller
                                 'role' => 'alumni',
                                 'username' => $formattedUsername,
                                 'created_by' => Auth::user()->id,
-                                'approved_by' => Auth::user()->id,
-                                'approved_at' => Carbon::now('Asia/Manila'),
+                                'approved_by' => null,
+                                'approved_at' => null,
                             ]);
 
-                            AlumniInformation::create([
+                            $test = AlumniInformation::create([
                                 'user_id' => $user->id,
                                 'first_name' => $request->first_name,
                                 'middle_name' => $request->middle_name,

@@ -102,7 +102,7 @@
             <div class="fixed inset-0 bg-black opacity-50"></div>
             <div id="send-feedback-form"
                 class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-lg p-6 relative">
-                <form action="{{ route('groups.store') }}" method="POST">
+                <form action="{{ route('groups.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <h2
                         class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex justify-between items-center">
