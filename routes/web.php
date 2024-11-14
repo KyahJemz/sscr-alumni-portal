@@ -11,6 +11,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\GroupAdminsController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupHobbiesController;
+use App\Http\Controllers\GroupLeaveController;
 use App\Http\Controllers\GroupMembersController;
 use App\Http\Controllers\GroupPostController;
 use App\Http\Controllers\HobbiesController;
@@ -242,6 +243,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
     Route::delete('/chats/{id}', [ChatController::class, 'destroy'])->name('chats.destroy');
 
+    Route::delete('/group-leave/{group}', [GroupLeaveController::class, 'destroy'])->name('group.leave');
 
     Route::get('/post-approvals/{group?}', [PostApprovalController::class, 'index'])->name('post-approvals.index');
     Route::get('/api/post-approvals/{group?}', [PostApprovalController::class, 'apiIndex'])->name('api.post-approvals.index');

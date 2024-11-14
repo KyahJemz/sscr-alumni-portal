@@ -21,8 +21,10 @@
             <div class="bg-white shadow-md rounded-lg p-6 flex flex-col gap-6">
                 <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center">
                     Alumni Digital Identification Card
+                    <button onclick="downloadAsImage()" class="sm:hidden md:block ml-auto bg-sscr-red text-white px-3 py-1 rounded text-xs">Download</button>
+                    <button onclick="downloadAsImage2()" class="sm:block md:hidden ml-auto bg-sscr-red text-white px-3 py-1 rounded text-xs">Download</button>
                 </h2>
-                <div id="alumni-id-card" class="sm:hidden md:block alumni-id-card relative w-[500px] h-[300px] bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500 m-auto mb-10">
+                <div id="alumni-id-card" class="sm:hidden md:block alumni-id-card relative w-[500px] h-[300px] bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500  mb-10">
                     <div class="text-center bg-sscr-red pb-2 p-4 rounded-t-lg">
                         <p class="text-sm font-semibold text-sscr-yellow">San Sebastian College - Recoletos de Cavite</p>
                         <p class="text-lg font-semibold text-sscr-yellow">SSCR Alumni Identification Card</p>
@@ -34,7 +36,7 @@
                     <div class="flex space-x-4 pt-2 px-4">
                         <div class="w-32 h-32 rounded-lg">
                             <img id="profile-preview"
-                                src="{{ $user->image ? asset('storage/profile/images/' . $user->image) : asset('storage/profile/images/default.jpg') }}"
+                                src="{{ $user->id_image ? asset('storage/profile/images/' . $user->id_image) : ( $user->image ? asset('storage/profile/images/' . $user->image) : asset('storage/profile/images/default.jpg') ) }}"
                                 onerror="this.onerror=null;this.src='{{ asset('storage/profile/images/default.jpg') }}';"
                                 alt="Profile Image" class="rounded-lg w-full h-full object-cover">
                         </div>
@@ -62,7 +64,7 @@
                     </div>
                 </div>
 
-                <div id="alumni-id-card" class="md:hidden sm:block alumni-id-card relative w-[350px] h-max bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500 m-auto mb-10">
+                <div id="alumni-id-card-2" class="md:hidden sm:block alumni-id-card relative w-[350px] h-max bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500 mb-10">
                     <div class="text-center bg-sscr-red pb-2 p-4 rounded-t-lg">
                         <p class="text-xs font-semibold text-sscr-yellow">San Sebastian College - Recoletos de Cavite</p>
                         <p class="text-md font-semibold text-sscr-yellow">SSCR Alumni Identification Card</p>
@@ -74,7 +76,7 @@
                     <div class="flex space-x-4 pt-2 px-4">
                         <div class="w-20 h-20 rounded-lg">
                             <img id="profile-preview"
-                                src="{{ $user->image ? asset('storage/profile/images/' . $user->image) : asset('storage/profile/images/default.jpg') }}"
+                                src="{{ $user->id_image ? asset('storage/profile/images/' . $user->id_image) : ( $user->image ? asset('storage/profile/images/' . $user->image) : asset('storage/profile/images/default.jpg') ) }}"
                                 onerror="this.onerror=null;this.src='{{ asset('storage/profile/images/default.jpg') }}';"
                                 alt="Profile Image" class="rounded-lg w-full h-full object-cover">
                         </div>
@@ -298,4 +300,56 @@
 
         @endif
     </div>
+@endsection
+
+@section('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+    <script>
+        function downloadAsImage() {
+            const node = document.getElementById('alumni-id-card');
+            const scale = 2;
+
+        domtoimage.toPng(node, {
+            width: node.offsetWidth * scale,
+            height: node.offsetHeight * scale,
+            style: {
+                transform: `scale(${scale})`,
+                transformOrigin: 'top left',
+                width: `${node.offsetWidth}px`,
+                height: `${node.offsetHeight}px`
+            }
+        }).then(function (dataUrl) {
+            const link = document.createElement('a');
+            link.download = 'alumni-id-card.png';
+            link.href = dataUrl;
+            link.click();
+        }).catch(function (error) {
+            console.error('Failed to download image:', error);
+        });
+        }
+    </script>
+    <script>
+        function downloadAsImage2() {
+            const node = document.getElementById('alumni-id-card-2');
+            const scale = 2;
+
+        domtoimage.toPng(node, {
+            width: node.offsetWidth * scale,
+            height: node.offsetHeight * scale,
+            style: {
+                transform: `scale(${scale})`,
+                transformOrigin: 'top left',
+                width: `${node.offsetWidth}px`,
+                height: `${node.offsetHeight}px`
+            }
+        }).then(function (dataUrl) {
+            const link = document.createElement('a');
+            link.download = 'alumni-id-card.png';
+            link.href = dataUrl;
+            link.click();
+        }).catch(function (error) {
+            console.error('Failed to download image:', error);
+        });
+        }
+    </script>
 @endsection

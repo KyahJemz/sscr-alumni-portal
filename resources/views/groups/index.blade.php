@@ -69,6 +69,31 @@
                     </div>
                 </div>
 
+                @if($suggested)
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800">Suggested Clubs</h2>
+                        <div id="suggested-clubs" class="flex flex-row gap-4 overflow-x-auto py-4">
+                            @forelse ($suggested as $group)
+                                <a data-name="{{$group->name}}" href="{{ route('groups.show', ['group' => $group->id]) }}" class="flex flex-col items-center bg-white border border-gray-300 rounded-lg shadow-md hover:bg-gray-50 group-card flex-shrink-0 w-80 h-max">
+                                    <img src="{{ asset('storage/groups/images/' . $group->image ?? 'default.jpg') }}"
+                                        onerror="this.onerror=null;this.src='{{ asset('storage/groups/images/default.jpg') }}';"
+                                        alt="{{ $group->name }}" class="h-44 w-full object-cover rounded-t-lg">
+                                    <div class="flex flex-col px-4 py-2 w-full">
+                                        <p class="group-name text-md font-bold text-gray-700">{{ $group->name }}</p>
+                                        <p class="text-sm font-medium text-gray-700">{{ $group->group_members->whereNotNull('approved_at')->whereNull('deleted_at')->count() + $group->group_admins->whereNull('deleted_at')->count() }} members * {{ $group->posts->whereNotNull('approved_at')->whereNull('deleted_at')->count() }} posts</p>
+                                        <p class="text-sm font-light text-gray-400">Founded: {{ $group->created_at->format('F j, Y') }}</p>
+                                    </div>
+                                </a>
+                            @empty
+                                <a href="#"
+                                    class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50 flex-shrink-0 w-48">
+                                    Join some groups
+                                </a>
+                            @endforelse
+                        </div>
+                    </div>
+                @endif
+
                 <div>
                     <h2 class="text-xl font-semibold text-gray-800">Other Clubs</h2>
                     <div id="recommended-clubs" class="flex flex-row gap-4 overflow-x-auto py-4">

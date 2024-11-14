@@ -24,6 +24,7 @@ class User extends Authenticatable
         'username',
         'password',
         'image',
+        'id_image',
         'role',
         'created_by',
         'deleted_by',

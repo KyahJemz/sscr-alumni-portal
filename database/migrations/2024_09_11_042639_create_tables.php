@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->softDeletes();
+            $table->text('id_image')->nullable()->default(null)->after('image');
         });
 
         Schema::create('hobbies', function (Blueprint $table) {
@@ -50,6 +51,7 @@ return new class extends Migration
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->string('location')->nullable();
+            $table->text('url')->nullable();
             $table->string('contribution')->default(null)->nullable();
             $table->string('amount')->default(null)->nullable();
             $table->string('status');

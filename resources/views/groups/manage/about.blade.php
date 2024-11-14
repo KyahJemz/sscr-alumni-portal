@@ -20,6 +20,18 @@
         <p class="text-gray-600">Last Modified: {{ $group->updated_at->format('F j, Y') }}</p>
     </div>
 
+    @if($isAdmin || $groupMember)
+        <div class="md:col-span-2 pt-2 mt-4">
+            <form action="{{ route('group.leave', ['group' => $group->id]) }}" method="POST">
+                @method('DELETE')
+                @csrf
+                <button type="submit" class="bg-sscr-red text-white rounded-md h-max py-2 px-4 inline-flex items-center text-xs cursor-pointer">
+                    Leave the group
+                </button>
+            </form>
+        </div>
+    @endif
+
     <div class="md:col-span-2 pt-2 mt-4">
         <p class="text-md font-bold text-gray-700">Summary</p>
         <div class="grid grid-cols-2 gap-4 mt-2">

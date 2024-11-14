@@ -29,7 +29,17 @@ class GroupController extends Controller
 
     $myGroupsMerged = $myGroups->merge($myManagedGroups)->unique();
 
-    $recommended = $groups->diff($myGroupsMerged);
+    $suggested = collect();
+
+    $hobbies = Auth::user()->hobbies;
+    foreach ($hobbies as $hobby) {
+        $hobbyGroups = $hobby->groups->diff($myGroupsMerged);
+        $suggested = $suggested->merge($hobbyGroups);
+    }
+
+    $suggested = $suggested->unique();
+
+    $recommended = $groups->diff($suggested->merge($myGroupsMerged));
 
     $user = Auth::user();
 
@@ -39,6 +49,7 @@ class GroupController extends Controller
         'myManagedGroups' => $myManagedGroups,
         'myGroupsMerged' => $myGroupsMerged,
         'recommended' => $recommended,
+        'suggested' => $suggested,
         'user' => $user
     ];
 

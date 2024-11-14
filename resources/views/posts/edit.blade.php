@@ -41,6 +41,8 @@
                                 <input type="text" name="amount" class="w-full p-2 rounded text-sm" placeholder="Amount (optional)" value="{{optional($post->event)->amount ?? ''}}">
                                 <input type="text" name="location" class="w-full p-2 rounded -mt-2 text-sm"
                                     placeholder="Event location (optional)" value="{{optional($post->event)->location ?? ''}}">
+                                <input type="text" name="url" class="w-full p-2 rounded -mt-2 text-sm"
+                                    placeholder="Event url (converted to QR code, optional)" value="{{optional($post->event)->url ?? ''}}">
                                 <div class="w-full flex text-xs gap-2">
                                     <input type="datetime-local" name="startDate" id="startDate"
                                         class="text-xs cursor-pointer rounded p-2"

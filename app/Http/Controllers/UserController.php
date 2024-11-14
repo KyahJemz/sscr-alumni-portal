@@ -98,6 +98,17 @@ class UserController extends Controller
                 $imageName = $user->image;
             }
 
+            if ($request->id_image) {
+                $idImageName = time() . '.' . $request->id_image->getClientOriginalExtension();
+                $request->id_image->storeAs('public/profile/images', $idImageName);
+
+                if ($user->id_image) {
+                    Storage::delete('public/profile/images/' . $user->id_image);
+                }
+            } else {
+                $idImageName = $user->id_image;
+            }
+
             $updatedFields = [];
 
             // if ($request->filled('username') && $user->username !== $request->input('username')) {
@@ -110,6 +121,10 @@ class UserController extends Controller
 
             if ($request->has('image') && $user->image !== $imageName) {
                 $updatedFields['image'] = $imageName;
+            }
+
+            if ($request->has('id_image') && $user->id_image !== $idImageName) {
+                $updatedFields['id_image'] = $idImageName;
             }
 
             if (!empty($updatedFields)) {

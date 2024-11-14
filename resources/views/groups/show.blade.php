@@ -81,6 +81,8 @@
                                 <input type="text" name="amount" class="w-full p-2 rounded text-sm" placeholder="Amount (optional)">
                                 <input type="text" name="location" class="w-full p-2 rounded -mt-2 text-sm"
                                     placeholder="Event location (optional)">
+                                <input type="text" name="url" class="w-full p-2 rounded -mt-2 text-sm"
+                                    placeholder="Event url (converted to QR code, optional)">
                                 <div class="w-full flex text-xs gap-2">
                                     <input type="datetime-local" name="startDate" id="startDate"
                                         class="text-xs cursor-pointer rounded p-2">
@@ -440,6 +442,10 @@
                                             <img src="{{ asset('storage/posts/images') }}/${image}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
                                         </div>
                                     `).join('') : ''}
+
+                                ${post.event && post.event.url ? `
+                                    <div id="qr-code-container-${post.id}" class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item></div>
+                                ` : ''}
                             </div>
 
                             <button type="button" class="absolute top-0 start-0 z-1 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
@@ -625,6 +631,27 @@
                 json.data.posts.forEach(post => {
                     const postElement = PostTemplate(post);
                     postsContainer.innerHTML += postElement;
+                    if (post.event && post.event.url) {
+                        const qrContainer = document.getElementById(`qr-code-container-${post.id}`);
+                        console.log(post.event.url)
+                        console.log(qrContainer)
+                        setTimeout(() => {
+                            const qrContainer = document.getElementById(`qr-code-container-${post.id}`);
+                            if (qrContainer) {
+                                qrContainer.innerHTML = '';
+                                new QRCode(qrContainer, {
+                                    text: post.event.url,
+                                    width: 200,
+                                    height: 200,
+                                    colorDark: "#000000",
+                                    colorLight: "#ffffff",
+                                    correctLevel: QRCode.CorrectLevel.H
+                                });
+                            } else {
+                                console.error(`QR code container not found for post ID ${post.id}`);
+                            }
+                        }, 100);
+                    }
                 });
                 addEvents();
             } catch (error) {
