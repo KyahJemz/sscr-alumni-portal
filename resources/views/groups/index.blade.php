@@ -69,7 +69,7 @@
                     </div>
                 </div>
 
-                @if($suggested)
+                @if($suggested->count() > 0)
                     <div>
                         <h2 class="text-xl font-semibold text-gray-800">Suggested Clubs</h2>
                         <div id="suggested-clubs" class="flex flex-row gap-4 overflow-x-auto py-4">
@@ -85,10 +85,6 @@
                                     </div>
                                 </a>
                             @empty
-                                <a href="#"
-                                    class="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-4 shadow-md hover:bg-gray-50 flex-shrink-0 w-48">
-                                    Join some groups
-                                </a>
                             @endforelse
                         </div>
                     </div>

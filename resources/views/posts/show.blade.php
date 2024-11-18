@@ -13,7 +13,7 @@
 @endsection
 
 @section('scripts')
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         function openPostOptions(postId) {
             const optionsElement = document.getElementById(`post-options-${postId}`);
@@ -107,6 +107,10 @@
                                             <img src="{{ asset('storage/posts/images/') }}/${image}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
                                         </div>
                                     `).join('') : ''}
+
+                                ${post.event && post.event.url ? `
+                                    <div id="qr-code-container-${post.id}" class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item></div>
+                                ` : ''}
                             </div>
 
                             <button type="button" class="absolute top-0 start-0 z-1 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
@@ -288,6 +292,27 @@
                 const json = await response.json();
 
                 postsContainer.innerHTML = PostTemplate(json.data.post);
+                if (json.data.post.event && json.data.post.event.url) {
+                    const qrContainer = document.getElementById(`qr-code-container-${json.data.post.id}`);
+                    console.log(json.data.post.event.url)
+                    console.log(qrContainer)
+                    setTimeout(() => {
+                        const qrContainer = document.getElementById(`qr-code-container-${json.data.post.id}`);
+                        if (qrContainer) {
+                            qrContainer.innerHTML = '';
+                            new QRCode(qrContainer, {
+                                text: json.data.post.event.url,
+                                width: 200,
+                                height: 200,
+                                colorDark: "#000000",
+                                colorLight: "#ffffff",
+                                correctLevel: QRCode.CorrectLevel.H
+                            });
+                        } else {
+                            console.error(`QR code container not found for post ID ${json.data.post.id}`);
+                        }
+                    }, 100);
+                }
 
                 addEvents();
             } catch (error) {
