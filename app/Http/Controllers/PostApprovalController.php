@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Models\Notification;
 use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -69,10 +70,22 @@ class PostApprovalController extends Controller
                     'approved_at' => Carbon::now('Asia/Manila'),
                     'approved_by' => Auth::user()->id,
                 ]);
+                Notification::create([
+                    'user_id' => $post->created_by,
+                    'type' => 'group',
+                    'content' => "Your post has been approved in the group " . $group->name,
+                    'url' => "/group/{$group->id}/posts/{$post->id}",
+                ]);
             } else {
                 $post->update([
                     'rejected_at' => Carbon::now('Asia/Manila'),
                     'rejected_by' => Auth::user()->id,
+                ]);
+                Notification::create([
+                    'user_id' => $post->created_by,
+                    'type' => 'group',
+                    'content' => "Your post has been rejected in the group " . $group->name,
+                    'url' => null,
                 ]);
             }
             $post->save();
@@ -85,10 +98,22 @@ class PostApprovalController extends Controller
                     'approved_at' => Carbon::now('Asia/Manila'),
                     'approved_by' => Auth::user()->id,
                 ]);
+                Notification::create([
+                    'user_id' => $post->created_by,
+                    'type' => 'post',
+                    'content' => "Your post has been approved",
+                    'url' => "/posts/{$post->id}",
+                ]);
             } else {
                 $post->update([
                     'rejected_at' => Carbon::now('Asia/Manila'),
                     'rejected_by' => Auth::user()->id,
+                ]);
+                Notification::create([
+                    'user_id' => $post->created_by,
+                    'type' => 'post',
+                    'content' => "Your post has been rejected",
+                    'url' => null,
                 ]);
             }
             $post->save();

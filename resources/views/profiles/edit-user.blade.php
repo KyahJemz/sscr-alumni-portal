@@ -25,16 +25,18 @@
                         accept="image/png, image/jpeg" />
                 </div>
 
-                <div>
-                    <label for="id-image" class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-2">Profile
-                        Id Image</label>
-                    <img id="id-image-preview"
-                        src="{{ $user->id_image ? asset('storage/profile/images/' . $user->id_image) : asset('storage/profile/images/default.jpg') }}"
-                        onerror="this.onerror=null;this.src='{{ asset('storage/profile/images/default.jpg') }}';"
-                        alt="Profile Id Image" class="rounded-full w-32 h-32 border-gray-300 dark:border-gray-700 mb-4">
-                    <input id="id_image" class="mt-1 block w-full cursor-pointer" type="file" name="id_image"
-                        accept="image/png, image/jpeg" />
-                </div>
+                @if(Auth::user()->role === 'alumni')
+                    <div>
+                        <label for="id-image" class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-2">Profile
+                            Id Image</label>
+                        <img id="id-image-preview"
+                            src="{{ $user->id_image ? asset('storage/profile/images/' . $user->id_image) : asset('storage/profile/images/default.jpg') }}"
+                            onerror="this.onerror=null;this.src='{{ asset('storage/profile/images/default.jpg') }}';"
+                            alt="Profile Id Image" class="rounded-full w-32 h-32 border-gray-300 dark:border-gray-700 mb-4">
+                        <input id="id_image" class="mt-1 block w-full cursor-pointer" type="file" name="id_image"
+                            accept="image/png, image/jpeg" />
+                    </div>
+                @endif
 
                 <div>
                     <label for="username"

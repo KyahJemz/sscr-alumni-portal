@@ -279,10 +279,10 @@
                 <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center">
                     More Information
                     @if ($user->role === 'alumni')
-                        <a href="{{ route('alumni-information.edit', ['alumniInformation' => $user->id]) }}"
+                        <a href="{{ route('alumni-information.edit', ['alumniInformation' => $user->alumniInformation->id]) }}"
                             class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
                     @else
-                        <a href="{{ route('admin-information.edit', ['adminInformation' => $user->id]) }}"
+                        <a href="{{ route('admin-information.edit', ['adminInformation' => $user->adminInformation->id]) }}"
                             class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
                     @endif
                 </h2>

@@ -46,11 +46,11 @@
                     <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300">Additional Information</h3>
                     <div class="flex flex-wrap -mx-3 mb-6">
                         <div class="w-full md:w-1/4 px-3">
-                            <label for="nationality" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Department</label>
-                            <input list="nationalities" id="nationality" name="nationality"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12"
-                                value="{{ old('nationality', $information->department) }}" />
-                            <datalist id="nationalities">
+                            <label for="department" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Department</label>
+                            <input list="department" id="department" name="department"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-2"
+                                value="{{ old('department', $information->department) }}" />
+                            <datalist id="department">
                                 @foreach ($departments as $department)
                                     <option value="{{ $department }}"></option>
                                 @endforeach

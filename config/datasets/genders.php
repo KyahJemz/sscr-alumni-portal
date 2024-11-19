@@ -14,5 +14,6 @@ return [
     'list' => [
         'Male',
         'Female',
+        'Others'
     ],
 ];

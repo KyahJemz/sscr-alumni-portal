@@ -21,6 +21,7 @@ return [
     'gender' => [
         'male' => 'Male',
         'female' => 'Female',
+        'others' => 'Others',
     ],
 
     'occupation' => [

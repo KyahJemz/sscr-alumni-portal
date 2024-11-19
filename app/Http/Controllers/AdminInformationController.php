@@ -62,16 +62,11 @@ class AdminInformationController extends Controller
     public function update(Request $request, AdminInformation $adminInformation)
     {
         try {
-            $validEnums = [
-                'departments' => config('datasets.departments.list'),
-            ];
-
             $request->validate([
                 'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
                 'middle_name' => 'nullable|string|max:255',
                 'suffix' => 'nullable|string|max:255',
-                'department' => ['nullable', 'string', Rule::in($validEnums['departments'])],
             ]);
 
             $updatedFields = [];
