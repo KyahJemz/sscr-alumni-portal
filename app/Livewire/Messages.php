@@ -20,7 +20,6 @@ class Messages extends Component
         $this->isGroup = $isGroup;
     }
 
-
     public function render()
     {
 

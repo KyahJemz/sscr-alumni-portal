@@ -98,7 +98,7 @@
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-200 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                         autocomplete="current-password" />
                     @if ($errors->updatePassword->has('current_password'))
-                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">
+                        <p class="mt-2 text-sm text-sscr-red">
                             {{ $errors->updatePassword->first('current_password') }}</p>
                     @endif
                 </div>
@@ -110,7 +110,7 @@
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-200 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                         autocomplete="new-password" />
                     @if ($errors->updatePassword->has('password'))
-                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">
+                        <p class="mt-2 text-sm text-sscr-red">
                             {{ $errors->updatePassword->first('password') }}</p>
                     @endif
                 </div>
@@ -122,7 +122,7 @@
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-200 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                         autocomplete="new-password" />
                     @if ($errors->updatePassword->has('password_confirmation'))
-                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">
+                        <p class="mt-2 text-sm text-sscr-red">
                             {{ $errors->updatePassword->first('password_confirmation') }}</p>
                     @endif
                 </div>
@@ -152,7 +152,7 @@
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-200 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                         autocomplete="current-password" />
                     @error('password')
-                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="mt-2 text-sm text-sscr-red">{{ $message }}</p>
                     @enderror
                 </div>
 
