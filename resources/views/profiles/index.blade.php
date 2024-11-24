@@ -45,7 +45,7 @@
                             <p><span class="font-semibold">Last Name: </span> {{ $information->last_name ?? 'N/A' }}</p>
                             <p><span class="font-semibold">Given Name: </span> {{ $information->first_name ?? 'N/A' }}</p>
                             <p><span class="font-semibold">Middle Name: </span> {{ $information->middle_name ?? 'N/A' }}</p>
-                            <p><span class="font-semibold">Date of Birth: </span> {{ $information->birth_date ?? 'N/A' }}</p>
+                            <p><span class="font-semibold">Date of Birth: </span> {{ !empty($information->birth_date) ? \Carbon\Carbon::parse($information->birth_date)->format('d F Y') : 'N/A' }}</p>
                             <p><span class="font-semibold">Course: </span> {{ $information->course ?? 'N/A' }}</p>
                             <p><span class="font-semibold">Batch: </span> {{ $information->batch ?? 'N/A' }}</p>
                         </div>
@@ -85,7 +85,7 @@
                             <p><span class="font-semibold">Last Name: </span> {{ $information->last_name ?? 'N/A' }}</p>
                             <p><span class="font-semibold">Given Name: </span> {{ $information->first_name ?? 'N/A' }}</p>
                             <p><span class="font-semibold">Middle Name: </span> {{ $information->middle_name ?? 'N/A' }}</p>
-                            <p><span class="font-semibold">Date of Birth: </span> {{ $information->birth_date ?? 'N/A' }}</p>
+                            <p><span class="font-semibold">Date of Birth: </span> {{ !empty($information->birth_date) ? \Carbon\Carbon::parse($information->birth_date)->format('d F Y') : 'N/A' }}</p>
                             <p><span class="font-semibold">Course: </span> {{ $information->course ?? 'N/A' }}</p>
                             <p><span class="font-semibold">Batch: </span> {{ $information->batch ?? 'N/A' }}</p>
                         </div>

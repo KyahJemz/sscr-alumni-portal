@@ -30,7 +30,12 @@ class UserController extends Controller
             'hobbies' => $hobbies,
         ];
         if($user->role === 'alumni'){
-            $data['address'] = ($information->province ?? '') . ($information->city ?? '') . ($information->barangay ?? '') . ($information->street_address ?? '');
+            $data['address'] = implode(', ', array_filter([
+                $information->province ?? '',
+                $information->city ?? '',
+                $information->barangay ?? '',
+                $information->street_address ?? ''
+            ]));
         }
 
         return view('profiles.index', $data);
