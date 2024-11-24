@@ -19,6 +19,7 @@ class Chat extends Model
         'file',
         'image',
         'read_at',
+        'seen',
         'deleted_by',
     ];
 

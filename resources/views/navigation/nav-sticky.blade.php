@@ -72,12 +72,14 @@
 
         <div class="sm:flex sm:items-center gap-2">
             <a href="{{ route('messages.index') }}" title="Messages"
-                class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+                class='inline-flex relative text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 @include('components.icons.chat')
+                <span id="messages-count" class=" absolute -top-1 -right-0 inline-flex items-center justify-center w-3 h-3 text-xs leading-none text-white bg-sscr-red rounded-full">•</span>
             </a>
             <a onclick="document.getElementById('notifications-modal').classList.toggle('hidden');" title="Notifications"
-                class='cursor-pointer inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+                class='relative cursor-pointer inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center text-sm leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 @include('components.icons.bell')
+                <span id="notification-count" class=" absolute -top-1 -right-0 inline-flex items-center justify-center w-3 h-3 text-xs leading-none text-white bg-sscr-red rounded-full">•</span>
             </a>
             <div id="dropdown" class="relative" title="Profile">
                 <button id="sticky-navbar-dropdown-trigger"
@@ -162,7 +164,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-96 p-4 relative">
         <h2 class="text-md font-semibold text-gray-800 dark:text-gray-100">
             Notifications
-            <button type="button" onclick="document.getElementById('notifications-modal').classList.toggle('hidden');" class="absolute top-4 right-4 text-sscr-red">@include('components.icons.x')</button>
+            <button type="button" onclick="document.getElementById('notifications-modal').classList.toggle('hidden'); getNotification(); readNotifications(); getHasMessages();" class="absolute top-4 right-4 text-sscr-red">@include('components.icons.x')</button>
         </h2>
         <div id="notifications-container" class="mt-4 space-y-2">
 
@@ -247,10 +249,57 @@
         }
     }
 
+    async function readNotifications() {
+        const url = "{{ route('api.markNotificationRead') }}";
+
+        try {
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+
+            const json = await response.json();
+            displayNotifications();
+            getNotification();
+        } catch (error) {
+            console.error('Error fetching notifications:', error.message);
+        }
+    }
+
+    async function getHasMessages() {
+        const url = "{{ route('api.getMessagesMark') }}";
+
+        try {
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+
+            const json = await response.json();
+            console.log(json);
+            if (json.hasMessage) {
+                document.getElementById('messages-count').classList.remove('hidden');
+            } else {
+                document.getElementById('messages-count').classList.add('hidden');
+            }
+        } catch (error) {
+            console.error('Error fetching notifications:', error.message);
+        }
+    }
+
     function displayNotifications() {
         const start = (currentPage - 1) * pageSize;
         const end = start + pageSize;
         const paginatedNotifications = notifications.slice(start, end);
+
+        const length = document.getElementById('notification-count').textContent = notifications.filter(notification => !notification.is_read).length;
+        if (length > 0) {
+            document.getElementById('notification-count').classList.remove('hidden');
+        } else {
+            document.getElementById('notification-count').classList.add('hidden');
+        }
 
         const notificationsContainer = document.getElementById('notifications-container');
         notificationsContainer.innerHTML = '';
@@ -262,6 +311,7 @@
                         <p class="text-sm text-gray-800">${notification.content}</p>
                         ${notification?.url ? `<p class="absolute bottom-1 font-bold text-sscr-red right-2 text-xs">--></p>` : ''}
                         <p class="text-xs text-gray-500 mt-2">${new Date(notification.created_at).toLocaleString()}</p>
+                        ${notification.is_read ? `` : '<span id="messages-count" class=" absolute -top-1 -right-0 inline-flex items-center justify-center w-3 h-3 text-xs leading-none text-white bg-sscr-red rounded-full">•</span>'}
                     </a>
                 `;
             });
@@ -295,6 +345,7 @@
     });
 
     getNotification();
+    getHasMessages();
 
 </script>
 

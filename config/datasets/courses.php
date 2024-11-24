@@ -14,5 +14,6 @@ return [
     'list' => [
         'Bachelor of Science in Information Technology',
         'Bachelor of Science in Computer Science',
+        'Bachelor of Science in Computer sss',
     ],
 ];

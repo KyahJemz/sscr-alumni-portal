@@ -16,6 +16,7 @@ use App\Http\Controllers\GroupMembersController;
 use App\Http\Controllers\GroupPostController;
 use App\Http\Controllers\HobbiesController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\MarksController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NotificationController;
@@ -248,6 +249,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/post-approvals/{group?}', [PostApprovalController::class, 'index'])->name('post-approvals.index');
     Route::get('/api/post-approvals/{group?}', [PostApprovalController::class, 'apiIndex'])->name('api.post-approvals.index');
     Route::patch('/api/post-approvals/{post}/{group?}', [PostApprovalController::class, 'apiUpdate'])->name('api.post-approvals.update');
+
+    Route::get('/api/markNotificationRead', [MarksController::class, 'markNotificationRead'])->name('api.markNotificationRead');
+    Route::get('/api/getMessagesMark', [MarksController::class, 'getMessagesMark'])->name('api.getMessagesMark');
 });
 
 // Route::get('/accounts/{accountId}', [AccountsController::class, 'showById'])

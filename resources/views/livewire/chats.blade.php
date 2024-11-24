@@ -14,7 +14,7 @@
                 <div class="flex flex-col w-full ">
                     <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{ $chat->group->name }}
                     </p>
-                    <div class="text-xs text-gray-500 dark:text-gray-400 flex justify-between w-full {{ ($chat->sent_by === Auth::user()->id) ? 'font-light' : ($chat->read_at ? 'font-light' : 'font-black text-black') }}">
+                    <div class="text-xs text-gray-500 dark:text-gray-400 flex justify-between w-full {{ ($chat->sent_by === Auth::user()->id) ? 'font-light' : ((collect(json_decode($chat->seen))->contains(Auth::user()->id)) ? 'font-light' : 'font-black text-black') }}">
                         <p class="truncate">
                             @if ($chat->sent_by === Auth::user()->id)
                                 you: {{ $chat->message }}
@@ -70,7 +70,7 @@
                             </p>
                         @endif
                     @endif
-                    <div class="text-xs text-gray-500 dark:text-gray-400 flex justify-between w-full {{ ($chat->sent_by === Auth::user()->id) ? 'font-light' : ($chat->read_at ? 'font-light' : 'font-black text-black') }}">
+                    <div class="text-xs text-gray-500 dark:text-gray-400 flex justify-between w-full {{ ($chat->sent_by === Auth::user()->id) ? 'font-light' : ((collect(json_decode($chat->seen))->contains(Auth::user()->id)) ? 'font-light' : 'font-black text-black') }}">
                         <p class="truncate">
                             @if ($chat->sent_by === Auth::user()->id)
                                 you: {{ $chat->message }}

@@ -122,6 +122,7 @@ class GroupController extends Controller
             GroupChat::create([
                     'sent_by' => Auth::id(),
                     'group_id' => $group->id,
+                    'seen' => json_encode([Auth::id()]),
                     'message' => '- - Group chat created - -'
             ]);
 

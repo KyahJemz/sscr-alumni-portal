@@ -63,12 +63,14 @@ class MessagesController extends Controller
                 GroupChat::create([
                     'sent_by' => Auth::id(),
                     'group_id' => $request->receiver_id,
+                    'seen' => json_encode([Auth::id()]),
                     'message' => $request->message
                 ]);
             } else {
                 Chat::create([
                     'sent_by' => Auth::id(),
                     'received_by' => $request->receiver_id,
+                    'seen' => json_encode([Auth::id()]),
                     'message' => $request->message
                 ]);
             }
@@ -125,6 +127,17 @@ class MessagesController extends Controller
                     'onlineStatus' => $onlineStatus
                 ];
 
+                $chats = GroupChat::where('group_id', $group->id)->get();
+
+                foreach ($chats as $chat) {
+                    $seen = json_decode($chat->seen, true) ?? [];
+
+                    if (!in_array(Auth::id(), $seen)) {
+                        $seen[] = Auth::id();
+                        $chat->update(['seen' => json_encode($seen)]);
+                    }
+                }
+
                 return view('messages.show', $data);
             } else {
                 return redirect()->route('messages.index')->with('error', 'You are not allowed to access this group.');
@@ -141,6 +154,21 @@ class MessagesController extends Controller
                 'users' => User::with('adminInformation', 'alumniInformation')->get(),
                 'onlineStatus' => $onlineStatus
             ];
+
+            $chats = Chat::where(function ($query) use ($user) {
+                $query->orWhere('sent_by', $user->id)
+                      ->orWhere('received_by', $user->id);
+            })->get();
+
+            foreach ($chats as $chat) {
+                $seen = json_decode($chat->seen, true) ?? [];
+
+                if (!in_array(Auth::id(), $seen)) {
+                    $seen[] = Auth::id();
+                    $chat->update(['seen' => json_encode($seen)]);
+                }
+            }
+
             return view('messages.show', $data);
         }
     }

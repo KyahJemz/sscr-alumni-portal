@@ -52,7 +52,7 @@
                                 value="{{ old('nationality', $information->nationality) }}" />
                             <datalist id="nationalities">
                                 @foreach ($nationalities as $nationality)
-                                    <option value="{{ $nationality }}"></option>
+                                    <option value="{{ $nationality }}">{{ $nationality }}</option>
                                 @endforeach
                             </datalist>
                         </div>
@@ -60,10 +60,10 @@
                             <label for="civil_status" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Civil Status</label>
                             <input list="civil_statuses" id="civil_status" name="civil_status"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
-                                value="{{ old('civil_status', $information->civil_status) }}" />
+                                value="{{ old('civil_status', $information->civil_status) }}"/>
                             <datalist id="civil_statuses">
                                 @foreach ($civilStatus as $status)
-                                    <option value="{{ $status }}"></option>
+                                    <option value="{{ $status }}">{{ $status }}</option>
                                 @endforeach
                             </datalist>
                         </div>
@@ -86,7 +86,7 @@
                                 value="{{ old('gender', $information->gender) }}" />
                             <datalist id="genders">
                                 @foreach ($genders as $gender)
-                                    <option value="{{ $gender }}"></option>
+                                    <option value="{{ $gender }}">{{ $gender }}</option>
                                 @endforeach
                             </datalist>
                         </div>
@@ -113,7 +113,7 @@
                                 value="{{ old('country', $information->country) }}" />
                             <datalist id="countries">
                                 @foreach ($countries as $country)
-                                    <option value="{{ $country }}"></option>
+                                    <option value="{{ $country }}">{{ $country }}</option>
                                 @endforeach
                             </datalist>
                         </div>
@@ -124,7 +124,7 @@
                                 value="{{ old('region', $information->region) }}" />
                             <datalist id="regions">
                                 @foreach ($regions as $region)
-                                    <option value="{{ $region }}"></option>
+                                    <option value="{{ $region }}">{{ $region }}</option>
                                 @endforeach
                             </datalist>
                         </div>
@@ -135,7 +135,7 @@
                                 value="{{ old('province', $information->province) }}" />
                             <datalist id="provinces">
                                 @foreach ($provinces as $province)
-                                    <option value="{{ $province }}"></option>
+                                    <option value="{{ $province }}">{{ $province }}</option>
                                 @endforeach
                             </datalist>
                         </div>
@@ -146,7 +146,7 @@
                                 value="{{ old('city', $information->city) }}" />
                             <datalist id="cities">
                                 @foreach ($cities as $city)
-                                    <option value="{{ $city }}"></option>
+                                    <option value="{{ $city }}">{{ $city }}</option>
                                 @endforeach
                             </datalist>
                         </div>
@@ -160,7 +160,7 @@
                                 value="{{ old('barangay', $information->barangay) }}" />
                             <datalist id="barangays">
                                 @foreach ($barangays as $barangay)
-                                    <option value="{{ $barangay }}"></option>
+                                    <option value="{{ $barangay }}">{{ $barangay }}</option>
                                 @endforeach
                             </datalist>
                         </div>
@@ -184,7 +184,7 @@
                                 value="{{ old('education_level', $information->education_level) }}" />
                             <datalist id="education_levels">
                                 @foreach ($educationLevels as $educationLevel)
-                                    <option value="{{ $educationLevel }}"></option>
+                                    <option value="{{ $educationLevel }}">{{ $educationLevel }}</option>
                                 @endforeach
                             </datalist>
                         </div>
@@ -201,7 +201,7 @@
                                 value="{{ old('course', $information->course) }}" />
                             <datalist id="courses">
                                 @foreach ($courses as $course)
-                                    <option value="{{ $course }}"></option>
+                                    <option value="{{ $course }}">{{ $course }}</option>
                                 @endforeach
                             </datalist>
                         </div>
@@ -220,7 +220,7 @@
                                 value="{{ old('occupation', $information->occupation) }}" />
                             <datalist id="occupations">
                                 @foreach ($occupations as $occupation)
-                                    <option value="{{ $occupation }}"></option>
+                                    <option value="{{ $occupation }}">{{ $occupation }}</option>
                                 @endforeach
                             </datalist>
                         </div>
