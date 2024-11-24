@@ -169,10 +169,10 @@
                     More Information
                     @if (Auth::user()->role === 'cict_admin' || Auth::user()->rol === 'alumni_coordinator' || Auth::user()->id === $user->id)
                         @if ($user->role === 'alumni')
-                            <a href="{{ route('alumni-information.edit', ['alumniInformation' => $user->id]) }}"
+                            <a href="{{ route('alumni-information.edit', ['alumniInformation' => $user->alumniInformation->id]) }}"
                                 class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
                         @else
-                            <a href="{{ route('admin-information.edit', ['alumniInformation' => $user->id]) }}"
+                            <a href="{{ route('admin-information.edit', ['adminInformation' => $user->adminInformation->id]) }}"
                                 class="text-gray-800 font-bold py-2 px-4 rounded">@include('components.icons.edit')</a>
                         @endif
                     @endif
