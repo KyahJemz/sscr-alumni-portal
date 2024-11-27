@@ -1,49 +1,49 @@
 <div id="sticky-navbar"
-    class="sm:hidden md:flex lg:flex border-t border-sscr-yellow sticky top-0 z-10 transition ease-in-out duration-500 bg-sscr-yellow">
+    class="sm:hidden md:flex lg:flex border-y border-sscr-red sticky top-0 z-10 transition ease-in-out duration-500 bg-sscr-yellow text-sscr-red font bold">
     <div class="max-w-7xl mx-auto sm:flex md:flex lg:flex justify-between py-1 w-full">
         <div class="sm:-my-px sm:flex">
             <a href="{{ route('home') }}"
-                class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+                class='inline-flex hover:opacity-50 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 Home
             </a>
             <a href="{{ route('groups.index') }}"
-                class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+                class='inline-flex hover:opacity-50 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 {{ (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator') ? 'Organizations' : 'My Organizations' }}
             </a>
             <a href="{{ route('news.index') }}"
-                class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+                class='inline-flex hover:opacity-50 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 News
             </a>
             <a href="{{ route('events.index') }}"
-                class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+                class='inline-flex hover:opacity-50 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 Events
             </a>
             <a href="{{ route('announcements.index') }}"
-                class='inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+                class='inline-flex hover:opacity-50 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 Announcements
             </a>
             @if (Auth::user()->role !== 'alumni')
                 <div class="relative">
-                    <button id="dropdownToggle" class='inline-flex text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+                    <button id="dropdownToggle" class='inline-flex hover:opacity-50 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                         Accounts
                         <svg id="nav-accounts-dropdown-arrow" xmlns="http://www.w3.org/2000/svg" class="ml-2 h-5 w-5 transform transition duration-150 ease-in-out" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M5.292 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div id="dropdownMenu" class="hidden absolute mt-2 w-48 bg-white rounded-md shadow-lg z-20 transform transition duration-150 ease-in-out">
+                    <div id="dropdownMenu" class="hidden absolute mt-2 w-48 bg-sscr-red rounded-md shadow-lg z-20 transform transition duration-150 ease-in-out">
                         @if(Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
                             <a href="{{ route('account.index', ['type'=>'alumni']) }}"
-                                class='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-sscr-red hover:font-bold transition duration-150 ease-in-out'>
+                                class='block px-4 py-2 text-sscr-yellow hover:opacity-50 transition duration-150 ease-in-out'>
                                 Alumni Accounts
                             </a>
                         @endif
                         <a href="{{ route('account.index', ['type'=>'graduates']) }}"
-                            class='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-sscr-red hover:font-bold transition duration-150 ease-in-out'>
+                            class='block px-4 py-2 text-sm text-sscr-yellow hover:opacity-50 transition duration-150 ease-in-out'>
                             Graduation List
                         </a>
                         @if(Auth::user()->role === 'cict_admin')
                             <a href="{{ route('account.index', ['type'=>'admins']) }}"
-                                class='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-sscr-red hover:font-bold transition duration-150 ease-in-out'>
+                                class='block px-4 py-2 text-sm text-sscr-yellow hover:opacity-50 transition duration-150 ease-in-out'>
                                 Management Accounts
                             </a>
                         @endif
@@ -72,18 +72,18 @@
 
         <div class="sm:flex sm:items-center gap-2">
             <a href="{{ route('messages.index') }}" title="Messages"
-                class='inline-flex relative text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+                class='inline-flex relative hover:opacity-50 items-center border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 @include('components.icons.chat')
                 <span id="messages-count" class=" absolute -top-1 -right-0 inline-flex items-center justify-center w-3 h-3 text-xs leading-none text-white bg-sscr-red rounded-full">•</span>
             </a>
             <a onclick="document.getElementById('notifications-modal').classList.toggle('hidden');" title="Notifications"
-                class='relative cursor-pointer inline-flex text-gray-100 dark:text-gray-100 hover:text-gray-300/80 dark:hover:text-gray-300/80 items-center text-sm leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
+                class='relative cursor-pointer inline-flex hover:opacity-50 items-center text-sm leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 @include('components.icons.bell')
                 <span id="notification-count" class=" absolute -top-1 -right-0 inline-flex items-center justify-center w-3 h-3 text-xs leading-none text-white bg-sscr-red rounded-full">•</span>
             </a>
             <div id="dropdown" class="relative" title="Profile">
                 <button id="sticky-navbar-dropdown-trigger"
-                    class="flex gap-2 items-center px-3 text-sm font-medium rounded-md text-gray-100 dark:text-gray-100 cursor-pointer bg-sscr-red/0 dark:bg-sscr-red/0 hover:text-gray-200 dark:hover:text-gray-200 focus:outline-none transition ease-in-out duration-150 hover:text-gray-300/80 dark:hover:text-gray-300/80">
+                    class="flex gap-2 items-center px-3 text-sm font-medium rounded-md hover:opacity-50 cursor-pointer focus:outline-none transition ease-in-out duration-150">
                     <img class="w-6 h-6 rounded-full m-0 p-0"
                         src="{{ Auth::user()->image ? asset('storage/profile/images/' . Auth::user()->image) : asset('storage/profile/images/default.jpg') }}"
                         onerror="this.onerror=null;this.src='{{ asset('storage/profile/images/default.jpg') }}';"
@@ -93,37 +93,37 @@
                 </button>
 
                 <div id="sticky-navbar-dropdown"
-                    class="absolute z-50 mt-2 hidden rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
+                    class="absolute z-50 mt-2 hidden rounded-md shadow-lg bg-sscr-red ring-1 ring-black ring-opacity-5">
                     <a href="{{ route('user.index') }}"
-                        class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
+                        class="block w-full px-4 py-2 text-start text-sm leading-5 text-sscr-yellow hover:opacity-50 transition duration-150 ease-in-out">
                         Profile
                     </a>
                     @if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator' || Auth::user()->role === 'program_chair')
                         <a href="{{ route('feedback.index') }}"
-                            class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
+                            class="block w-full px-4 py-2 text-start text-sm leading-5 text-sscr-yellow hover:opacity-50 transition duration-150 ease-in-out">
                             Feedback
                         </a>
                     @else
                         <button id="send-feedback-trigger"
                             type="button"
                             onclick="document.getElementById('send-feedback-modal').classList.toggle('hidden');"
-                            class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
+                            class="block w-full px-4 py-2 text-start text-sm leading-5 text-sscr-yellow hover:opacity-50 transition duration-150 ease-in-out">
                             Send Feedback
                         </button>
                     @endif
                     @if (Auth::user()->role === 'cict_admin' || Auth::user()->role === 'alumni_coordinator')
-                        <hr />
+                        <hr class="border-sscr-yellow" />
                         <a href="{{ route('hobbies.index') }}"
-                            class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
+                            class="block w-full px-4 py-2 text-start text-sm leading-5 text-sscr-yellow hover:opacity-50 transition duration-150 ease-in-out">
                             Hobbies Management
                         </a>
                     @endif
-                    <hr />
+                    <hr class="border-sscr-yellow" />
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <a href="{{ route('logout') }}"
                             onclick="event.preventDefault(); this.closest('form').submit();"
-                            class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
+                            class="block w-full px-4 py-2 text-start text-sm leading-5 text-sscr-yellow hover:opacity-50 transition duration-150 ease-in-out">
                             Log Out
                         </a>
                     </form>
@@ -199,12 +199,12 @@
         const navbar = document.getElementById('sticky-navbar');
 
         if (window.scrollY > 0) {
-            navbar.classList.remove('bg-sscr-yellow');
-            navbar.classList.add('bg-sscr-red', 'py-2');
+            navbar.classList.remove('bg-sscr-yellow', 'text-sscr-red');
+            navbar.classList.add('bg-sscr-red', 'text-sscr-yellow', 'py-2');
             console.log("on");
         } else {
-            navbar.classList.remove('bg-sscr-red', 'py-2');
-            navbar.classList.add('bg-sscr-yellow');
+            navbar.classList.remove('bg-sscr-red' , 'text-sscr-yellow', 'py-2');
+            navbar.classList.add('bg-sscr-yellow', 'text-sscr-red');
             console.log("off");
         }
     });

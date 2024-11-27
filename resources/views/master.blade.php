@@ -917,7 +917,7 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen flex flex-col bg-sscr-yellow">
         @include('navigation.nav')
         <main class="flex-grow relative h-full">
             @include('navigation.nav-sticky')

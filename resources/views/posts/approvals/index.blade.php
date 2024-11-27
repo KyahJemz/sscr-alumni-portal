@@ -23,6 +23,9 @@
                 ' ' +
                     (post.posted_by.alumni_information?.last_name ?? post.posted_by.admin_information?.last_name);
 
+            let sliderCount = 0;
+            let sliderPosition = 0;
+
             const type = `${post.type.charAt(0).toUpperCase() + post.type.slice(1)} on ${getHumanReadableDate(new Date(post.created_at))}`;
             const hrs = getTimeAgo(new Date(post.approved_at ?? post.created_at));
 
@@ -34,58 +37,81 @@
                     <div class="space-y-4">
                         <div id="media-slider-${post.id}" class="relative w-full" data-carousel="slide">
                             <div class="relative h-56 overflow-hidden rounded-lg">
-                                ${post.event && post.event.thumbnail ? `
-                                    <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                        <img src="{{ asset('storage/posts/thumbnails') }}/${post.event.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
-                                    </div>
-                                ` : ''}
+                                ${post.event && post.event.thumbnail ? (() => {
+                                    sliderCount++;
+                                    return `
+                                        <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
+                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.event.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
+                                        </div>`;
+                                })() : ''}
 
-                                ${post.news && post.news.thumbnail ? `
-                                    <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                        <img src="{{ asset('storage/posts/thumbnails') }}/${post.news.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
-                                    </div>
-                                ` : ''}
+                                ${post.news && post.news.thumbnail ? (() => {
+                                    sliderCount++;
+                                    return `
+                                        <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
+                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.news.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
+                                        </div>`;
+                                })() : ''}
 
-                                ${post.announcement && post.announcement.thumbnail ? `
-                                    <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                        <img src="{{ asset('storage/posts/thumbnails') }}/${post.announcement.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
-                                    </div>
-                                ` : ''}
+                                ${post.announcement && post.announcement.thumbnail ? (() => {
+                                    sliderCount++;
+                                    return `
+                                        <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
+                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.announcement.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
+                                        </div>`;
+                                })() : ''}
 
                                 ${post.videos && Array.isArray(JSON.parse(post.videos)) ?
-                                    JSON.parse(post.videos).map(video => `
-                                        <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                            <video controls class="max-w-full max-h-full rounded-md">
-                                                <source src="{{ asset('storage/posts/videos') }}/${video}" type="video/mp4">
-                                            </video>
-                                        </div>
-                                    `).join('') : ''}
+                                    JSON.parse(post.videos).map(video => {
+                                        sliderCount++;
+                                        return `
+                                            <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
+                                                <video controls class="max-w-full max-h-full rounded-md">
+                                                    <source src="{{ asset('storage/posts/videos') }}/${video}" type="video/mp4">
+                                                </video>
+                                            </div>`;
+                                    }).join('')
+                                : ''}
 
                                 ${post.images && Array.isArray(JSON.parse(post.images)) ?
-                                    JSON.parse(post.images).map(image => `
-                                        <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                            <img src="{{ asset('storage/posts/images') }}/${image}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
-                                        </div>
-                                    `).join('') : ''}
+                                    JSON.parse(post.images).map(image => {
+                                        sliderCount++;
+                                        return `
+                                            <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
+                                                <img src="{{ asset('storage/posts/images') }}/${image}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
+                                            </div>`;
+                                    }).join('')
+                                : ''}
+
+                                ${post.event && post.event.url ? (() => {
+                                    sliderCount++;
+                                    return `
+                                        <div id="qr-code-container-${post.id}" class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item></div>
+                                    `;
+                                })() : ''}
                             </div>
 
-                            <button type="button" class="absolute top-0 start-0 z-1 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-                                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                                    <svg class="w-4 h-4 text-sscr-red" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                                    </svg>
-                                    <span class="sr-only text-sscr-red">Previous</span>
-                                </span>
-                            </button>
-
-                            <button type="button" class="absolute top-0 end-0 z-1 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-                                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                                    <svg class="w-4 h-4 text-sscr-red" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                                    </svg>
-                                    <span class="sr-only text-sscr-red">Next</span>
-                                </span>
-                            </button>
+                            ${sliderCount > 1 ? `
+                                <button type="button" class="absolute top-0 start-0 z-1 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+                                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                        <svg class="w-4 h-4 text-sscr-red" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                        </svg>
+                                        <span class="sr-only text-sscr-red">Previous</span>
+                                    </span>
+                                </button>
+                                <button type="button" class="absolute top-0 end-0 z-1 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+                                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                        <svg class="w-4 h-4 text-sscr-red" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                        </svg>
+                                        <span class="sr-only text-sscr-red">Next</span>
+                                    </span>
+                                </button>
+                                <div class="absolute bottom-4 right-4 bg-white/50 text-black px-2 py-1 rounded-lg text-sm">
+                                    <span id="slider-position-${post.id}">1</span> / ${sliderCount}
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
                 ` : '';
@@ -178,23 +204,33 @@
                 const prevButton = slider.querySelector('[data-carousel-prev]');
                 const nextButton = slider.querySelector('[data-carousel-next]');
                 const items = slider.querySelectorAll('[data-carousel-item]');
+                const progressIndicator = slider.querySelector(`[id^="slider-position"]`);
                 let currentIndex = 0;
+
+                if (!items || items.length === 0) return;
 
                 const showItem = (index) => {
                     items.forEach((item, i) => {
                         item.classList.toggle('hidden', i !== index);
                     });
+                    if (progressIndicator) {
+                        progressIndicator.textContent = index + 1;
+                    }
                 };
 
-                prevButton.addEventListener('click', () => {
-                    currentIndex = (currentIndex > 0) ? currentIndex - 1 : items.length - 1;
-                    showItem(currentIndex);
-                });
+                if (prevButton) {
+                    prevButton.addEventListener('click', () => {
+                        currentIndex = (currentIndex > 0) ? currentIndex - 1 : items.length - 1;
+                        showItem(currentIndex);
+                    });
+                }
 
-                nextButton.addEventListener('click', () => {
-                    currentIndex = (currentIndex < items.length - 1) ? currentIndex + 1 : 0;
-                    showItem(currentIndex);
-                });
+                if (nextButton) {
+                    nextButton.addEventListener('click', () => {
+                        currentIndex = (currentIndex < items.length - 1) ? currentIndex + 1 : 0;
+                        showItem(currentIndex);
+                    });
+                }
 
                 showItem(currentIndex);
             });
