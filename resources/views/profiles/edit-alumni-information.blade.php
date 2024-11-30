@@ -120,11 +120,13 @@
                         <div class="w-full md:w-1/4 px-3">
                             <label for="region" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Region</label>
                             <input list="regions" id="region" name="region"
+                                type="text"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('region', $information->region) }}" />
                             <datalist id="regions">
-                                @foreach ($regions as $region)
-                                    <option value="{{ $region }}">{{ $region }}</option>
+                                <option value="">-</option>
+                                @foreach ($locations as $regionCode => $regionData)
+                                    <option value="{{ $regionCode }}">{{ $regionData['region_name'] }}</option>
                                 @endforeach
                             </datalist>
                         </div>
@@ -134,9 +136,7 @@
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('province', $information->province) }}" />
                             <datalist id="provinces">
-                                @foreach ($provinces as $province)
-                                    <option value="{{ $province }}">{{ $province }}</option>
-                                @endforeach
+
                             </datalist>
                         </div>
                         <div class="w-full md:w-1/4 px-3">
@@ -145,9 +145,7 @@
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('city', $information->city) }}" />
                             <datalist id="cities">
-                                @foreach ($cities as $city)
-                                    <option value="{{ $city }}">{{ $city }}</option>
-                                @endforeach
+
                             </datalist>
                         </div>
                     </div>
@@ -159,9 +157,7 @@
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3 "
                                 value="{{ old('barangay', $information->barangay) }}" />
                             <datalist id="barangays">
-                                @foreach ($barangays as $barangay)
-                                    <option value="{{ $barangay }}">{{ $barangay }}</option>
-                                @endforeach
+
                             </datalist>
                         </div>
                         <div class="w-full md:w-1/4 px-3">
@@ -241,4 +237,48 @@
             </form>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+<script>
+    const regions = @json($locations);
+
+    document.getElementById('region').addEventListener('change', function () {
+        const regionId = this.value;
+        const region = regions[regionId].province_list;
+
+        const provinceSelect = document.getElementById('provinces');
+        provinceSelect.innerHTML = '<option value="">Select Province</option>';
+        Object.entries(region).forEach(([key, province]) => {
+            provinceSelect.innerHTML += `<option value="${key}">${key}</option>`;
+        });
+    });
+
+    document.getElementById('province').addEventListener('change', function () {
+        const provinceId = this.value;
+        const regionId = document.getElementById('region').value;
+        const municipalities = regions[regionId].province_list[provinceId].municipality_list;
+
+        const municipalitySelect = document.getElementById('cities');
+        municipalitySelect.innerHTML = '<option value="">Select Municipality</option>';
+        Object.entries(municipalities).forEach(([key, municipality]) => {
+            municipalitySelect.innerHTML += `<option value="${key}">${key}</option>`;
+        });
+    });
+
+    document.getElementById('city').addEventListener('change', function () {
+        const municipalityId = this.value;
+        const regionId = document.getElementById('region').value;
+        const provinceId = document.getElementById('province').value;
+
+        const barangays = regions[regionId].province_list[provinceId].municipality_list[municipalityId].barangay_list;
+        console.log(barangays);
+
+        const barangaySelect = document.getElementById('barangays');
+        barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+        barangays.forEach(barangay => {
+            barangaySelect.innerHTML += `<option value="${barangay}">${barangay}</option>`;
+        });
+    });
+</script>
 @endsection

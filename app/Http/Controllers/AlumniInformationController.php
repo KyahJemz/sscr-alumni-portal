@@ -48,6 +48,7 @@ class AlumniInformationController extends Controller
     public function edit(AlumniInformation $alumniInformation)
     {
         $user = Auth::user();
+        //dd(config('datasets.locations'));
         $data = [
             'countries' => config('datasets.countries.list'),
             'nationalities' => config('datasets.nationalities.list'),
@@ -61,6 +62,7 @@ class AlumniInformationController extends Controller
             'occupations' => config('datasets.occupations.list'),
             'genders' => config('datasets.genders.list'),
             'civilStatus' => config('datasets.civil-status.list'),
+            'locations' => config('datasets.locations'),
             'user' => $user,
             'information' => $alumniInformation,
         ];
@@ -92,6 +94,7 @@ class AlumniInformationController extends Controller
                 'occupations' => config('datasets.occupations.list'),
                 'genders' => config('datasets.genders.list'),
                 'civilStatus' => config('datasets.civil-status.list'),
+                'locations' => config('datasets.locations.regions'),
             ];
 
             $request->validate([
