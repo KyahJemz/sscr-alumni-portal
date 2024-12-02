@@ -20,7 +20,7 @@
                 title="Download"
                 class="absolute top-4 right-16 text-white bg-gray-800 hover:bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center z-10"
             >
-            ↓
+                ↓
             </a>
             <button
                 title="Close"
@@ -29,6 +29,16 @@
             >
                 ✕
             </button>
+
+            <button id="modalPrev" class="absolute left-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center z-10">◀</button>
+            <button id="modalNext" class="absolute right-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center z-10">▶</button>
+
+            <div
+                id="slideCounter"
+                class="absolute bottom-4 text-white bg-gray-800 bg-opacity-75 rounded-md px-4 py-1 text-sm"
+            >
+            </div>
+
             <div id="modalContent" class="w-full h-full flex items-center justify-center"></div>
         </div>
     </div>
@@ -97,43 +107,45 @@
                     (post.event && post.event.thumbnail)  ||
                     (post.news && post.news.thumbnail)  ||
                     (post.announcement && post.announcement.thumbnail) ? `
-                    <div class="space-y-4">
-                        <div id="media-slider-${post.id}" class="relative w-full" data-carousel="slide">
-                            <div class="relative h-56 overflow-hidden rounded-lg">
+
                                 ${post.event && post.event.thumbnail ? (() => {
                                     sliderCount++;
+                                    imageStrings=imageStrings+`{{ asset('storage/posts/thumbnails') }}/${post.event.thumbnail}|`;
                                     return `
                                         <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.event.thumbnail}" class="max-w-full max-h-full object-cover rounded-md cursor-pointer" alt="Post Image"
-                                            onclick="openImageModal('{{ asset('storage/posts/thumbnails') }}/${post.event.thumbnail}', 'image')">
+                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.event.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image"
+                                            >
                                         </div>`;
                                 })() : ''}
 
                                 ${post.news && post.news.thumbnail ? (() => {
                                     sliderCount++;
+                                    imageStrings=imageStrings+`{{ asset('storage/posts/thumbnails') }}/${post.news.thumbnail}|`;
                                     return `
                                         <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.news.thumbnail}" class="max-w-full max-h-full object-cover rounded-md cursor-pointer" alt="Post Image"
-                                            onclick="openImageModal('{{ asset('storage/posts/thumbnails') }}/${post.news.thumbnail}', 'image')">
+                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.news.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image"
+                                            >
                                         </div>`;
                                 })() : ''}
 
                                 ${post.announcement && post.announcement.thumbnail ? (() => {
                                     sliderCount++;
+                                    imageStrings=imageStrings+`{{ asset('storage/posts/thumbnails') }}/${post.announcement.thumbnail}|`;
                                     return `
                                         <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.announcement.thumbnail}" class="max-w-full max-h-full object-cover rounded-md cursor-pointer" alt="Post Image"
-                                            onclick="openImageModal('{{ asset('storage/posts/thumbnails') }}/${post.announcement.thumbnail}', 'image')">
+                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.announcement.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image"
+                                            >
                                         </div>`;
                                 })() : ''}
 
                                 ${post.videos && Array.isArray(JSON.parse(post.videos)) ?
                                     JSON.parse(post.videos).map(video => {
                                         sliderCount++;
+                                        videoStrings=videoStrings+`{{ asset('storage/posts/videos') }}/${video}|`;
                                         return `
                                             <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                                <video controls class="max-w-full max-h-full rounded-md cursor-pointer"
-                                                onclick="openImageModal('{{ asset('storage/posts/videos') }}/${video}', 'video')">
+                                                <video controls class="max-w-full max-h-full rounded-md"
+                                                >
                                                     <source src="{{ asset('storage/posts/videos') }}/${video}" type="video/mp4">
                                                 </video>
                                             </div>`;
@@ -143,10 +155,11 @@
                                 ${post.images && Array.isArray(JSON.parse(post.images)) ?
                                     JSON.parse(post.images).map(image => {
                                         sliderCount++;
+                                        imageStrings=imageStrings+`{{ asset('storage/posts/images') }}/${image}|`;
                                         return `
                                             <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                                <img src="{{ asset('storage/posts/images') }}/${image}" class="max-w-full max-h-full object-cover rounded-md cursor-pointer" alt="Post Image"
-                                                onclick="openImageModal('{{ asset('storage/posts/images') }}/${image}', 'image')">
+                                                <img src="{{ asset('storage/posts/images') }}/${image}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image"
+                                               >
                                             </div>`;
                                     }).join('')
                                 : ''}
@@ -157,31 +170,7 @@
                                         <div id="qr-code-container-${post.id}" class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item></div>
                                     `;
                                 })() : ''}
-                            </div>
 
-                            ${sliderCount > 1 ? `
-                                <button type="button" class="absolute top-0 start-0 z-1 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-                                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                                        <svg class="w-4 h-4 text-sscr-red" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                                        </svg>
-                                        <span class="sr-only text-sscr-red">Previous</span>
-                                    </span>
-                                </button>
-                                <button type="button" class="absolute top-0 end-0 z-1 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-                                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                                        <svg class="w-4 h-4 text-sscr-red" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                                        </svg>
-                                        <span class="sr-only text-sscr-red">Next</span>
-                                    </span>
-                                </button>
-                                <div class="absolute bottom-4 right-4 bg-white/50 text-black px-2 py-1 rounded-lg text-sm">
-                                    <span id="slider-position-${post.id}">1</span> / ${sliderCount}
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
                 ` : '';
 
             const files = post.files && Array.isArray(JSON.parse(post.files)) ? `
@@ -314,7 +303,40 @@
                         </div>
                     `: ""}
 
-                    ${images}
+                    ${((post.videos && Array.isArray(JSON.parse(post.videos)) && JSON.parse(post.videos).length > 0) ||
+                    (post.images && Array.isArray(JSON.parse(post.images)) && JSON.parse(post.images).length > 0))  ||
+                    (post.event && post.event.thumbnail)  ||
+                    (post.news && post.news.thumbnail)  ||
+                    (post.announcement && post.announcement.thumbnail) ? `
+                        <div class="space-y-4">
+                            <div id="media-slider-${post.id}" class="relative w-full" data-carousel="slide">
+                                <div class="relative h-56 overflow-hidden rounded-lg cursor-pointer" onclick="openCarouselModal('${imageStrings}|-|${videoStrings}')">
+                                    ${images}
+                                </div>
+                                ${sliderCount > 1 ? `
+                                    <button type="button" class="absolute top-0 start-0 z-1 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+                                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                            <svg class="w-4 h-4 text-sscr-red" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                            </svg>
+                                            <span class="sr-only text-sscr-red">Previous</span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="absolute top-0 end-0 z-1 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+                                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                            <svg class="w-4 h-4 text-sscr-red" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                            </svg>
+                                            <span class="sr-only text-sscr-red">Next</span>
+                                        </span>
+                                    </button>
+                                    <div class="absolute bottom-4 right-4 bg-white/50 text-black px-2 py-1 rounded-lg text-sm">
+                                        <span id="slider-position-${post.id}">1</span> / ${sliderCount}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    ` : ""}
 
                     ${post.files !== '[]' ? files : ""}
 
@@ -500,10 +522,62 @@
     </script>
 
     <script>
-        function openImageModal(src, type) {
+        let currentModalIndex = 0;
+
+        function openCarouselModal(contents) {
+            const passedData = contents.split('|-|');
+            const passedImages = passedData[0] ? passedData[0].split('|').filter((url) => url.trim() !== '') : [];
+            const passedVideos = passedData[1] ? passedData[1].split('|').filter((url) => url.trim() !== '') : [];
+
+            const carouselData = [
+                ...passedImages.map((image) => [image, 'image']),
+                ...passedVideos.map((video) => [video, 'video']),
+            ];
+
+            if (!carouselData || carouselData.length === 0) {
+                console.error("No contents available for this modal.");
+                return;
+            }
+
             const modal = document.getElementById('mediaModal');
             const modalContent = document.getElementById('modalContent');
-            const downloadButton = document.getElementById('downloadButton');
+            const prevButton = document.getElementById('modalPrev');
+            const nextButton = document.getElementById('modalNext');
+            const slideCounter = document.getElementById('slideCounter');
+
+            currentModalIndex = 0;
+            renderModalContent(carouselData[currentModalIndex], modalContent);
+
+            slideCounter.textContent = `${currentModalIndex + 1} / ${carouselData.length}`;
+
+            if (carouselData.length === 1) {
+                prevButton.classList.add('hidden');
+                nextButton.classList.add('hidden');
+            } else {
+                prevButton.classList.remove('hidden');
+                nextButton.classList.remove('hidden');
+            }
+
+            prevButton.onclick = () => navigateCarousel(-1, carouselData, modalContent, slideCounter);
+            nextButton.onclick = () => navigateCarousel(1, carouselData, modalContent, slideCounter);
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('mediaModal');
+            modal.classList.add('hidden');
+        }
+
+        function navigateCarousel(direction, carouselData, modalContent, slideCounter) {
+            currentModalIndex = (currentModalIndex + direction + carouselData.length) % carouselData.length;
+            renderModalContent(carouselData[currentModalIndex], modalContent);
+
+            slideCounter.textContent = `${currentModalIndex + 1} / ${carouselData.length}`;
+        }
+
+        function renderModalContent(content, modalContent) {
+            const [src, type] = content;
 
             if (type === 'image') {
                 modalContent.innerHTML = `<img src="${src}" class="max-w-full max-h-[70vh] rounded-md">`;
@@ -514,14 +588,9 @@
                     </video>`;
             }
 
+            const downloadButton = document.getElementById('downloadButton');
             downloadButton.href = src;
-
-            modal.classList.remove('hidden');
         }
 
-        function closeImageModal() {
-            const modal = document.getElementById('mediaModal');
-            modal.classList.add('hidden');
-        }
     </script>
 @endsection
