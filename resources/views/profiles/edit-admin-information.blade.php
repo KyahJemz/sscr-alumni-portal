@@ -15,15 +15,17 @@
                     <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300">Personal Information</h3>
                     <div class="flex flex-wrap -mx-3 mb-6">
                         <div class="w-full  md:w-1/4 px-3">
-                            <label for="last_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Last Name</label>
+                            <label for="last_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Last Name <a class="text-sscr-red"> *</a></label>
                             <input id="last_name" name="last_name"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="text"
+                                required
                                 value="{{ old('last_name', $information->last_name) }}" />
                         </div>
                         <div class="flex-1 md:w-1/4 px-3">
-                            <label for="first_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">First Name</label>
+                            <label for="first_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">First Name <a class="text-sscr-red"> *</a></label>
                             <input id="first_name" name="first_name"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="text"
+                                required
                                 value="{{ old('first_name', $information->first_name) }}" required />
                         </div>
                         <div class="flex-1 md:w-1/4 px-3">
@@ -46,9 +48,10 @@
                     <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300">Additional Information</h3>
                     <div class="flex flex-wrap -mx-3 mb-6">
                         <div class="w-full md:w-1/4 px-3">
-                            <label for="department" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Department</label>
+                            <label for="department" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Department <a class="text-sscr-red"> *</a></label>
                             <input list="department" id="department" name="department"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-2"
+                                required
                                 value="{{ old('department', $information->department) }}" />
                             <datalist id="department">
                                 @foreach ($departments as $department)

@@ -17,25 +17,29 @@
                         <div class="w-full  md:w-1/4 px-3">
                             <label for="last_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Last Name</label>
                             <input id="last_name" name="last_name"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="text"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 {{ Auth::user()->role === 'alumni' ? 'bg-gray-200' : '' }}" type="text"
+                                {{ Auth::user()->role === 'alumni' ? 'readonly' : '' }}
                                 value="{{ old('last_name', $information->last_name) }}" />
                         </div>
                         <div class="flex-1 md:w-1/4 px-3">
                             <label for="first_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">First Name</label>
                             <input id="first_name" name="first_name"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="text"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 {{ Auth::user()->role === 'alumni' ? 'bg-gray-200' : '' }}" type="text"
+                                {{ Auth::user()->role === 'alumni' ? 'readonly' : '' }}
                                 value="{{ old('first_name', $information->first_name) }}" required />
                         </div>
                         <div class="flex-1 md:w-1/4 px-3">
                             <label for="middle_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Middle Name</label>
                             <input id="middle_name" name="middle_name"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="text"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 {{ Auth::user()->role === 'alumni' ? 'bg-gray-200' : '' }}" type="text"
+                                {{ Auth::user()->role === 'alumni' ? 'readonly' : '' }}
                                 value="{{ old('middle_name', $information->middle_name) }}" />
                         </div>
                         <div class="flex-1 md:w-1/4 px-3">
                             <label for="suffix" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Suffix</label>
                             <input id="suffix" name="suffix"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="text"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 {{ Auth::user()->role === 'alumni' ? 'bg-gray-200' : '' }}" type="text"
+                                {{ Auth::user()->role === 'alumni' ? 'readonly' : '' }}
                                 value="{{ old('suffix', $information->suffix) }}" />
                         </div>
                     </div>
@@ -45,10 +49,11 @@
                 <div class="space-y-4">
                     <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300">Basic Information</h3>
                     <div class="flex flex-wrap -mx-3 mb-6">
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="nationality" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Nationality</label>
+                        <div class="md:w-1/3 px-3">
+                            <label for="nationality" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Nationality <a class="text-sscr-red"> *</a></label>
                             <input list="nationalities" id="nationality" name="nationality"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
+                                required
                                 value="{{ old('nationality', $information->nationality) }}" />
                             <datalist id="nationalities">
                                 @foreach ($nationalities as $nationality)
@@ -56,10 +61,11 @@
                                 @endforeach
                             </datalist>
                         </div>
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="civil_status" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Civil Status</label>
+                        <div class="md:w-1/3 px-3">
+                            <label for="civil_status" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Civil Status <a class="text-sscr-red"> *</a></label>
                             <input list="civil_statuses" id="civil_status" name="civil_status"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
+                                required
                                 value="{{ old('civil_status', $information->civil_status) }}"/>
                             <datalist id="civil_statuses">
                                 @foreach ($civilStatus as $status)
@@ -67,22 +73,25 @@
                                 @endforeach
                             </datalist>
                         </div>
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="age" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Age</label>
+                        <div class="md:w-1/3 px-3">
+                            <label for="age" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Age <a class="text-sscr-red"> *</a></label>
                             <input id="age" name="age"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="number"
+                                required
                                 value="{{ old('age', $information->age) }}" />
                         </div>
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="birth_date" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Birth Date</label>
+                        <div class=" md:w-1/2 px-3">
+                            <label for="birth_date" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Birth Date <a class="text-sscr-red"> *</a></label>
                             <input id="birth_date" name="birth_date"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="date"
+                                required
                                 value="{{ old('birth_date', $information->birth_date ?? '') }}" />
                         </div>
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="gender" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Gender</label>
+                        <div class="md:w-1/2 px-3">
+                            <label for="gender" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Gender <a class="text-sscr-red"> *</a></label>
                             <input list="genders" id="gender" name="gender"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
+                                required
                                 value="{{ old('gender', $information->gender) }}" />
                             <datalist id="genders">
                                 @foreach ($genders as $gender)
@@ -98,18 +107,20 @@
                     <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300">Address Information</h3>
                     <div class="flex flex-wrap -mx-3 mb-6">
                         <div class="w-full px-3">
-                            <label for="street_address" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Street Address</label>
+                            <label for="street_address" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Street Address <a class="text-sscr-red"> *</a></label>
                             <input id="street_address" name="street_address"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="text"
+                                required
                                 value="{{ old('street_address', $information->street_address) }}" />
                         </div>
                     </div>
 
                     <div class="flex flex-wrap -mx-3 mb-6">
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="country" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Country</label>
+                        <div class="md:w-1/2 px-3">
+                            <label for="country" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Country <a class="text-sscr-red"> *</a></label>
                             <input list="countries" id="country" name="country"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
+                                required
                                 value="{{ old('country', $information->country) }}" />
                             <datalist id="countries">
                                 @foreach ($countries as $country)
@@ -117,11 +128,12 @@
                                 @endforeach
                             </datalist>
                         </div>
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="region" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Region</label>
+                        <div class="md:w-1/2 px-3">
+                            <label for="region" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Region <a class="text-sscr-red"> *</a></label>
                             <input list="regions" id="region" name="region"
                                 type="text"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
+                                required
                                 value="{{ old('region', $information->region) }}" />
                             <datalist id="regions">
                                 <option value="">-</option>
@@ -130,19 +142,21 @@
                                 @endforeach
                             </datalist>
                         </div>
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="province" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Province</label>
+                        <div class="md:w-1/2 px-3">
+                            <label for="province" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Province<a class="text-sscr-red"> *</a></label>
                             <input list="provinces" id="province" name="province"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
+                                required
                                 value="{{ old('province', $information->province) }}" />
                             <datalist id="provinces">
 
                             </datalist>
                         </div>
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="city" class="block font-medium text-sm text-gray-700 dark:text-gray-300">City</label>
+                        <div class="md:w-1/2 px-3">
+                            <label for="city" class="block font-medium text-sm text-gray-700 dark:text-gray-300">City<a class="text-sscr-red"> *</a></label>
                             <input list="cities" id="city" name="city"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
+                                required
                                 value="{{ old('city', $information->city) }}" />
                             <datalist id="cities">
 
@@ -151,19 +165,21 @@
                     </div>
 
                     <div class="flex flex-wrap -mx-3 mb-6">
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="barangay" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Barangay</label>
+                        <div class="md:w-1/2 px-3">
+                            <label for="barangay" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Barangay<a class="text-sscr-red"> *</a></label>
                             <input list="barangays" id="barangay" name="barangay"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3 "
+                                required
                                 value="{{ old('barangay', $information->barangay) }}" />
                             <datalist id="barangays">
 
                             </datalist>
                         </div>
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="postal_code" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Postal Code</label>
+                        <div class="md:w-1/2 px-3">
+                            <label for="postal_code" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Postal Code<a class="text-sscr-red"> *</a></label>
                             <input id="postal_code" name="postal_code"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="text"
+                                required
                                 value="{{ old('postal_code', $information->postal_code) }}" />
                         </div>
                     </div>
@@ -173,10 +189,11 @@
                 <div class="space-y-4">
                     <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300">Education and Career Information</h3>
                     <div class="flex flex-wrap -mx-3 mb-6">
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="education_level" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Education Level</label>
+                        <div class="md:w-1/2 px-3">
+                            <label for="education_level" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Education Level<a class="text-sscr-red"> *</a></label>
                             <input list="education_levels" id="education_level" name="education_level"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
+                                required
                                 value="{{ old('education_level', $information->education_level) }}" />
                             <datalist id="education_levels">
                                 @foreach ($educationLevels as $educationLevel)
@@ -184,34 +201,10 @@
                                 @endforeach
                             </datalist>
                         </div>
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="batch" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Batch</label>
-                            <input id="batch" name="batch"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="number"
-                                value="{{ old('batch', $information->batch) }}" />
-                        </div>
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="course" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Course</label>
-                            <input list="courses" id="course" name="course"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
-                                value="{{ old('course', $information->course) }}" />
-                            <datalist id="courses">
-                                @foreach ($courses as $course)
-                                    <option value="{{ $course }}">{{ $course }}</option>
-                                @endforeach
-                            </datalist>
-                        </div>
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="phone" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Phone</label>
-                            <input id="phone" name="phone"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="text"
-                                value="{{ old('phone', $information->phone) }}" />
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap -mx-3 mb-6">
-                        <div class="w-full md:w-1/4 px-3">
-                            <label for="occupation" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Occupation</label>
+                        <div class="md:w-1/2 px-3">
+                            <label for="occupation" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Occupation<a class="text-sscr-red"> *</a></label>
                             <input list="occupations" id="occupation" name="occupation"
+                                required
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3"
                                 value="{{ old('occupation', $information->occupation) }}" />
                             <datalist id="occupations">
@@ -219,6 +212,32 @@
                                     <option value="{{ $occupation }}">{{ $occupation }}</option>
                                 @endforeach
                             </datalist>
+                        </div>
+                        <div class="md:w-1/4 px-3">
+                            <label for="batch" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Batch</label>
+                            <input id="batch" name="batch"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 {{ Auth::user()->role === 'alumni' ? 'bg-gray-200' : '' }}" type="number"
+                                {{ Auth::user()->role === 'alumni' ? 'readonly' : '' }}
+                                value="{{ old('batch', $information->batch) }}" />
+                        </div>
+                        <div class="md:w-2/4 px-3">
+                            <label for="course" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Course</label>
+                            <input list="courses" id="course" name="course"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12 px-3 {{ Auth::user()->role === 'alumni' ? 'bg-gray-200' : '' }}"
+                                {{ Auth::user()->role === 'alumni' ? 'readonly' : '' }}
+                                value="{{ old('course', $information->course) }}" />
+                            <datalist id="courses">
+                                @foreach ($courses as $course)
+                                    <option value="{{ $course }}">{{ $course }}</option>
+                                @endforeach
+                            </datalist>
+                        </div>
+                        <div class="md:w-1/4 px-3">
+                            <label for="phone" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Phone<a class="text-sscr-red"> *</a></label>
+                            <input id="phone" name="phone"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-12" type="text"
+                                required
+                                value="{{ old('phone', $information->phone) }}" />
                         </div>
                     </div>
                 </div>
