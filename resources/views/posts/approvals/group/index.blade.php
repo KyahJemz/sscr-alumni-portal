@@ -33,8 +33,8 @@
                 ✕
             </button>
 
-            <button id="modalPrev" class="absolute left-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center z-10">◀</button>
-            <button id="modalNext" class="absolute right-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center z-10">▶</button>
+            <button id="modalPrev" class="absolute left-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center z-10"><</button>
+            <button id="modalNext" class="absolute right-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center z-10">></button>
 
             <div
                 id="slideCounter"
