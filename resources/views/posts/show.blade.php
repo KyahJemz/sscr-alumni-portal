@@ -80,7 +80,8 @@
                                     sliderCount++;
                                     return `
                                         <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.event.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
+                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.event.thumbnail}" class="max-w-full max-h-full object-cover rounded-md cursor-pointer" alt="Post Image"
+                                            onclick="openImageModal('{{ asset('storage/posts/thumbnails') }}/${post.event.thumbnail}', 'image')">
                                         </div>`;
                                 })() : ''}
 
@@ -88,7 +89,8 @@
                                     sliderCount++;
                                     return `
                                         <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.news.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
+                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.news.thumbnail}" class="max-w-full max-h-full object-cover rounded-md cursor-pointer" alt="Post Image"
+                                            onclick="openImageModal('{{ asset('storage/posts/thumbnails') }}/${post.news.thumbnail}', 'image')">
                                         </div>`;
                                 })() : ''}
 
@@ -96,7 +98,8 @@
                                     sliderCount++;
                                     return `
                                         <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.announcement.thumbnail}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
+                                            <img src="{{ asset('storage/posts/thumbnails') }}/${post.announcement.thumbnail}" class="max-w-full max-h-full object-cover rounded-md cursor-pointer" alt="Post Image"
+                                            onclick="openImageModal('{{ asset('storage/posts/thumbnails') }}/${post.announcement.thumbnail}', 'image')">
                                         </div>`;
                                 })() : ''}
 
@@ -105,7 +108,8 @@
                                         sliderCount++;
                                         return `
                                             <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                                <video controls class="max-w-full max-h-full rounded-md">
+                                                <video controls class="max-w-full max-h-full rounded-md cursor-pointer"
+                                                onclick="openImageModal('{{ asset('storage/posts/videos') }}/${video}', 'video')">
                                                     <source src="{{ asset('storage/posts/videos') }}/${video}" type="video/mp4">
                                                 </video>
                                             </div>`;
@@ -117,7 +121,8 @@
                                         sliderCount++;
                                         return `
                                             <div class="duration-700 ease-in-out flex items-center justify-center w-full h-full" data-carousel-item>
-                                                <img src="{{ asset('storage/posts/images') }}/${image}" class="max-w-full max-h-full object-cover rounded-md" alt="Post Image">
+                                                <img src="{{ asset('storage/posts/images') }}/${image}" class="max-w-full max-h-full object-cover rounded-md cursor-pointer" alt="Post Image"
+                                                onclick="openImageModal('{{ asset('storage/posts/images') }}/${image}', 'image')">
                                             </div>`;
                                     }).join('')
                                 : ''}
@@ -489,5 +494,31 @@
         }
 
         getPosts()
+    </script>
+
+    <script>
+        function openImageModal(src, type) {
+            const modal = document.getElementById('mediaModal');
+            const modalContent = document.getElementById('modalContent');
+            const downloadButton = document.getElementById('downloadButton');
+
+            if (type === 'image') {
+                modalContent.innerHTML = `<img src="${src}" class="max-w-full max-h-[70vh] rounded-md">`;
+            } else if (type === 'video') {
+                modalContent.innerHTML = `
+                    <video controls class="max-w-full max-h-[70vh] rounded-md">
+                        <source src="${src}" type="video/mp4">
+                    </video>`;
+            }
+
+            downloadButton.href = src;
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('mediaModal');
+            modal.classList.add('hidden');
+        }
     </script>
 @endsection
