@@ -124,7 +124,17 @@
 
     <div id="mediaModal" class="fixed inset-0 bg-sscr-red bg-opacity-80 flex items-center justify-center hidden z-50">
         <div class="relative w-full h-full flex items-center justify-center">
+            <a
+                id="downloadButton"
+                href="#"
+                download
+                title="Download"
+                class="absolute top-4 right-16 text-white bg-gray-800 hover:bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center z-10"
+            >
+            ↓
+            </a>
             <button
+                title="Close"
                 class="absolute top-4 right-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center z-10"
                 onclick="closeImageModal()"
             >
@@ -135,14 +145,7 @@
 
             </div>
 
-            <a
-                id="downloadButton"
-                href="#"
-                download
-                class="absolute bottom-6 right-6 bg-sscr-yellow text-sscr-red px-4 py-2 rounded-md z-10"
-            >
-                Download
-            </a>
+
         </div>
     </div>
 

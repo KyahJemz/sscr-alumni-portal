@@ -206,6 +206,28 @@
     </div>
 </div>
 
+<div id="mediaModal" class="fixed inset-0 bg-sscr-red bg-opacity-80 flex items-center justify-center hidden z-50">
+    <div class="relative w-full h-full flex items-center justify-center">
+        <a
+            id="downloadButton"
+            href="#"
+            download
+            title="Download"
+            class="absolute top-4 right-16 text-white bg-gray-800 hover:bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center z-10"
+        >
+        ↓
+        </a>
+        <button
+            title="Close"
+            class="absolute top-4 right-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center z-10"
+            onclick="closeImageModal()"
+        >
+            ✕
+        </button>
+        <div id="modalContent" class="w-full h-full flex items-center justify-center"></div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
