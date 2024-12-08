@@ -102,6 +102,8 @@
             const hrs = getTimeAgo(new Date(post.approved_at ?? post.created_at));
             const items = 0;
 
+            let imageStrings = "";
+            let videoStrings = "";
             const images = ((post.videos && Array.isArray(JSON.parse(post.videos)) && JSON.parse(post.videos).length > 0) ||
                     (post.images && Array.isArray(JSON.parse(post.images)) && JSON.parse(post.images).length > 0))  ||
                     (post.event && post.event.thumbnail)  ||

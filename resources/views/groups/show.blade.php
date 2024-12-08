@@ -436,6 +436,8 @@
             const type = `${post.type.charAt(0).toUpperCase() + post.type.slice(1)} on ${getHumanReadableDate(new Date(post.created_at))}`;
             const hrs = getTimeAgo(new Date(post.approved_at ?? post.created_at));
 
+            let imageStrings = "";
+            let videoStrings = "";
             const images = ((post.videos && Array.isArray(JSON.parse(post.videos)) && JSON.parse(post.videos).length > 0) ||
                     (post.images && Array.isArray(JSON.parse(post.images)) && JSON.parse(post.images).length > 0))  ||
                     (post.event && post.event.thumbnail)  ||
