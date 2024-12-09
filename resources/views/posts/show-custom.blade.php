@@ -260,7 +260,7 @@
                         </div>
                     </div>
 
-                    ${post?.content ? `<div class="text-sm font-light mb-4">${post?.content ? post.content.replace(/\n/g, '<br>') : ''}</div>` : ""}
+                    ${post?.content ? `<div class="text-sm font-light mb-4">${post?.content ? nl2br(convert_links_to_anchor(post.content)) : ''}</div>` : ""}
 
                     ${post?.event ? `
                         <div class="bg-gray-100 p-4 border border-gray-300 rounded-lg flex flex-row gap-4 items-center">
@@ -285,11 +285,10 @@
                         ` : ""}
                     ` : ""}
 
-                    ${post?.announcement || post?.news || post?.event  ? `
+                    ${post?.announcement || post?.news ? `
                         <div class="text-sm font-light mb-2">
-                            ${post.announcement ? post.announcement.description.replace(/\n/g, '<br>') : ''}
-                            ${post.news ? post.news.description.replace(/\n/g, '<br>') : ''}
-                            ${post.event ? post.event.description.replace(/\n/g, '<br>') : ''}
+                            ${post.announcement ? nl2br(convert_links_to_anchor(post.announcement.description)) : ''}
+                            ${post.news ? nl2br(convert_links_to_anchor(post.news.description)) : ''}
                         </div>
                     `: ""}
 

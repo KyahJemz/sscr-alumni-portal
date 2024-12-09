@@ -39,4 +39,16 @@
             hour12: true };
         return new Date(date).toLocaleDateString('en-US', options);
     }
+
+    function nl2br(text) {
+        return text.replace(/\n/g, '<br>');
+    }
+
+    function convert_links_to_anchor(text) {
+        return text.replace(
+            /(https?:\/\/[^\s]+)/g,
+            '<a class="text-sscr-red underline hover:no-underline" href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+        );
+    }
+
 </script>

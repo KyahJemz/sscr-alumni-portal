@@ -262,7 +262,7 @@
                         ` : ''}
                     </div>
 
-                    ${post?.content ? `<div class="text-sm font-light mb-4">${post?.content ? post.content.replace(/\n/g, '<br>') : ''}</div>` : ""}
+                    ${post?.content ? `<div class="text-sm font-light mb-4">${post?.content ? nl2br(convert_links_to_anchor(post.content)) : ''}</div>` : ""}
 
                     ${post?.event ? `
                         <div class="bg-gray-100 p-4 border border-gray-300 rounded-lg flex flex-row gap-4 items-center">
@@ -274,7 +274,7 @@
                             </div>
                         </div>
                         <div class="text-md text-gray-700 font-light my-4 ">
-                            ${post.event.description.replace(/\n/g, '<br>')}
+                            ${post.event ? nl2br(convert_links_to_anchor(post.event.description)) : ''}
                         </div>
                         ${post.event?.contribution || post.event?.amount ? `
                             <div class="text-sm text-gray-700 my-4 font-bold">Notes:
@@ -298,10 +298,11 @@
                         </div>
                     `: ""}
 
-                    ${post?.announcement || post?.news ? `
+                    ${post?.announcement || post?.news || post?.event  ? `
                         <div class="text-sm font-light mb-2">
-                            ${post.announcement ? post.announcement.description.replace(/\n/g, '<br>') : ''}
-                            ${post.news ? post.news.description.replace(/\n/g, '<br>') : ''}
+                            ${post.announcement ? nl2br(convert_links_to_anchor(post.announcement.description)) : ''}
+                            ${post.news ? nl2br(convert_links_to_anchor(post.news.description)) : ''}
+                            ${post.event ? nl2br(convert_links_to_anchor(post.event.description)) : ''}
                         </div>
                     `: ""}
 
