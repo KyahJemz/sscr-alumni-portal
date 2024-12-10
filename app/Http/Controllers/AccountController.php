@@ -203,12 +203,11 @@ class AccountController extends Controller
             DB::beginTransaction();
 
             if (Auth::user()->role !== 'alumni') {
-                $request->validate([
-                    'course' => 'required',
-                    'batch' => 'required',
-                ]);
                 if (Auth::user()->role === 'program_chair') {
-                    // first 2 letters of first name, last 2 letters of last name, and batch)
+                    $request->validate([
+                        'course' => 'required',
+                        'batch' => 'required',
+                    ]);
                     $alumniTotalCount = User::where('role', 'alumni')->withTrashed()->count();
                     $defaultPassword = strtoupper(substr($request->first_name, 0, 2)) . strtoupper(substr($request->last_name, -2)) . $request->batch;
                     $formattedUsername = sprintf('%s-%07d', $request->batch, $alumniTotalCount++);
@@ -231,6 +230,10 @@ class AccountController extends Controller
                     ]);
                 } else {
                     if ($request->role === 'alumni') {
+                        $request->validate([
+                            'course' => 'required',
+                            'batch' => 'required',
+                        ]);
                         // first 2 letters of first name, last 2 letters of last name, and batch)
                         $alumniTotalCount = User::where('role', 'alumni')->withTrashed()->count();
                         $defaultPassword = strtoupper(substr($request->first_name, 0, 2)) . strtoupper(substr($request->last_name, -2)) . $request->batch;

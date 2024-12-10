@@ -29,7 +29,6 @@
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Fullname</th>
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Email</th>
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Role</th>
-                                <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Last Seen</th>
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Actions</th>
                             </tr>
                         </thead>
@@ -138,7 +137,6 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account.admin_information?.first_name ?? ''} ${account.admin_information?.middle_name ?? ''} ${account.admin_information?.last_name ?? ''}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account.email}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${role}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm">2 days ago</td>
                 <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center h-full">
                         <button class="text-xs bg-blue-500 hover:bg-blue-600 py-1 px-2 rounded-lg underline" onclick="editAccount(${account.id})">Edit</button>
