@@ -94,6 +94,13 @@
                             class="mt-1 block w-full text-sm border-gray-300 dark:bg-gray-700 dark:text-gray-100 rounded-md shadow-sm"
                             required>
                     </div>
+
+                    <div>
+                        <label for="password" class="text-sm font-semibold text-gray-700 dark:text-gray-200">Password</label>
+                        <input id="password" type="password" name="password"
+                            class="mt-1 block w-full text-sm border-gray-300 dark:bg-gray-700 dark:text-gray-100 rounded-md shadow-sm"
+                            required>
+                    </div>
                 </div>
                 <div class="flex justify-end mt-4">
                     <button type="submit"

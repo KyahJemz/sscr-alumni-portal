@@ -79,7 +79,6 @@
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Alumni ID</th>
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Course</th>
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Batch</th>
-                                <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Last Seen</th>
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Actions</th>
                             </tr>
                         </thead>
@@ -249,7 +248,6 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account.username}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account.alumni_information?.batch ?? ''}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">${account.alumni_information?.course ?? ''}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm">2 days ago</td>
                 <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center h-full">
                         <button class="text-xs bg-blue-500 hover:bg-blue-600 py-1 px-2 rounded-lg underline" onclick="editAccount(${account.id})">Edit</button>

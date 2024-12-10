@@ -24,7 +24,7 @@
                     <button onclick="downloadAsImage()" class="sm:hidden md:block ml-auto bg-sscr-red text-white px-3 py-1 rounded text-xs">Download</button>
                     <button onclick="downloadAsImage2()" class="sm:block md:hidden ml-auto bg-sscr-red text-white px-3 py-1 rounded text-xs">Download</button>
                 </h2>
-                <div id="alumni-id-card" class="sm:hidden md:block alumni-id-card relative w-[500px] h-[300px] bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500  mb-10">
+                <div id="alumni-id-card" class="sm:hidden md:block alumni-id-card relative w-[500px] h-max bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500  mb-10">
                     <div class="text-center bg-sscr-red pb-2 p-4 rounded-t-lg">
                         <p class="text-sm font-semibold text-sscr-yellow">San Sebastian College - Recoletos de Cavite</p>
                         <p class="text-lg font-semibold text-sscr-yellow">SSCR Alumni Identification Card</p>
@@ -51,7 +51,7 @@
                         </div>
                     </div>
 
-                    <div class="absolute bottom-4 left-4 text-sm">
+                    <div class="mx-4 mb-4 text-sm">
                         <p><span class="font-semibold">Address:</span> {{ $address ?? false ? $address : 'N/A' }}</p>
                     </div>
 
@@ -64,7 +64,7 @@
                     </div>
                 </div>
 
-                <div id="alumni-id-card-2" class="md:hidden sm:block alumni-id-card relative w-[350px] h-max bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500 mb-10">
+                <div id="alumni-id-card-2" class="md:hidden sm:block alumni-id-card relative w-[350px] h-max bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500">
                     <div class="text-center bg-sscr-red pb-2 p-4 rounded-t-lg">
                         <p class="text-xs font-semibold text-sscr-yellow">San Sebastian College - Recoletos de Cavite</p>
                         <p class="text-md font-semibold text-sscr-yellow">SSCR Alumni Identification Card</p>
@@ -81,7 +81,7 @@
                                 alt="Profile Image" class="rounded-lg w-full h-full object-cover">
                         </div>
 
-                        <div class="text-xs mb-8">
+                        <div class="text-xs">
                             <p><span class="font-semibold">Last Name: </span> {{ $information->last_name ?? 'N/A' }}</p>
                             <p><span class="font-semibold">Given Name: </span> {{ $information->first_name ?? 'N/A' }}</p>
                             <p><span class="font-semibold">Middle Name: </span> {{ $information->middle_name ?? 'N/A' }}</p>
@@ -91,7 +91,7 @@
                         </div>
                     </div>
 
-                    <div class="absolute bottom-4 left-4 text-xs">
+                    <div class="mx-4 mb-4 text-xs">
                         <p><span class="font-semibold">Address:</span> {{ $address ?? false ? $address : 'N/A' }}</p>
                     </div>
 
