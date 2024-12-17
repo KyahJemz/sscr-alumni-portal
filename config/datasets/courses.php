@@ -12,8 +12,17 @@ return [
     */
 
     'list' => [
-        'Bachelor of Science in Information Technology',
-        'Bachelor of Science in Computer Science',
-        'Bachelor of Science in Computer sss',
+        'BS Accountancy and BSBA major in Accounting',
+        'BSBA Financial Management',
+        'BSBA Marketing Management',
+        'BS Psychology',
+        'BS Hospitality Management',
+        'BSBA major in HR Development Management',
+        'BS Tourism Management',
+        'AB Communication',
+        'BS Criminology',
+        'BS Industrial Engineering',
+        'BS Electronics Engineering',
+        'BS Nursing',
     ],
 ];

@@ -12,10 +12,21 @@ return [
     */
 
     'list' => [
-        'Nationality 1',
-        'Nationality 2',
-        'Nationality 3',
-        'Nationality 4',
-        'Nationality 5',
+        'Filipino',
+        'American',
+        'Australian',
+        'Brazilian',
+        'Canadian',
+        'Chinese',
+        'French',
+        'German',
+        'Indian',
+        'Italian',
+        'Japanese',
+        'Mexican',
+        'Russian',
+        'South African',
+        'Spanish',
+        'United Kingdom',
     ],
 ];

@@ -12,7 +12,17 @@ return [
     */
 
     'list' => [
-        'Information Technology',
-        'Computer Science',
+        'Accountancy and BSBA major in Accounting',
+        'Financial Management',
+        'Marketing Management',
+        'Psychology',
+        'Hospitality Management',
+        'HR Development Management',
+        'Tourism Management',
+        'ABCom',
+        'Criminology',
+        'Industrial Engineering',
+        'Electronics Engineering',
+        'Nursing'
     ],
 ];
