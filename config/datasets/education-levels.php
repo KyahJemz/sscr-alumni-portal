@@ -12,9 +12,9 @@ return [
     */
 
     'list' => [
-        'Elementary',
-        'Junior High School',
-        'Senior High School',
+        // 'Elementary',
+        // 'Junior High School',
+        // 'Senior High School',
         'College',
         'Graduate',
         'Post Graduate',
