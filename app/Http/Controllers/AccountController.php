@@ -383,7 +383,7 @@ class AccountController extends Controller
 
     public function apiDestroy(Request $request, User $user)
     {
-        if(Auth::user()->role !== 'alumni' && Auth::user()->role !== 'program_chair') {
+        if(Auth::user()->role !== 'alumni') {
             $user->update([
                 'deleted_at' => Carbon::now('Asia/Manila'),
                 'deleted_by' => Auth::user()->id,
