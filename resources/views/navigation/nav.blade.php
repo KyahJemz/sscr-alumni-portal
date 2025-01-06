@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 relative">
         <div class="flex w-full justify-between h-max py-4 sm:py-2 items-center relative">
             <div class="sm:hidden md:flex absolute items-center">
-                <a href="{{ route('home') }}">
+                <a href="{{ route('posts.index') }}">
                     <img class="h-16 w-auto" src="{{ asset('storage/stags.png') }}" alt="San Sebastian College - Recoletos de Cavite">
                 </a>
             </div>
@@ -27,7 +27,7 @@
         </div>
 
         <div id="responsiveMenu" class="hidden sm:flex sm:flex-col md:hidden rounded-b-xl absolute bg-sscr-red w-full z-10 -mx-6 p-6">
-            <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-gray-300' : 'text-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium border-t-2 border-gray-300">
+            <a href="{{ route('posts.index') }}" class="{{ request()->routeIs('posts.index') ? 'text-gray-300' : 'text-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium border-t-2 border-gray-300">
                 Home
             </a>
             <a href="{{ route('groups.index') }}" class="{{ request()->routeIs('groups.index') ? 'text-gray-300' : 'text-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium">

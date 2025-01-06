@@ -1,6 +1,35 @@
 @extends('master')
 
 @section('content')
+    @if (session('loginWelcome') === 'true')
+        <div id="welcomeModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center bg-opacity-50 bg-sscr-red">
+            <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-8 text-center border-2 border-sscr-red">
+                <div class="text-2xl font-bold text-gray-800 mb-4">Welcome to Baste Connect: An Alumni Portal!</div>
+                <p class="text-gray-600 mb-6">
+                    This is your home to reconnect, share your journey, and celebrate the enduring Recollect spirit.</br>
+                    Let us stay true to our values of honesty and integrity as we strengthen the bonds that unite us.</br>
+                    Together, we honor our legacy and continue to make a meaningful difference.
+                </p>
+                <p class="text-md font-semibold text-gray-700 mb-6">
+                    Once a Sebastinian, </br>
+                    always a Sebastinian. </br>
+                    Welcome home!
+                </p>
+                <button
+                    onclick="closeWelcomeModal()"
+                    class="px-4 py-2 bg-sscr-red text-white rounded-lg">
+                    Agree
+                </button>
+            </div>
+        </div>
+
+        <script>
+            function closeWelcomeModal() {
+                document.getElementById('welcomeModal').style.display = 'none';
+            }
+        </script>
+    @endif
+
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-2 lg:px-6">
             <div class="overflow-hidden sm:rounded-lg max-w-2xl mx-auto space-y-4">

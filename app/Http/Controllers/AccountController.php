@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Excel\Imports\CustomImport;
+use Illuminate\Database\Eloquent\Builder;
 
 class AccountController extends Controller
 {
@@ -103,11 +104,46 @@ class AccountController extends Controller
      */
     public function index($type)
     {
+        $batches = AlumniInformation::select('batch')
+            ->distinct()
+            ->withCount([
+                'user as total_users' => function (Builder $query) {
+                    $query->whereNull('deleted_at');
+                },
+                'user as approved_users' => function (Builder $query) {
+                    $query->whereNotNull('approved_by')
+                        ->whereNull('deleted_at');
+                },
+                'user as rejected_users' => function (Builder $query) {
+                    $query->whereNull('approved_by')
+                        ->whereNotNull('rejected_by')
+                        ->whereNull('deleted_at');
+                },
+            ])
+            ->orderBy('batch', 'desc')
+            ->get();
+
+        $formattedBatches = $batches->map(function ($batch) {
+            $total = $batch->total_users;
+            $approved = $batch->approved_users;
+
+            if ($total === 0) {
+                return null;
+            }
+
+            return [
+                'batch' => $batch->batch,
+                'approved' => $approved,
+                'total' => $total,
+                'display' => "{$batch->batch} - ({$approved} / {$total})",
+            ];
+        })->filter();
+
         switch ($type) {
             case 'alumni':
                 if (Auth::user()->role != 'alumni') {
                     $data = [
-                        'batches' => AlumniInformation::distinct('batch')->orderBy('batch', 'desc')->get(['batch']),
+                        'batches' => $formattedBatches,
                         'courses' => AlumniInformation::distinct('course')->orderBy('course', 'desc')->get(['course']),
                     ];
                     return view('accounts.alumni.index', $data);
@@ -125,7 +161,7 @@ class AccountController extends Controller
             case 'graduates':
                 if (Auth::user()->role != 'alumni') {
                     $data = [
-                        'batches' => AlumniInformation::distinct('batch')->orderBy('batch', 'desc')->get(['batch']),
+                        'batches' => $formattedBatches,
                         'courses' => AlumniInformation::distinct('course')->orderBy('course', 'desc')->get(['course']),
                     ];
                     return view('accounts.graduates.index',$data);

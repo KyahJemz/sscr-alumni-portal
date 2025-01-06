@@ -20,9 +20,12 @@
         @if($user->role === 'alumni')
             <div class="bg-white shadow-md rounded-lg p-6 flex flex-col gap-6">
                 <h2 class="text-lg font-bold text-gray-800 border-l-4 border-sscr-red pl-2 text-sscr-red flex items-center">
-                    Alumni Digital Identification Card
-                    <button onclick="downloadAsImage()" class="sm:hidden md:block ml-auto bg-sscr-red text-white px-3 py-1 rounded text-xs">Download</button>
-                    <button onclick="downloadAsImage2()" class="sm:block md:hidden ml-auto bg-sscr-red text-white px-3 py-1 rounded text-xs">Download</button>
+                    <div>Alumni Digital Identification Card</div>
+                    <div class="flex flex-row ml-auto gap-2">
+                        <button onclick="switchSide()" class="bg-sscr-red text-white px-3 py-1 rounded text-xs">Switch</button>
+                        <button onclick="downloadAsImage()" class="sm:hidden md:block bg-sscr-red text-white px-3 py-1 rounded text-xs">Download</button>
+                        <button onclick="downloadAsImage2()" class="sm:block md:hidden bg-sscr-red text-white px-3 py-1 rounded text-xs">Download</button>
+                    </div>
                 </h2>
                 <div id="alumni-id-card" class="sm:hidden md:block alumni-id-card relative w-[500px] h-max bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500  mb-10">
                     <div class="text-center bg-sscr-red pb-2 p-4 rounded-t-lg">
@@ -61,6 +64,21 @@
 
                     <div class="absolute top-4 right-4">
                         <img src="{{ asset('/storage/oar_logo.png') }}" alt="Seal" class="w-12 h-12">
+                    </div>
+                </div>
+
+                <div id="alumni-id-card-back" class="sm:hidden md:block hidden alumni-id-card relative w-[500px] h-max bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500  mb-10">
+                    <div class="text-center bg-sscr-red pb-2 p-4 rounded-t-lg">
+                        <p class="text-xl font-semibold text-sscr-yellow">San Sebastian College - Recoletos de Cavite</p>
+                        <p class="text-md italic text-sscr-yellow">Caritas et Scientia</p>
+                    </div>
+
+                    <p class="text-sm font-light text-sscr-red px-4 pt-2">Alumni Id: {{ $user->username }}</p>
+
+                    <div class="flex flex-col space-y-4 pt-2 px-4 h-44 w-full">
+                        <p class="text-center text-sm">{{ $address ?? false ? $address : 'N/A' }} </p>
+                        <p class="text-sm"><span class="font-semibold">Civil Status: </span> {{ $information->civil_status ?? 'N/A' }}</p>
+                        <p class="text-sm"><span class="font-semibold">Sex / Gender: </span> {{ $information->gender ?? 'N/A' }}</p>
                     </div>
                 </div>
 
@@ -103,6 +121,22 @@
                         <img src="{{ asset('/storage/oar_logo.png') }}" alt="Seal" class="w-8 h-8">
                     </div>
                 </div>
+
+                <div id="alumni-id-card-2-back" class="md:hidden sm:block hidden alumni-id-card relative w-[350px] h-max bg-gray-100 rounded-lg shadow-lg border-2 border-gray-500 mb-10">
+                    <div class="text-center bg-sscr-red pb-2 p-4 rounded-t-lg">
+                        <p class="text-sm font-semibold text-sscr-yellow">San Sebastian College - Recoletos de Cavite </p>
+                        <p class="text-md italic text-sscr-yellow">Caritas et Scientia</p>
+                    </div>
+
+                    <p class="text-sm font-light text-sscr-red px-4 pt-2">Alumni Id: {{ $user->username }}</p>
+
+                    <div class="flex flex-col space-y-4 pt-2 px-4 h-40 w-full">
+                        <p class="text-center text-sm">{{ $address ?? false ? $address : 'N/A' }} </p>
+                        <p class="text-sm"><span class="font-semibold">Civil Status: </span> {{ $information->civil_status ?? 'N/A' }}</p>
+                        <p class="text-sm"><span class="font-semibold">Sex / Gender: </span> {{ $information->gender ?? 'N/A' }}</p>
+                    </div>
+                </div>
+
             </div>
         @endif
         <div class="bg-white shadow-md rounded-lg p-6 flex flex-col gap-6">
@@ -304,6 +338,7 @@
 
 @section('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
     <script>
         function downloadAsImage() {
             const node = document.getElementById('alumni-id-card');
@@ -328,6 +363,17 @@
         });
         }
     </script>
+
+    <script>
+        function switchSide() {
+            document.getElementById('alumni-id-card').classList.toggle('hidden');
+            document.getElementById('alumni-id-card-back').classList.toggle('hidden');
+            document.getElementById('alumni-id-card-2').classList.toggle('hidden');
+            document.getElementById('alumni-id-card-2-back').classList.toggle('hidden');
+        }
+    </script>
+
+
     <script>
         function downloadAsImage2() {
             const node = document.getElementById('alumni-id-card-2');

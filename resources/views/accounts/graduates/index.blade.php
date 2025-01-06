@@ -35,8 +35,8 @@
                                 <div class="py-1">
                                     @forelse ($batches as $batch)
                                         <label class="flex items-center px-4 py-2 text-xs">
-                                            <input type="checkbox" onchange="filterAlumniAccounts(event)" value="{{$batch->batch}}" class="alumni-batch-filter mr-2 text-sscr-red border-gray-300 focus:ring-0 hover:ring-0 active:ring-0" />
-                                            {{$batch->batch}}
+                                            <input type="checkbox" onchange="filterAlumniAccounts(event)" value="{{$batch['batch']}}" class="alumni-batch-filter mr-2 text-sscr-red border-gray-300 focus:ring-0 hover:ring-0 active:ring-0" />
+                                            {{$batch['display']}}
                                         </label>
                                     @empty
                                         <p>No batches found</p>
@@ -67,6 +67,7 @@
                     </div>
                     <div class="flex gap-2">
                         <a class="bg-sscr-red text-white rounded-md h-max py-2 px-4 inline-flex items-center text-xs cursor-pointer w-max" onclick="exportTable()">Export Table</a>
+                        <a class="bg-sscr-red text-white rounded-md h-max py-2 px-4 inline-flex items-center text-xs cursor-pointer w-max" onclick="generatePDF()">Print Table</a>
                         <button onclick="document.getElementById('add-account-modal').classList.toggle('hidden');" class="sm:flex md:hidden w-max text-xs items-center transition duration-150 ease-in-out gap-1 text-white bg-sscr-red hover:bg-sscr-red/80 active:bg-sscr-red/60 border border-sscr-red px-3 py-1 rounded">
                             Add
                         </button>
@@ -76,7 +77,7 @@
                     </div>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 rounded">
+                    <table class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 rounded" id="alumni-accounts-table">
                         <thead class="bg-gray-100 dark:bg-gray-700">
                             <tr>
                                 <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">#</th>
@@ -210,7 +211,59 @@
     </div>
 @endsection
 
+@section('css')
+
+<style>
+
+</style>
+
+@endsection
+
 @section('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        function generatePDF() {
+        let originalTable = document.getElementById('alumni-accounts-table');
+
+        let clonedTable = originalTable.cloneNode(true);
+
+        let columnsToKeep = [0, 1, 2, 3, 4, 5, 6];
+
+        Array.from(clonedTable.rows).forEach(row => {
+            Array.from(row.cells).forEach((cell, index) => {
+                if (!columnsToKeep.includes(index)) {
+                    cell.style.display = 'none';
+                }
+            });
+        });
+
+        let container = document.createElement('div');
+        container.appendChild(clonedTable);
+
+        let PdfOptions = {
+            margin: 0.5,
+            filename: `Graduates_${new Date().toISOString().slice(0, 10)}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+                scale: 1,
+                useCORS: true,
+                scrollY: 1,
+            },
+            jsPDF: {
+                unit: 'in',
+                format: 'legal',
+                orientation: 'landscape',
+            },
+            pagebreak: {
+                mode: ['css', 'legacy'],
+                before: '.page-break',
+            },
+        };
+
+        html2pdf().set(PdfOptions).from(container).save();
+    }
+    </script>
 
     <script>
         document.getElementById('batch-filter-dropdown-btn').addEventListener('click', function() {

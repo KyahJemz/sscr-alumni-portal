@@ -43,7 +43,7 @@ Route::get('/', function () {
 });
 
 Route::get('/home', function () {
-    return redirect()->route('posts.index');
+    return redirect()->route('posts.index')->with('loginWelcome', 'true');
 })->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {

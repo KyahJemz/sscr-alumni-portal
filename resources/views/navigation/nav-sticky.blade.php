@@ -2,7 +2,7 @@
     class="sm:hidden md:flex lg:flex border-y border-sscr-red sticky top-0 z-10 transition ease-in-out duration-500 bg-sscr-yellow text-sscr-red font bold">
     <div class="max-w-7xl mx-auto sm:flex md:flex lg:flex justify-between py-1 w-full">
         <div class="sm:-my-px sm:flex">
-            <a href="{{ route('home') }}"
+            <a href="{{ route('posts.index') }}"
                 class='inline-flex hover:opacity-50 items-center px-8 border-indigo-400 dark:border-indigo-600 text-sm leading-5 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'>
                 Home
             </a>

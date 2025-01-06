@@ -30,8 +30,8 @@
                                 <div class="py-1">
                                     @forelse ($batches as $batch)
                                         <label class="flex items-center px-4 py-2 text-xs">
-                                            <input type="checkbox" onchange="filterAlumniAccounts(event)" value="{{$batch->batch}}" class="alumni-batch-filter mr-2 text-sscr-red border-gray-300 focus:ring-0 hover:ring-0 active:ring-0" />
-                                            {{$batch->batch}}
+                                            <input type="checkbox" onchange="filterAlumniAccounts(event)" value="{{$batch['batch']}}" class="alumni-batch-filter mr-2 text-sscr-red border-gray-300 focus:ring-0 hover:ring-0 active:ring-0" />
+                                            {{$batch['display']}}
                                         </label>
                                     @empty
                                         <p>No batches found</p>
