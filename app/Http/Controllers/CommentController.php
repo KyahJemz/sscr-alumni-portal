@@ -29,11 +29,13 @@ class CommentController extends Controller
                 'post_id' => 'required|exists:posts,id',
             ]);
 
+            $comment = $this->filterMessage($request->comment);
+
             Comment::create([
                 'post_id' => $request->post_id,
                 'commented_by' => Auth::user()->id,
                 'deleted_by' => null,
-                'content' => $request->comment,
+                'content' => $comment,
             ]);
 
             Notification::create([
@@ -54,6 +56,38 @@ class CommentController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    private function filterMessage($message)
+    {
+        // words suggested by chat gpt
+        $bannedWords = [
+            'bobo', 'obob', 'tanga', 'gago', 'gaga', 'ulol', 'tarantado', 'lintik',
+            'tangina', 'puta',
+            'putangina', 'pakyu', 'inutil', 'siraulo', 'leche', 'hayop',
+            'bwisit', 'hindot', 'kantot', 'titi', 'pekpek', 'puta', 'punyeta',
+            'tae', 'utang', 'kupal', 'ampotangina', 'putragis', 'putres',
+            'taragis', 'ungas'
+        ];
+
+        // words suggested by chat gpt
+        $bannedWords = array_merge($bannedWords, [
+            'fuck', 'shit', 'bitch', 'asshole', 'bastard', 'dick',
+            'pussy', 'cunt', 'fucker', 'motherfucker', 'crap', 'jerk',
+            'damn', 'slut', 'whore', 'prick', 'cock', 'wanker', 'twat',
+            'bollocks', 'arsehole', 'douche', 'dumbass', 'faggot', 'retard'
+        ]);
+
+        foreach ($bannedWords as $word) {
+            $pattern = "/\b" . preg_quote($word, '/') . "\b/i";
+            $replacement = str_repeat('*', strlen($word));
+
+            $message = preg_replace($pattern, $replacement, $message);
+
+            $patternFlexible = "/(?<=\w)" . preg_quote($word, '/') . "(?=\w)/i";
+            $message = preg_replace($patternFlexible, $replacement, $message);
+        }
+        return $message;
     }
 
     /**

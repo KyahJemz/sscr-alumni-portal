@@ -340,8 +340,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
 
     <script>
+        let isBackSide = false;
+    </script>
+
+    <script>
         function downloadAsImage() {
-            const node = document.getElementById('alumni-id-card');
+            let node = null;
+            if (isBackSide) {
+                node = document.getElementById('alumni-id-card-back');
+            } else {
+                node = document.getElementById('alumni-id-card');
+            }
             const scale = 2;
 
         domtoimage.toPng(node, {
@@ -366,6 +375,7 @@
 
     <script>
         function switchSide() {
+            isBackSide = !isBackSide;
             document.getElementById('alumni-id-card').classList.toggle('hidden');
             document.getElementById('alumni-id-card-back').classList.toggle('hidden');
             document.getElementById('alumni-id-card-2').classList.toggle('hidden');
@@ -373,10 +383,14 @@
         }
     </script>
 
-
     <script>
         function downloadAsImage2() {
-            const node = document.getElementById('alumni-id-card-2');
+            let node = null;
+            if (isBackSide) {
+                node = document.getElementById('alumni-id-card-back-2');
+            } else {
+                node = document.getElementById('alumni-id-card-2');
+            }
             const scale = 2;
 
         domtoimage.toPng(node, {
