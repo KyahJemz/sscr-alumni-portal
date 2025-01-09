@@ -105,39 +105,33 @@ class AccountController extends Controller
     public function index($type)
     {
         $batches = AlumniInformation::select('batch')
-            ->distinct()
-            ->withCount([
-                'user as total_users' => function (Builder $query) {
-                    $query->whereNull('deleted_at');
-                },
-                'user as approved_users' => function (Builder $query) {
-                    $query->whereNotNull('approved_by')
-                        ->whereNull('deleted_at');
-                },
-                'user as rejected_users' => function (Builder $query) {
-                    $query->whereNull('approved_by')
-                        ->whereNotNull('rejected_by')
-                        ->whereNull('deleted_at');
-                },
-            ])
+            ->selectRaw('COUNT(CASE WHEN users.deleted_at IS NULL THEN 1 END) as total_users')
+            ->selectRaw('COUNT(CASE WHEN users.approved_by IS NOT NULL AND users.deleted_at IS NULL THEN 1 END) as approved_users')
+            ->selectRaw('COUNT(CASE WHEN users.approved_by IS NULL AND users.rejected_by IS NOT NULL AND users.deleted_at IS NULL THEN 1 END) as rejected_users')
+            ->leftJoin('users', 'alumni_informations.user_id', '=', 'users.id')
+            ->whereNull('alumni_informations.deleted_at')
+            ->groupBy('batch')
             ->orderBy('batch', 'desc')
             ->get();
 
-        $formattedBatches = $batches->map(function ($batch) {
-            $total = $batch->total_users;
-            $approved = $batch->approved_users;
+        $formattedBatches = $batches
+            ->map(function ($batch) {
+                $total = $batch->total_users;
+                $approved = $batch->approved_users;
 
-            if ($total === 0) {
-                return null;
-            }
+                if ($total === 0) {
+                    return null;
+                }
 
-            return [
-                'batch' => $batch->batch,
-                'approved' => $approved,
-                'total' => $total,
-                'display' => "{$batch->batch} - ({$approved} / {$total})",
-            ];
-        })->filter();
+                return [
+                    'batch' => $batch->batch,
+                    'approved' => $approved,
+                    'total' => $total,
+                    'display' => "{$batch->batch} - ({$approved} / {$total})",
+                ];
+            })
+            ->filter()
+            ->unique('batch');
 
         switch ($type) {
             case 'alumni':
